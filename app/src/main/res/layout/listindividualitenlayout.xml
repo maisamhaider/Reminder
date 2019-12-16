@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:id="@+id/mainindivduallayout"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp" />
+
+    <TextView
+        android:id="@+id/noteTextView"
+        android:layout_width="179dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="1dp"
+        android:layout_toEndOf="@+id/checkbox"
+        android:hint="check" />
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="50dp"
+        android:layout_height="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="23dp"
+        android:layout_toEndOf="@+id/noteTextView"
+        android:gravity="center"
+        android:textSize="8dp" />
+
+    <ImageView
+        android:id="@+id/subtasksImageView"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="76dp"
+        android:layout_toEndOf="@+id/noteTextView"
+        android:gravity="center"
+        android:hint="check"
+        android:src="@mipmap/subtasks_foreground"
+        android:textSize="8dp" />
+
+    <ImageView
+        android:id="@+id/AttachmentImageView"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="14dp"
+        android:layout_toEndOf="@+id/subtasksImageView"
+        android:gravity="center"
+        android:hint="check"
+        android:src="@drawable/ic_attach_file_black_24dp"
+        android:textSize="8dp" />
+
+
+</RelativeLayout>

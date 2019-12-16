@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.InputListFrag">
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/search_close_btn"
+                android:text="x"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/searchET"
+            android:layout_width="225dp"
+            android:hint="i want to"
+            android:gravity="start|center"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/donebtn"
+            android:text="done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layout1"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/inputRemiderRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+        <fragment
+            android:id="@+id/afterlistfragContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.example.reminder.Fragments.mainfrag"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
