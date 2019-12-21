@@ -2,36 +2,33 @@ package com.example.reminder.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.reminder.Fragments.CalendarFrag;
 import com.example.reminder.Fragments.SettingsFrag;
 import com.example.reminder.Fragments.TasksFrag;
 import com.example.reminder.R;
+import com.example.reminder.models.EditTextStringListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditTextStringListener{
 
 
     ScrollView scrollView;
     LinearLayout bottomsheetLLO;
     BottomNavigationView bottomNavigationView;
+    EditTextStringListener mEditTextStringListener;
+    Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void loadmyfrag(Fragment fragment) {
+        this.mFragment = fragment;
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.addToBackStack(null);
@@ -114,16 +112,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void hideBottonNView()
+    public void hideBottomNView()
     {
         bottomNavigationView.setVisibility( View.GONE );
     }
-    public void showBottonNView()
+    public void showBottomNView()
     {
         bottomNavigationView.setVisibility( View.VISIBLE );
     }
 
 
+    @Override
+    public void mystring(String ss) {
+        if (mFragment instanceof EditTextStringListener)
+        mEditTextStringListener = (EditTextStringListener) mFragment;
 
-
+        if (mEditTextStringListener!=null){
+            mEditTextStringListener.mystring( ss );
+        }
+    }
 }

@@ -15,6 +15,10 @@ import com.example.reminder.Fragments.TasksFrag;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.example.reminder.classes.MyTimeSettingClass.todayPlaceDate;
+import static com.example.reminder.classes.MyTimeSettingClass.tomorrowPlaceDate;
+import static com.example.reminder.classes.MyTimeSettingClass.upcomingPlaceDate;
+
 public class DataBaseHelper extends SQLiteOpenHelper {
 
 
@@ -63,7 +67,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public Cursor getToday() {
         SQLiteDatabase database = getWritableDatabase();
-        String today = TasksFrag.todayPlaceDate();
+        String today = todayPlaceDate();
 
         Cursor day = database.rawQuery( " SELECT * FROM " + TABLE_NAME + " WHERE DATE_TO_PLACE_TASK LIKE \'" + today + "\'", null );
 
@@ -74,7 +78,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase database = getWritableDatabase();
         Cursor day ;
-        String tomorrow = TasksFrag.tomorrowPlaceDate();
+        String tomorrow = tomorrowPlaceDate();
         day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+" WHERE DATE_TO_PLACE_TASK LIKE \'"+tomorrow+"\'",null );
         return day;
 
@@ -83,7 +87,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase database = getWritableDatabase();
         Cursor day ;
-        String upcoming = TasksFrag.upcomingPlaceDate();
+        String upcoming = upcomingPlaceDate();
         day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+" WHERE DATE_TO_PLACE_TASK LIKE \'"+upcoming+"\'",null );
         return day;
 

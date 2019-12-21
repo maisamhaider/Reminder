@@ -3,6 +3,7 @@ package com.example.reminder.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -36,24 +37,29 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class InputListFrag extends Fragment {
 
-    RecyclerView recyclerView_today, recyclerView_tomorrow, recyclerView_upcoming, recyclerView_someday,recyclerView;
+    private RecyclerView recyclerView_tomorrow;
+    private RecyclerView recyclerView_upcoming;
+    private RecyclerView recyclerView_someday;
+    private RecyclerView recyclerView;
     BottomNavigationView bottomNavigationView;
 
-    InputAdapter inputAdapter;
+    private InputAdapter inputAdapter;
     MyAdapter myAdapter;
 
     TasksFrag tasksFrag;
-    EditText input_ET;
-    Button input_Done_btn,close_btn;
+    private EditText input_ET;
+    private Button input_Done_btn,close_btn;
 
     String input_from_inputRV;
     String date1 = "today",date2 = "tommorow",date3 = "upcoming",date4 = "someday";
+    EditTextStringListener editTextStringListener;
 
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +77,7 @@ public class InputListFrag extends Fragment {
         mainActivity = (MainActivity)getActivity();
 
         recyclerView =view.findViewById(R.id.inputRemiderRV);
-        recyclerView_today =view.findViewById(R.id.todaytasksRecyclerView);
+        RecyclerView recyclerView_today = view.findViewById( R.id.todaytasksRecyclerView );
         recyclerView_tomorrow =view.findViewById(R.id.TomorrowtasksRecyclerView);
         recyclerView_upcoming =view.findViewById(R.id.upcomingtasksRecyclerView);
         recyclerView_someday =view.findViewById(R.id.somedaytasksRecyclerView);
@@ -92,7 +98,7 @@ public class InputListFrag extends Fragment {
             @Override
             public void run() {
                 input_ET.requestFocus();
-                InputMethodManager imgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imgr = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService(Context.INPUT_METHOD_SERVICE);
                 imgr.showSoftInput(input_ET, InputMethodManager.SHOW_FORCED);
                 input_ET.setImeOptions( EditorInfo.IME_ACTION_DONE );
                 input_ET.setSingleLine();
@@ -110,7 +116,6 @@ public class InputListFrag extends Fragment {
         });
 
 
-        final List<MyModel> myModelList =new ArrayList<>();
         List<InputRemiderModel>inputRemiderModelList= new ArrayList<>();
 
 
@@ -143,7 +148,6 @@ public class InputListFrag extends Fragment {
 
         //on done button data should go to task fragment.
 
-
         //search
         input_ET.addTextChangedListener( new TextWatcher() {
             @Override
@@ -160,7 +164,6 @@ public class InputListFrag extends Fragment {
         close_btn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.showBottonNView();
                 goToTaskFrag();
             }
         } );
@@ -176,6 +179,18 @@ public class InputListFrag extends Fragment {
         return view;
     }
 
+    public void addListenerIF(EditTextStringListener editTextStringListener)
+    {
+        input_from_inputRV = editTextStringListener.toString();
+    }
+    public void sString(String s) {
+        if (editTextStringListener != null)
+        {
+            editTextStringListener.mystring( s );
+        }
+
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -183,7 +198,7 @@ public class InputListFrag extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
     }
@@ -223,7 +238,7 @@ public class InputListFrag extends Fragment {
     }
 
 
-    public void closeKeyboard()
+    private void closeKeyboard()
     {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);

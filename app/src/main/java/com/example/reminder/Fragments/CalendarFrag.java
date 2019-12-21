@@ -2,8 +2,9 @@ package com.example.reminder.Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentProvider;
 import android.content.ContentResolver;
-import android.content.Context;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
@@ -13,17 +14,22 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.CalendarContract;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -33,6 +39,7 @@ import com.example.reminder.R;
 import com.example.reminder.adapter.CalendarAdapter;
 import com.example.reminder.classes.ItemType;
 import com.example.reminder.models.CalendarModel;
+import com.example.reminder.models.EditTextStringListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.kodmap.library.kmrecyclerviewstickyheader.KmHeaderItemDecoration;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
@@ -42,16 +49,20 @@ import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.TimeZone;
 
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
-public class CalendarFrag extends DialogFragment  {
+public class CalendarFrag extends Fragment implements EditTextStringListener {
 
 //    implements DatePickerDialog.OnDateSetListener
     MainActivity mainActivity;
@@ -60,15 +71,20 @@ public class CalendarFrag extends DialogFragment  {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private KmHeaderItemDecoration kmHeaderItemDecoration;
+    boolean isFirstFieldSelected=false;
 
     BoomMenuButton bmb;
     BottomSheetBehavior bottomSheetBehavior;
 
-    TextView startDateTv,endDateTv,startTimeTv,endTimeTv,addRepeatTv,addAlarmTv;
-    EditText setTitleEt,addNotesEd;
+    TextView startDateTv,endDateTv,startTimeTv,endTimeTv,addRepeatTv, addAlarmTv1;
+    EditText eventTitleEt,addNotesEt;
+    Button saveBtn;
     String formattedDate,formattedTime;
+    Long sDate,sTime,eDate,eTime,sDateAndTime,eDateAndTime;
+    Switch allTimeSwitch;
     private boolean isStartDate = false;
     private boolean isStartTime = false;
+    private boolean isAllTime;
     View bottomsheet;
 
     @Override
@@ -89,14 +105,17 @@ public class CalendarFrag extends DialogFragment  {
         adapter = new CalendarAdapter();
         bmb = view.findViewById( R.id.bmb );
 
+        saveBtn = bottomsheet.findViewById( R.id.event_save_btn);
         startDateTv = bottomsheet.findViewById( R.id.s_date_Tv );
         endDateTv = bottomsheet.findViewById( R.id.e_date_Tv );
         startTimeTv =bottomsheet.findViewById( R.id.event_start_time_tv );
         endTimeTv = bottomsheet.findViewById( R.id.event_end_time_tv );
-        addAlarmTv =bottomsheet.findViewById( R.id.add_alarm_tv );
-        addRepeatTv =bottomsheet.findViewById( R.id.add_repeat_tv );
+        addAlarmTv1 =bottomsheet.findViewById( R.id.add_alarm_tv1 );
+        allTimeSwitch = bottomsheet.findViewById( R.id.all_time_sb );
 
-        setTitleEt = bottomsheet.findViewById( R.id.event_title_Et );
+        addRepeatTv =bottomsheet.findViewById( R.id.add_repeat_tv );
+        eventTitleEt = bottomsheet.findViewById( R.id.event_title_Et );
+        addNotesEt = bottomsheet.findViewById( R.id.add_notes_Et );
 
 
 
@@ -179,10 +198,12 @@ public class CalendarFrag extends DialogFragment  {
                             if (index==1){
                             setBottomSheet();
                             bottomSheetBehavior.setState( BottomSheetBehavior.STATE_EXPANDED );
+                            mainActivity.hideBottomNView();
                             }
                             else
                             {
-
+                                InputListFrag inputListFrag = new InputListFrag();
+                                mainActivity.loadmyfrag( inputListFrag );
                             }
                         }
 
@@ -241,6 +262,16 @@ public class CalendarFrag extends DialogFragment  {
 
     }
 
+    @Override
+    public void mystring(String ss) {
+        Toast.makeText( getActivity(), "Selected "+ss, Toast.LENGTH_SHORT ).show();
+        if
+        (isFirstFieldSelected){
+        addAlarmTv1.setText( ss );
+        }else{
+            addRepeatTv.setText( ss );
+        }
+    }
 
 
     public static class GoogleCalendar {
@@ -305,15 +336,20 @@ public class CalendarFrag extends DialogFragment  {
             Calendar c = Calendar.getInstance();
             c.set(year, monthOfYear, dayOfMonth);
 
+
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy");
             formattedDate = sdf.format(c.getTime());
             if (isStartDate)
             {
+
+                sDate = c.getTimeInMillis();
+                Toast.makeText( getContext(), sDate.toString(), Toast.LENGTH_SHORT ).show();
                 startDateTv.setText( formattedDate );
             }
             else
                 if(!isStartDate)
                 {
+                    eDate = c.getTimeInMillis();
                     endDateTv.setText( formattedDate );
                 }
         }
@@ -325,20 +361,25 @@ public class CalendarFrag extends DialogFragment  {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
             Calendar calendar =  Calendar.getInstance();
-            calendar.set( hourOfDay,minute );
-            SimpleDateFormat format = new SimpleDateFormat( "h:mm a" );
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE,minute );
+            SimpleDateFormat sformat = new SimpleDateFormat( "h:mm a" );
 
-            formattedTime = format.format( calendar.getTime() );
 
+            formattedTime = sformat.format( calendar.getTime() );
+          // Log.d("FRagmentcall","time => " +dateFormat.format(calendar.getTime()+""));
 
             if (isStartTime) {
+                sTime = calendar.getTimeInMillis();
                 startTimeTv.setText(formattedTime);
             } else if (!isStartTime)
             {
+                eTime= calendar.getTimeInMillis();
                 endTimeTv.setText( formattedTime );
             }
         }
     };
+
 
     // set event's Title,start date,end date,start time, end Time, and other event_bottom_sheet views
     public void eventAddingFun()
@@ -375,7 +416,7 @@ public class CalendarFrag extends DialogFragment  {
             @Override
             public void onClick(View v) {
                 isStartTime = true;
-                TimePickerDialog dpd = new TimePickerDialog(getContext(), (timeSetListener), hour, minutes,false);
+                TimePickerDialog dpd = new TimePickerDialog(getActivity(), (timeSetListener), hour, minutes,true);
                 dpd.show();
 
             }
@@ -385,25 +426,86 @@ public class CalendarFrag extends DialogFragment  {
             @Override
             public void onClick(View v) {
                 isStartTime = false;
-                TimePickerDialog dpd = new TimePickerDialog(getContext(), (timeSetListener), hour, minutes,false);
+                TimePickerDialog dpd = new TimePickerDialog(getActivity(), (timeSetListener), hour, minutes,true);
                 dpd.show();
 
             }
         } );
 
-        addAlarmTv.setOnClickListener( new View.OnClickListener() {
+        allTimeSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    isAllTime = true;
+                }
+                else
+                    isAllTime =false;
+            }
+        } );
+
+        addAlarmTv1.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showBShAlarmRcDialog();
+                isFirstFieldSelected = true;
             }
         } );
+
+
         addRepeatTv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showBShRepeatRvDialog();
+                isFirstFieldSelected = false;
+            }
+        } );
+        saveBtn.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onEventSaveClick();
+                mainActivity.showBottomNView();
             }
         } );
 
+    }
+
+
+    public void onEventSaveClick() {
+
+        String evntTitle, alarm, repeat, notes;
+        long startDate, endDate, startTime, endTime;
+        boolean allTime;
+        TimeZone timeZone = TimeZone.getDefault();
+
+        if (eventTitleEt.equals( "" )) {
+            evntTitle = "Untitled";
+        }
+        evntTitle = eventTitleEt.getText().toString();
+        startDate = sDate;
+        endDate = eDate;
+        startTime = sTime;
+        endTime = eTime;
+         this.isAllTime = isAllTime;
+        alarm = addAlarmTv1.getText().toString();
+        repeat = addRepeatTv.getText().toString();
+        if (addNotesEt.equals( "" ))
+        {
+            addNotesEt.setText( "nothing in notes ");
+        }
+        notes = addNotesEt.getText().toString();
+
+        ContentResolver contentResolver = Objects.requireNonNull( getContext() ).getContentResolver();
+        ContentValues values = new ContentValues(  );
+        values.put( CalendarContract.Events.CALENDAR_ID,1 );
+        values.put( CalendarContract.Events.TITLE,evntTitle );
+        values.put( CalendarContract.Events.DTSTART,startDate );
+        values.put( CalendarContract.Events.DTEND,endDate);
+        values.put( CalendarContract.Events.EVENT_TIMEZONE,timeZone.getID() );
+        values.put( CalendarContract.Events.DESCRIPTION,notes);
+        values.put( CalendarContract.Events.ALL_DAY,this.isAllTime );
+
+         contentResolver.insert( CalendarContract.Events.CONTENT_URI,values );
     }
 
     public void showBShAlarmRcDialog()
@@ -413,6 +515,7 @@ public class CalendarFrag extends DialogFragment  {
         ft.addToBackStack(null);
         dialogFragment.show(ft, "dialog");
 
+
     }
     public void showBShRepeatRvDialog()
     {
@@ -421,18 +524,22 @@ public class CalendarFrag extends DialogFragment  {
         ft.addToBackStack(null);
         dialogFragment.show(ft, "dialog");
 
-    }
-
-
-
-
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
 
     }
+
+
+
+
+
+
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof EditTextStringListener){
+//            mEditTextStringListener = (EditTextStringListener) context;
+//        }
+//
+//    }
 
     @Override
     public void onDetach() {

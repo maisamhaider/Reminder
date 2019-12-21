@@ -15,6 +15,7 @@
                 android:id="@+id/search_close_btn"
                 android:text="x"
                 android:layout_width="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_height="wrap_content"/>
 
         <EditText
@@ -27,6 +28,7 @@
             android:id="@+id/donebtn"
             android:text="done"
             android:layout_width="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_height="wrap_content"/>
 
 
@@ -49,7 +51,8 @@
             android:id="@+id/afterlistfragContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.example.reminder.Fragments.mainfrag"/>
+            android:name="com.example.reminder.Fragments.mainfrag"
+            tools:layout="@layout/fragment_mainfrag" />
 
 
     </LinearLayout>

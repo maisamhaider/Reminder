@@ -62,7 +62,6 @@ public class InputAdapter extends RecyclerView.Adapter<InputAdapter.InputHolder>
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-                //  String text1=holder.setInpputET(text);
                 etvString(text);
 
             }
@@ -115,9 +114,9 @@ public class InputAdapter extends RecyclerView.Adapter<InputAdapter.InputHolder>
     }
 
     void etvString(String string){
-        for(EditTextStringListener editTextStringListener:stringListenerslist){
-            editTextStringListener.mystring(string);
-        }
+            for(EditTextStringListener editTextStringListener:stringListenerslist){
+                editTextStringListener.mystring(string);
+            }
     }
 
     @Override

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.CalendarFrag">
 
@@ -24,7 +25,18 @@
 
     <com.kodmap.library.kmrecyclerviewstickyheader.KmRecyclerView
         android:id="@+id/recyclerView"
+        android:layout_marginTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp" />
+      />
+
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="60dp" />
+
+    <include layout="@layout/event_bottom_sheet"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
