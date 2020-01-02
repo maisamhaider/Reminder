@@ -31,7 +31,6 @@ import android.widget.Toast;
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.InputAdapter;
-import com.example.reminder.adapter.MyAdapter;
 import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
@@ -55,7 +54,6 @@ public class InputListFrag extends Fragment {
     DataBaseHelper dataBaseHelper;
 
     private InputAdapter inputAdapter;
-    MyAdapter myAdapter;
 
     AllTasksFrag allTasksFrag;
     private EditText input_ET;

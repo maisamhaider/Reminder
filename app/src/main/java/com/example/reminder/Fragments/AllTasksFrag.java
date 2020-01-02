@@ -29,14 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
-import com.example.reminder.adapter.MyAdapter2;
+import com.example.reminder.adapter.MyAllTasksAdapter;
 import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.R;
-import com.example.reminder.adapter.MyAdapter;
-import com.example.reminder.models.MyModel;
-import com.example.reminder.models.MyModel2;
+import com.example.reminder.models.MyAllTasksModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,33 +47,24 @@ import static com.example.reminder.classes.MyTimeSettingClass.nextWeekPlaceDate;
 
 
 public class AllTasksFrag extends Fragment {
-    MainActivity mainActivity ;
+    private MainActivity mainActivity ;
 
-    LinearLayout linearLayoutTags;
-    RelativeLayout relativeLayoutAddEt;
+    private LinearLayout linearLayoutTags;
+    private RelativeLayout relativeLayoutAddEt;
 
-    RecyclerView recyclerView_today, recyclerView_tomorrow, recyclerView_upcoming, recyclerView_someday;
-
-
-    EditText add_task_edittext, input_textView;
-    Button addtodayBtn, addtomorrowbtn, addupcomingbtn, addsomedaybtn, mainAddbtn, addUpbtn;
-    String text = "", reminder_date = "";
+    private RecyclerView recyclerView_today, recyclerView_tomorrow, recyclerView_upcoming, recyclerView_someday;
 
 
-    RadioGroup radioGroup;
-    RadioButton todaytag, tomorrowtag, upcomingtag, somedaytag;
+    private EditText add_task_edittext, input_textView;
+    private Button addtodayBtn, addtomorrowbtn, addupcomingbtn, addsomedaybtn, mainAddbtn, addUpbtn;
+    private String text = "", reminder_date = "";
 
-    ArrayList<MyModel> todayList;
-    ArrayList<MyModel> tomorrowList;
-    ArrayList<MyModel> upcomingList;
-    ArrayList<MyModel> somedayList;
 
-    MyAdapter todayAdapter;
-    MyAdapter tomorrowAdapter;
-    MyAdapter upcomingAdapter;
-    MyAdapter somedayAdapter;
+    private RadioGroup radioGroup;
+    private RadioButton todaytag, tomorrowtag, upcomingtag, somedaytag;
 
-    DataBaseHelper dataBaseHelper;
+
+    private DataBaseHelper dataBaseHelper;
 
 
     @Override
@@ -93,28 +82,11 @@ public class AllTasksFrag extends Fragment {
         View view = inflater.inflate( R.layout.fragment_tasks, container, false );
         mainActivity = (MainActivity) getActivity();
 
-
-
-
-        todayList = new ArrayList<>();
-        tomorrowList = new ArrayList<>();
-        upcomingList = new ArrayList<>();
-        somedayList = new ArrayList<>();
-
-        todayAdapter = new MyAdapter( getContext(), todayList );
-        tomorrowAdapter = new MyAdapter( getContext(), tomorrowList );
-        upcomingAdapter = new MyAdapter( getContext(), upcomingList );
-        somedayAdapter = new MyAdapter( getContext(), somedayList );
-
         recyclerView_today = view.findViewById( R.id.todaytasksRecyclerView );
         recyclerView_tomorrow = view.findViewById( R.id.TomorrowtasksRecyclerView );
         recyclerView_upcoming = view.findViewById( R.id.upcomingtasksRecyclerView );
         recyclerView_someday = view.findViewById( R.id.somedaytasksRecyclerView );
 
-        recyclerView_today.setAdapter( todayAdapter );
-        recyclerView_tomorrow.setAdapter( tomorrowAdapter );
-        recyclerView_upcoming.setAdapter( upcomingAdapter );
-        recyclerView_someday.setAdapter( somedayAdapter );
 
         todaytag = view.findViewById( R.id.todaytagRb );
         tomorrowtag = view.findViewById( R.id.tomorrowtagRb );
@@ -178,6 +150,7 @@ public class AllTasksFrag extends Fragment {
         addUpbtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.showBottomNView();
                 setDataInRecyclerView();
 
             }
@@ -342,32 +315,10 @@ public class AllTasksFrag extends Fragment {
         else {
             Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
         }
-
-        Toast.makeText( getContext(), todayPlaceDate(), Toast.LENGTH_SHORT ).show();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
-        linearLayoutManager = new LinearLayoutManager( getContext() ) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recyclerView_today.setLayoutManager( linearLayoutManager );
-
-        if (text.matches( "" )) {
-            Toast.makeText( getActivity(), "empty field", Toast.LENGTH_SHORT ).show();
-        } else {
-            MyModel myModel = new MyModel();
-            myModel.setDate( reminder_date );
-            myModel.setNotes( text );
-            todayList.add( myModel );
-            todayAdapter.notifyData( todayList );
-            add_task_edittext.setText( "" );
-        }
+        mainActivity.setDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
     }
 
     public void dynamicallyAddInTomorrow() {
-
 
         text = add_task_edittext.getText().toString();
         reminder_date = MyTimeSettingClass.getTomorrowMorning();
@@ -380,27 +331,8 @@ public class AllTasksFrag extends Fragment {
         else {
             Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
         }
+        mainActivity.setDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
-        linearLayoutManager = new LinearLayoutManager( getContext() ) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recyclerView_tomorrow.setLayoutManager( linearLayoutManager );
-
-        if (text.matches( "" )) {
-            Toast.makeText( getActivity(), "empty field", Toast.LENGTH_SHORT ).show();
-        } else {
-            MyModel myModel = new MyModel();
-            myModel.setDate( reminder_date );
-            myModel.setNotes( text );
-            tomorrowList.add( myModel );
-            tomorrowAdapter.notifyData( tomorrowList );
-            add_task_edittext.setText( "" );
-        }
     }
 
     public void dynamicallyAddInUpcoming() {
@@ -416,26 +348,8 @@ public class AllTasksFrag extends Fragment {
         else {
             Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
         }
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
-        linearLayoutManager = new LinearLayoutManager( getContext() ) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recyclerView_upcoming.setLayoutManager( linearLayoutManager );
+        mainActivity.setDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
 
-        if (text.matches( "" )) {
-            Toast.makeText( getActivity(), "empty field", Toast.LENGTH_SHORT ).show();
-        } else {
-            MyModel myModel = new MyModel();
-            myModel.setDate( reminder_date );
-            myModel.setNotes( text );
-            upcomingList.add( myModel );
-            upcomingAdapter.notifyData( upcomingList );
-            add_task_edittext.setText( "" );
-        }
     }
 
     public void dynamicallyAddInSomeday() {
@@ -444,33 +358,13 @@ public class AllTasksFrag extends Fragment {
         text = add_task_edittext.getText().toString();
         reminder_date = "";
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
-        linearLayoutManager = new LinearLayoutManager( getContext() ) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recyclerView_someday.setLayoutManager( linearLayoutManager );
-
-        if (text.matches( "" )) {
-            Toast.makeText( getActivity(), "empty field", Toast.LENGTH_SHORT ).show();
-        } else {
-            MyModel myModel = new MyModel();
-            myModel.setDate( reminder_date );
-            myModel.setNotes( text );
-            somedayList.add( myModel );
-            somedayAdapter.notifyData( somedayList );
-            add_task_edittext.setText( "" );
-        }
     }
 
 
 
     public void readTodayfromDb() {
-        MyAdapter2 myAdapter2;
-        List<MyModel2> model2List = new ArrayList<>();
+        MyAllTasksAdapter myAllTasksAdapter;
+        List<MyAllTasksModel> model2List = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         linearLayoutManager = new LinearLayoutManager( getContext() ) {
@@ -487,17 +381,17 @@ public class AllTasksFrag extends Fragment {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            model2List.add( new MyModel2(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            model2List.add( new MyAllTasksModel(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
-        myAdapter2 = new MyAdapter2( getContext(), model2List,dataBaseHelper );
-        recyclerView_today.setAdapter( myAdapter2 );
-        myAdapter2.notifyDataSetChanged();
+        myAllTasksAdapter = new MyAllTasksAdapter( getContext(), model2List,dataBaseHelper );
+        recyclerView_today.setAdapter( myAllTasksAdapter );
+        myAllTasksAdapter.notifyDataSetChanged();
 
     }
 
     public void readTomorrowfromDb() {
-        MyAdapter2 myAdapter2;
-        List<MyModel2> model2List = new ArrayList<>();
+        MyAllTasksAdapter myAllTasksAdapter;
+        List<MyAllTasksModel> model2List = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         linearLayoutManager = new LinearLayoutManager( getContext() ) {
@@ -514,18 +408,18 @@ public class AllTasksFrag extends Fragment {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            model2List.add( new MyModel2(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            model2List.add( new MyAllTasksModel(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
-        myAdapter2 = new MyAdapter2( getContext(), model2List,dataBaseHelper );
-        recyclerView_tomorrow.setAdapter( myAdapter2 );
-        myAdapter2.notifyDataSetChanged();
+        myAllTasksAdapter = new MyAllTasksAdapter( getContext(), model2List,dataBaseHelper );
+        recyclerView_tomorrow.setAdapter( myAllTasksAdapter );
+        myAllTasksAdapter.notifyDataSetChanged();
 
 
     }
 
     public void readUpcomingfromDb() {
-        MyAdapter2 myAdapter2;
-        List<MyModel2> model2List = new ArrayList<>();
+        MyAllTasksAdapter myAllTasksAdapter;
+        List<MyAllTasksModel> model2List = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         linearLayoutManager = new LinearLayoutManager( getContext() ) {
@@ -542,12 +436,12 @@ public class AllTasksFrag extends Fragment {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            model2List.add( new MyModel2(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            model2List.add( new MyAllTasksModel(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
 
-        myAdapter2 = new MyAdapter2( getContext(), model2List,dataBaseHelper );
-        recyclerView_upcoming.setAdapter( myAdapter2 );
-        myAdapter2.notifyDataSetChanged();
+        myAllTasksAdapter = new MyAllTasksAdapter( getContext(), model2List,dataBaseHelper );
+        recyclerView_upcoming.setAdapter( myAllTasksAdapter );
+        myAllTasksAdapter.notifyDataSetChanged();
 
     }
 

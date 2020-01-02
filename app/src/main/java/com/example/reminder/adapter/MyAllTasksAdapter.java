@@ -1,7 +1,6 @@
 package com.example.reminder.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +17,18 @@ import com.example.reminder.R;
 import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.MyItemClickListener;
-import com.example.reminder.models.MyModel;
-import com.example.reminder.models.MyModel2;
+import com.example.reminder.models.MyAllTasksModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MyAdapter2 extends RecyclerView.Adapter<MyAdapter2.MyHolder> {
+public class MyAllTasksAdapter extends RecyclerView.Adapter<MyAllTasksAdapter.MyHolder> {
 
     private final Context context;
-    public static List<MyModel2> modelListForDeletion;
-    private List<MyModel2> myModelList;
+    public static List<MyAllTasksModel> modelListForDeletion;
+    private List<MyAllTasksModel> myModelList;
     DataBaseHelper dataBaseHelper;
 
-    public MyAdapter2(Context context, List<MyModel2> myModelList,DataBaseHelper dataBaseHelper) {
+    public MyAllTasksAdapter(Context context, List<MyAllTasksModel> myModelList, DataBaseHelper dataBaseHelper) {
         this.modelListForDeletion = myModelList;
         this.context = context;
         this.myModelList = myModelList;
