@@ -1,24 +1,21 @@
 package com.example.reminder.Fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.reminder.R;
 import com.example.reminder.adapter.BottomShAlarmRVFragDialogAdapter;
 import com.example.reminder.models.BottomShAlarmRVFragDialogModel;
-import com.example.reminder.models.EditTextStringListener;
+import com.example.reminder.interfaces.EditTextStringListener;
 
 import java.util.ArrayList;
 
@@ -27,6 +24,7 @@ public class BShRepeatFragDiaglog extends DialogFragment {
     RecyclerView recyclerView;
     BottomShAlarmRVFragDialogAdapter adapter;
     private EditTextStringListener mEditTextStringListener;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

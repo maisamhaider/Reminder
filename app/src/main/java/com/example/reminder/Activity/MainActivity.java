@@ -15,9 +15,9 @@ import android.widget.ScrollView;
 
 import com.example.reminder.Fragments.CalendarFrag;
 import com.example.reminder.Fragments.SettingsFrag;
-import com.example.reminder.Fragments.TasksFrag;
+import com.example.reminder.Fragments.AllTasksFrag;
 import com.example.reminder.R;
-import com.example.reminder.models.EditTextStringListener;
+import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
@@ -52,9 +52,7 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
 
         //function calls
         bottomNavBar();
-
-        TasksFrag tasksFrag = new TasksFrag();
-        loadmyfrag( tasksFrag );
+        setDefaultBNBItem();
 
     }
 
@@ -67,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
                 switch (menuItem.getItemId())
                 {
                     case R.id.tasks:
-                        TasksFrag tasksFrag = new TasksFrag();
-                        loadmyfrag( tasksFrag );
+                        AllTasksFrag allTasksFrag = new AllTasksFrag();
+                        loadmyfrag( allTasksFrag );
                         break;
                     case R.id.calendar:
                         CalendarFrag calendarFrag = new CalendarFrag();
@@ -86,6 +84,11 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
         } );
     }
 
+    public void setDefaultBNBItem()
+    {
+        bottomNavigationView.setSelectedItemId( R.id.tasks );
+
+    }
 
 
 

@@ -1,6 +1,5 @@
 package com.example.reminder.database;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,15 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.example.reminder.Activity.MainActivity;
-import com.example.reminder.Fragments.TasksFrag;
-
-import java.util.Calendar;
-import java.util.Date;
-
 import static com.example.reminder.classes.MyTimeSettingClass.todayPlaceDate;
 import static com.example.reminder.classes.MyTimeSettingClass.tomorrowPlaceDate;
-import static com.example.reminder.classes.MyTimeSettingClass.upcomingPlaceDate;
+import static com.example.reminder.classes.MyTimeSettingClass.nextWeekPlaceDate;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -28,6 +21,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String reminderText = "REMINDER_TEXT";
     private static final String reminder_date = "REMINDER_DATE";
     private static final String date_to_place_task = "DATE_TO_PLACE_TASK";
+    int id = 0;
+
 
 
     public DataBaseHelper(@Nullable Context context) {
@@ -51,11 +46,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues(  );
-
+        contentValues.put(ID, id);
         contentValues.put( reminderText,text );
         contentValues.put( this.reminder_date,reminder_date );
         contentValues.put( this.date_to_place_task,date_to_place_task );
-
+        id++;
 
         long result = database.insert( TABLE_NAME, null,contentValues );
 
@@ -87,10 +82,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase database = getWritableDatabase();
         Cursor day ;
-        String upcoming = upcomingPlaceDate();
+        String upcoming = nextWeekPlaceDate();
         day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+" WHERE DATE_TO_PLACE_TASK LIKE \'"+upcoming+"\'",null );
         return day;
 
     }
+    public Cursor getSomeday()
+    {
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor day;
+        String someday = "someday";
+        day = database.rawQuery( "SELECT * FROM "+TABLE_NAME+" WHERE DATE_TO_PLACE_TASK LIKE \'"+someday+"\'",null);
+        return day;
+    }
+
+    public void deleteOneItem(String position)
+    {
+        SQLiteDatabase database = this.getWritableDatabase();
+        int a = database.delete( TABLE_NAME, "ID=?", new String[]{String.valueOf(position)} );
+    }
+
 
 }

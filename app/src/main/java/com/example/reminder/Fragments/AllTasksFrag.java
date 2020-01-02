@@ -5,16 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Layout;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,31 +30,25 @@ import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.adapter.MyAdapter2;
+import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.R;
 import com.example.reminder.adapter.MyAdapter;
-import com.example.reminder.models.EditTextStringListener;
 import com.example.reminder.models.MyModel;
 import com.example.reminder.models.MyModel2;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.example.reminder.classes.MyTimeSettingClass.getToday;
-import static com.example.reminder.classes.MyTimeSettingClass.getTomorrow;
-import static com.example.reminder.classes.MyTimeSettingClass.getUpcoming;
+import static com.example.reminder.classes.MyTimeSettingClass.getNextWeek;
 import static com.example.reminder.classes.MyTimeSettingClass.todayPlaceDate;
 import static com.example.reminder.classes.MyTimeSettingClass.tomorrowPlaceDate;
-import static com.example.reminder.classes.MyTimeSettingClass.upcomingPlaceDate;
+import static com.example.reminder.classes.MyTimeSettingClass.nextWeekPlaceDate;
 
 
-public class TasksFrag extends Fragment implements EditTextStringListener {
+public class AllTasksFrag extends Fragment {
     MainActivity mainActivity ;
 
     LinearLayout linearLayoutTags;
@@ -95,6 +85,7 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
@@ -197,9 +188,10 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    linearLayoutTags.setVisibility( View.GONE );
-                    addUpbtn.setVisibility( View.GONE );
-                    mainAddbtn.setVisibility( View.VISIBLE );
+
+                    HideAndShowViewClass.hideView( linearLayoutTags );
+                    HideAndShowViewClass.hideView( addUpbtn );
+                    HideAndShowViewClass.showView(mainAddbtn);
                     mainActivity.showBottomNView();
                     setDataInRecyclerView();
                 }
@@ -222,20 +214,22 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
         getView().setOnKeyListener( new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getKeyCode() == MotionEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    if (showlinearLayoutTags()) {
+                if (event.getKeyCode() == MotionEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
+
                         hidelinearLayoutTags();
                         addUpbtn.setVisibility( View.GONE );
                         mainAddbtn.setVisibility( View.VISIBLE );
-                    } else
-                        getActivity().finish();
-                    System.exit( 0 );
+//                        HideAndShowViewClass.hideView( addUpbtn );
+//                        HideAndShowViewClass.showView( mainAddbtn );
+                        mainActivity.showBottomNView();
 
                 }
                 return false;
             }
         } );
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -303,7 +297,7 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
 
     public boolean hidelinearLayoutTags() {
         linearLayoutTags.setVisibility( View.GONE );
-        return true;
+        return false;
 
     }
 
@@ -321,7 +315,7 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
 
 
 
-    // checking which tag is selected.then task to that tag
+    // checking which tag is selected.then add task to that tag
     public void setDataInRecyclerView() {
 
         if (todaytag.isChecked()) {
@@ -340,7 +334,14 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
     private void dynamicallyAddInToday() {
         text = add_task_edittext.getText().toString();
         reminder_date = getToday();
-        dataBaseHelper.insert( text, reminder_date, todayPlaceDate() );
+       boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate() );
+        if (isInsert)
+        {
+            Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+        }
+        else {
+            Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+        }
 
         Toast.makeText( getContext(), todayPlaceDate(), Toast.LENGTH_SHORT ).show();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
@@ -369,9 +370,16 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
 
 
         text = add_task_edittext.getText().toString();
-        reminder_date = getTomorrow();
+        reminder_date = MyTimeSettingClass.getTomorrowMorning();
         String tomorrow = tomorrowPlaceDate();
-        dataBaseHelper.insert( text, reminder_date, tomorrow );
+       boolean isInsert =  dataBaseHelper.insert( text, reminder_date, tomorrow );
+        if (isInsert)
+        {
+            Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+        }
+        else {
+            Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
@@ -398,10 +406,16 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
     public void dynamicallyAddInUpcoming() {
 
         text = add_task_edittext.getText().toString();
-        reminder_date = getUpcoming();
-        String upcoming = upcomingPlaceDate();
-        dataBaseHelper.insert( text, reminder_date, upcoming );
-
+        reminder_date = MyTimeSettingClass.getNextWeek();
+        String upcoming = nextWeekPlaceDate();
+         boolean isInsert =  dataBaseHelper.insert( text, reminder_date, upcoming );
+        if (isInsert)
+        {
+            Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+        }
+        else {
+            Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+        }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         linearLayoutManager = new LinearLayoutManager( getContext() ) {
@@ -428,7 +442,7 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
 
 
         text = add_task_edittext.getText().toString();
-        reminder_date = "5,12,2019";
+        reminder_date = "";
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
@@ -473,9 +487,9 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            model2List.add( new MyModel2( cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            model2List.add( new MyModel2(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
-        myAdapter2 = new MyAdapter2( getContext(), model2List );
+        myAdapter2 = new MyAdapter2( getContext(), model2List,dataBaseHelper );
         recyclerView_today.setAdapter( myAdapter2 );
         myAdapter2.notifyDataSetChanged();
 
@@ -500,9 +514,9 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            model2List.add( new MyModel2( cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            model2List.add( new MyModel2(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
-        myAdapter2 = new MyAdapter2( getContext(), model2List );
+        myAdapter2 = new MyAdapter2( getContext(), model2List,dataBaseHelper );
         recyclerView_tomorrow.setAdapter( myAdapter2 );
         myAdapter2.notifyDataSetChanged();
 
@@ -528,36 +542,13 @@ public class TasksFrag extends Fragment implements EditTextStringListener {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            model2List.add( new MyModel2( cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            model2List.add( new MyModel2(cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
-        myAdapter2 = new MyAdapter2( getContext(), model2List );
+
+        myAdapter2 = new MyAdapter2( getContext(), model2List,dataBaseHelper );
         recyclerView_upcoming.setAdapter( myAdapter2 );
         myAdapter2.notifyDataSetChanged();
 
     }
 
-
-    @Override
-    public void mystring(String ss)
-    {
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
-        linearLayoutManager = new LinearLayoutManager( getContext() ) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recyclerView_today.setLayoutManager( linearLayoutManager );
-
-            MyModel myModel = new MyModel();
-            myModel.setDate( MyTimeSettingClass.todayPlaceDate() );
-            myModel.setNotes( ss );
-            todayList.add( myModel );
-            todayAdapter.notifyData( todayList );
-            add_task_edittext.setText( "" );
-
-
-    }
 }

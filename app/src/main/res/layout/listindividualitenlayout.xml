@@ -28,9 +28,9 @@
         android:layout_height="15dp"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="14dp"
+        android:layout_marginEnd="11dp"
         android:layout_marginBottom="23dp"
-        android:layout_toEndOf="@+id/noteTextView"
+        android:layout_toStartOf="@+id/subtasksImageView"
         android:gravity="center"
         android:textSize="8dp" />
 
@@ -38,9 +38,11 @@
         android:id="@+id/subtasksImageView"
         android:layout_width="15dp"
         android:layout_height="15dp"
+        android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="76dp"
-        android:layout_toEndOf="@+id/noteTextView"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@+id/AttachmentImageView"
         android:gravity="center"
         android:hint="check"
         android:src="@mipmap/subtasks_foreground"
@@ -51,12 +53,21 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_centerVertical="true"
-        android:layout_marginStart="14dp"
-        android:layout_toEndOf="@+id/subtasksImageView"
+        android:layout_marginEnd="-17dp"
+        android:layout_toStartOf="@+id/deleteSingletaskIv"
         android:gravity="center"
         android:hint="check"
         android:src="@drawable/ic_attach_file_black_24dp"
         android:textSize="8dp" />
+
+    <ImageView
+        android:id="@+id/deleteSingletaskIv"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/clear_foreground" />
 
 
 </RelativeLayout>

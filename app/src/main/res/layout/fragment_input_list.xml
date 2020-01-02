@@ -7,54 +7,274 @@
 
     <LinearLayout
         android:id="@+id/layout1"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/search_close_btn"
-                android:text="x"
-                android:layout_width="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/search_close_btn"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:text="x" />
 
         <EditText
             android:id="@+id/searchET"
             android:layout_width="225dp"
-            android:hint="i want to"
+            android:layout_height="match_parent"
             android:gravity="start|center"
-            android:layout_height="match_parent" />
+            android:hint="i want to" />
+
         <Button
             android:id="@+id/donebtn"
-            android:text="done"
             android:layout_width="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:text="done" />
 
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout1"
+        android:layout_alignParentStart="true"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/inputRemiderRV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout
-
+        android:id="@+id/remindLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/layout1"
+        android:layout_height="50dp"
+        android:layout_below="@+id/layout2"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/inputRemiderRV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="0dp"
+        android:gravity="start|center"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal">
 
-        <fragment
-            android:id="@+id/afterlistfragContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.example.reminder.Fragments.mainfrag"
-            tools:layout="@layout/fragment_mainfrag" />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Remind"
+            android:textSize="20sp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dayslayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/remindLayout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/today_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/arrow_down_foreground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/today" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tomorrow_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/arrow_forward_foreground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/tomorrow" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/nextweek_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/nextweek_forward_foreground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Next Week" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/custom_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/custom_foreground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Custom" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/time_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/remindLayout"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/nine_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/ninenumber_foreground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="morning" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/three_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/threenumber_foreground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="afternoon" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/six_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/sixnumber_foreground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Next Week" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/custom_time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/custom_foreground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Custom" />
+
+        </LinearLayout>
+    </LinearLayout>
+
 
 </RelativeLayout>

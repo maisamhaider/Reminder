@@ -15,7 +15,7 @@ import com.example.reminder.Fragments.BShRepeatFragDiaglog;
 import com.example.reminder.Fragments.BottomShAlarmRvFragDialog;
 import com.example.reminder.R;
 import com.example.reminder.models.BottomShAlarmRVFragDialogModel;
-import com.example.reminder.models.EditTextStringListener;
+import com.example.reminder.interfaces.EditTextStringListener;
 
 import java.util.ArrayList;
 import java.util.List;

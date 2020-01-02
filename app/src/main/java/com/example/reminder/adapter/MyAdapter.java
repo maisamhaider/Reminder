@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.R;
-import com.example.reminder.models.EditTextStringListener;
+import com.example.reminder.interfaces.MyItemClickListener;
 import com.example.reminder.models.MyModel;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
     {
         TextView notes_TextView,date_textView;
         RelativeLayout mainLayout;
+
         public MyHolder(@NonNull final View itemView) {
             super(itemView);
 
@@ -82,6 +84,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
             });
 
         }
+
 
 
 

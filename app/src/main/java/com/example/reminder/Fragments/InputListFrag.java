@@ -1,13 +1,13 @@
 package com.example.reminder.Fragments;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,50 +21,63 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.SearchView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toolbar;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.InputAdapter;
 import com.example.reminder.adapter.MyAdapter;
-import com.example.reminder.models.EditTextStringListener;
+import com.example.reminder.classes.HideAndShowViewClass;
+import com.example.reminder.classes.MyTimeSettingClass;
+import com.example.reminder.database.DataBaseHelper;
+import com.example.reminder.interfaces.EditTextStringListener;
 import com.example.reminder.models.InputRemiderModel;
-import com.example.reminder.models.MyModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
 
 public class InputListFrag extends Fragment {
 
-    private RecyclerView recyclerView_tomorrow;
-    private RecyclerView recyclerView_upcoming;
-    private RecyclerView recyclerView_someday;
+
+    private static final int REQUEST_PERMISSION =1 ;
     private RecyclerView recyclerView;
     BottomNavigationView bottomNavigationView;
+
+    DataBaseHelper dataBaseHelper;
 
     private InputAdapter inputAdapter;
     MyAdapter myAdapter;
 
-    TasksFrag tasksFrag;
+    AllTasksFrag allTasksFrag;
     private EditText input_ET;
-    private Button input_Done_btn,close_btn;
+    private Button doneBtn, close_btn;
 
-    String input_from_inputRV;
-    String date1 = "today",date2 = "tommorow",date3 = "upcoming",date4 = "someday";
+    String input_from_inputRV,dateToPlaceTask = "",alamTime="";
     EditTextStringListener editTextStringListener;
 
     private MainActivity mainActivity;
+    private MyTimeSettingClass myTimeSettingClass;
+
+    LinearLayout remindTvLo,
+            dayslLo, todayLo, tomorrowLo, nextweekLo, daycustomLo,
+            timeLo, nineLo, threeLo, sixLo, timeCustomLo;
+    boolean today=false,tomorrow=false,nextWeek=false;
+
+    Calendar c = Calendar.getInstance();
+    int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        super.onCreate( savedInstanceState );
 
 
     }
@@ -73,75 +86,120 @@ public class InputListFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =inflater.inflate(R.layout.fragment_input_list, container, false);
-        mainActivity = (MainActivity)getActivity();
-
-        recyclerView =view.findViewById(R.id.inputRemiderRV);
-        RecyclerView recyclerView_today = view.findViewById( R.id.todaytasksRecyclerView );
-        recyclerView_tomorrow =view.findViewById(R.id.TomorrowtasksRecyclerView);
-        recyclerView_upcoming =view.findViewById(R.id.upcomingtasksRecyclerView);
-        recyclerView_someday =view.findViewById(R.id.somedaytasksRecyclerView);
-
-
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        input_ET =view.findViewById( R.id.searchET );
-        close_btn=view.findViewById( R.id.search_close_btn );
+        View view = inflater.inflate( R.layout.fragment_input_list, container, false );
+        mainActivity = (MainActivity) getActivity();
+        myTimeSettingClass = new MyTimeSettingClass();
+        dataBaseHelper = new DataBaseHelper( getContext() );
 
 
 
+        recyclerView = view.findViewById( R.id.inputRemiderRV );
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
+        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
+        recyclerView.setLayoutManager( linearLayoutManager );
+
+        input_ET  = view.findViewById( R.id.searchET );
+        close_btn = view.findViewById( R.id.search_close_btn );
+        doneBtn   = view.findViewById( R.id.donebtn );
+
+        remindTvLo  = view.findViewById( R.id.remindLayout );
+        dayslLo     = view.findViewById( R.id.dayslayout );
+        todayLo     = view.findViewById( R.id.today_layout );
+        tomorrowLo  = view.findViewById( R.id.tomorrow_layout );
+        nextweekLo  = view.findViewById( R.id.nextweek_layout );
+        daycustomLo = view.findViewById( R.id.custom_layout );
+
+        timeLo  = view.findViewById( R.id.time_layout );
+        nineLo  = view.findViewById( R.id.nine_layout );
+        threeLo = view.findViewById( R.id.three_layout );
+        sixLo   = view.findViewById( R.id.six_layout );
+
+        mainActivity.hideBottomNView();
+        remindTvLo.setVisibility( View.GONE );
+        dayslLo.setVisibility( View.GONE );
+        timeLo.setVisibility( View.GONE );
 
 
-        input_ET.post(new Runnable() {
+        if (timeOfDay>0 && timeOfDay>9) {
+            nineLo.setClickable( true );
+        }
+        else
+        {
+            nineLo.setClickable( false );
+        }
+        if (timeOfDay>0 && timeOfDay >15)
+        {
+            threeLo.setClickable( true );
+        }
+        else
+        {threeLo.setClickable( false );
+        }
+        if (timeOfDay>0 && timeOfDay>18)
+        {
+            sixLo.setClickable( true );
+        }
+        else
+        {
+            sixLo.setClickable( false );
+        }
+
+        setDateTimeOfTask();
+
+        input_ET.post( new Runnable() {
             @Override
             public void run() {
                 input_ET.requestFocus();
-                InputMethodManager imgr = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService(Context.INPUT_METHOD_SERVICE);
-                imgr.showSoftInput(input_ET, InputMethodManager.SHOW_FORCED);
+                InputMethodManager imgr = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
+                imgr.showSoftInput( input_ET, InputMethodManager.SHOW_FORCED );
                 input_ET.setImeOptions( EditorInfo.IME_ACTION_DONE );
                 input_ET.setSingleLine();
 
+
             }
-        });
+        } );
         input_ET.setOnEditorActionListener( new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENDCALL) || (actionId == EditorInfo.IME_ACTION_DONE))
-                    goToTaskFrag();
+
+                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENDCALL) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    InputMethodManager imgr = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
+                    imgr.hideSoftInputFromWindow(input_ET.getWindowToken(), 0);
+                    onDoneButtonClick();
+
+                }
                 return false;
             }
 
-        });
+        } );
 
 
-        List<InputRemiderModel>inputRemiderModelList= new ArrayList<>();
+        List<InputRemiderModel> inputRemiderModelList = new ArrayList<>();
 
 
-        inputRemiderModelList.add(new InputRemiderModel("Call",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Check",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Get",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Email",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Buy",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Meet/Schedule",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Clean",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Take",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Send",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Pay",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Make",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Pick",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Do",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Read",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Print",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Finish",R.drawable.ic_launcher_foreground));
-        inputRemiderModelList.add(new InputRemiderModel("Study",R.drawable.ic_launcher_foreground));
+        inputRemiderModelList.add( new InputRemiderModel( "Call", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Check", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Get", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Email", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Buy", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Meet/Schedule", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Clean", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Take", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Send", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Pay", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Make", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Pick", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Do", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Read", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Print", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Finish", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Study", R.drawable.ic_launcher_foreground ) );
 
-        inputAdapter = new InputAdapter(getContext(),inputRemiderModelList);
+        inputAdapter = new InputAdapter( getContext(), inputRemiderModelList );
         inputAdapter.addlistener( new EditTextStringListener() {
             @Override
             public void mystring(String ss) {
-                input_ET.setText( ss+" "  );
+                input_ET.setText( ss + " " );
                 input_ET.setSelection( input_ET.getText().length() );
             }
         } );
@@ -151,41 +209,282 @@ public class InputListFrag extends Fragment {
         //search
         input_ET.addTextChangedListener( new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
-                inputAdapter.getFilter().filter( s );}});
+                inputAdapter.getFilter().filter( s );
+            }
+        } );
+        remindTvLo.setVisibility( View.VISIBLE );
 
 
         //go to task fragment
         close_btn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToTaskFrag();
+                mainActivity.showBottomNView();
+                mainActivity.setDefaultBNBItem();//it will go on AllTasks fragment and
+                                                // make highlighted Task item of bottom navigation view
             }
         } );
 
 
-        recyclerView.setAdapter(inputAdapter);
+        recyclerView.setAdapter( inputAdapter );
         inputAdapter.notifyDataSetChanged();
 
-
-
+        //this saves task from InputListFrag into AllTasks Fragment
+        doneBtn.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDoneButtonClick();
+            }
+        } );
 
 
         return view;
     }
 
-    public void addListenerIF(EditTextStringListener editTextStringListener)
+    public void onDoneButtonClick()
     {
+        if (input_ET.length()==0)
+        {
+            mainActivity.setDefaultBNBItem();
+            mainActivity.showBottomNView();
+        }
+        if (input_ET.length() != 0)
+        {
+            if (dateToPlaceTask.matches( "" ))
+            {
+                boolean isInsert =  dataBaseHelper.insert( input_ET.getText().toString(),alamTime,MyTimeSettingClass.todayPlaceDate() );
+
+                if (isInsert)
+                {
+                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                }
+                else
+                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+
+            }
+            else
+            if (alamTime.matches( "" ))
+            {
+               boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",dateToPlaceTask );
+                if (isInsert)
+                {
+                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                }
+                else
+                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+
+            }
+            else if (alamTime.matches( "" ) && dateToPlaceTask.matches( "" ))
+            {
+                boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate() );
+
+                if (isInsert)
+                {
+                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                }
+                else
+                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            }
+            else
+            {
+              boolean isInsert =   dataBaseHelper.insert( input_ET.getText().toString(),alamTime,dateToPlaceTask );
+                if (isInsert)
+                {
+                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                }
+                else
+                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            }
+
+
+            mainActivity.setDefaultBNBItem();
+            mainActivity.showBottomNView();
+
+        }
+
+
+    }
+
+    private DatePickerDialog.OnDateSetListener datePickerDialog = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+            myTimeSettingClass.setCustomPlaceDate( dayOfMonth,month,year );
+            dateToPlaceTask = MyTimeSettingClass.getCustomPlaceDate();
+
+
+        }
+    };
+    private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+            Calendar calendar =  Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE,minute );
+            SimpleDateFormat sformat = new SimpleDateFormat( "h:mm a" );
+
+            alamTime = sformat.format( calendar.getTime() );
+
+        }
+    };
+
+
+
+      public void setDateTimeOfTask()
+          {
+        remindTvLo.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HideAndShowViewClass.hideView( remindTvLo );
+                HideAndShowViewClass.showView( dayslLo );
+                HideAndShowViewClass.hideView( timeLo );
+            }
+        } );
+
+            todayLo.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    today = true;
+                    tomorrow = false;
+                    nextWeek =false;
+
+                    dateToPlaceTask = MyTimeSettingClass.todayPlaceDate();
+                    HideAndShowViewClass.hideView(  dayslLo );
+                    HideAndShowViewClass.showView( timeLo );
+
+                }
+            } );
+            tomorrowLo.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tomorrow = true;
+                    today = false;
+                    nextWeek =false;
+                    dateToPlaceTask = MyTimeSettingClass.tomorrowPlaceDate();
+                    HideAndShowViewClass.hideView(  dayslLo );
+                    HideAndShowViewClass.showView( timeLo );
+                    nineLo.setClickable( true );
+                    threeLo.setClickable( true );
+                    sixLo.setClickable( true );
+
+                }
+            } );
+            nextweekLo.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    nextWeek =true;
+                    tomorrow = false;
+                    today = false;
+                    dateToPlaceTask= MyTimeSettingClass.nextWeekPlaceDate();
+                    HideAndShowViewClass.hideView(  dayslLo );
+                    HideAndShowViewClass.showView( timeLo );
+                    nineLo.setClickable( true );
+                    threeLo.setClickable( true );
+                    sixLo.setClickable( true );
+                }
+            } );
+
+            nineLo.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (today)
+                    {
+                        alamTime = MyTimeSettingClass.getToday9am();
+                    }
+                    if (tomorrow)
+                    {
+                        alamTime = MyTimeSettingClass.getTomorrowMorning();
+                    }
+                    if (nextWeek)
+                    {
+                        alamTime = MyTimeSettingClass.getNextWeek9am();
+                    }
+                }
+            } );
+
+            threeLo.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (today)
+                    {
+                        alamTime = MyTimeSettingClass.getToday3pm();
+                    }
+                    if (tomorrow)
+                    {
+                        alamTime = MyTimeSettingClass.getTomorrow3pm();
+                    }
+                    if (nextWeek)
+                    {
+                        alamTime = MyTimeSettingClass.getNextWeek3pm();
+                    }
+                }
+            } );
+
+              sixLo.setOnClickListener( new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+
+                      if (today)
+                      {
+                          alamTime = MyTimeSettingClass.getToday6pm();
+                      }
+                      if (tomorrow)
+                      {
+                          alamTime = MyTimeSettingClass.getTomorrow6pm();
+                      }
+                      if (nextWeek)
+                      {
+                          alamTime = MyTimeSettingClass.getNextWeek6pm();
+                      }
+                  }
+              } );
+
+              Calendar calendar = Calendar.getInstance();
+              final int year =  calendar.get( Calendar.YEAR );
+              final int month = calendar.get( Calendar.MONTH );
+              final int day = calendar.get( Calendar.DAY_OF_MONTH );
+              final int hour = calendar.get( Calendar.HOUR_OF_DAY );
+              final int minutes = calendar.get( Calendar.MINUTE );
+              daycustomLo.setOnClickListener( new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+
+
+                      TimePickerDialog tP = new TimePickerDialog( getContext(),timePickerListener,hour,minutes,false );
+                      tP.show();
+                      DatePickerDialog dP = new DatePickerDialog( getContext(),datePickerDialog,year,month,day );
+                      dP.show();
+                  }
+              } );
+              timeLo.setOnClickListener( new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      TimePickerDialog tP = new TimePickerDialog( getContext(),timePickerListener,hour,minutes,false );
+                      tP.show();
+                  }
+              } );
+
+
+
+    }
+
+    public void addListenerIF(EditTextStringListener editTextStringListener) {
         input_from_inputRV = editTextStringListener.toString();
     }
+
     public void sString(String s) {
-        if (editTextStringListener != null)
-        {
+        if (editTextStringListener != null) {
             editTextStringListener.mystring( s );
         }
 
@@ -199,26 +498,26 @@ public class InputListFrag extends Fragment {
 
     @Override
     public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+        super.onAttach( context );
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getView().setFocusableInTouchMode(true);
+        getView().setFocusableInTouchMode( true );
         getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
+        getView().setOnKeyListener( new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction()== MotionEvent.ACTION_UP &&keyCode==KeyEvent.KEYCODE_BACK) {
+                if (event.getAction() == MotionEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                     goToTaskFrag();
 
                     return true;
                 }
                 return false;
             }
-        });
+        } );
 
 
     }
@@ -230,18 +529,17 @@ public class InputListFrag extends Fragment {
     }
 
 
-    public void goToTaskFrag()
-    {
+    public void goToTaskFrag() {
         MainActivity mainActivity = (MainActivity) getActivity();
-        TasksFrag tasksFrag = new TasksFrag();
-        mainActivity.loadmyfrag(tasksFrag);
+        AllTasksFrag allTasksFrag = new AllTasksFrag();
+        mainActivity.loadmyfrag( allTasksFrag );
     }
 
 
-    private void closeKeyboard()
-    {
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+    private void closeKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService( Context.INPUT_METHOD_SERVICE );
+        imm.toggleSoftInput( InputMethodManager.SHOW_FORCED, 0 );
     }
+
 
 }

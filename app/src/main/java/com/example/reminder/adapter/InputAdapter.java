@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.R;
-import com.example.reminder.models.EditTextStringListener;
+import com.example.reminder.interfaces.EditTextStringListener;
 import com.example.reminder.models.InputRemiderModel;
 
 import java.util.ArrayList;
