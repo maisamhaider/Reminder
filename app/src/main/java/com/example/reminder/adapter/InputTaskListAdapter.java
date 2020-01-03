@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class InputAdapter extends RecyclerView.Adapter<InputAdapter.InputHolder> implements Filterable {
+public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdapter.InputHolder> implements Filterable {
 
 
     Context context;
@@ -32,7 +32,7 @@ public class InputAdapter extends RecyclerView.Adapter<InputAdapter.InputHolder>
     List<EditTextStringListener>stringListenerslist=new ArrayList<>();
     private ArrayList<String> names;
 
-    public InputAdapter(Context context, List<InputRemiderModel> inputRemiderModelList) {
+    public InputTaskListAdapter(Context context, List<InputRemiderModel> inputRemiderModelList) {
         this.context = context;
         this.inputRemiderModelList = inputRemiderModelList;
         inputRemiderModelListfull = new ArrayList<>( );
@@ -66,15 +66,6 @@ public class InputAdapter extends RecyclerView.Adapter<InputAdapter.InputHolder>
 
             }
         });
-
-   /*   holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-              //  String text1=holder.setInpputET(text);
-                holder.input_ET.setText(text);
-            }
-        });*/
 
 
     }

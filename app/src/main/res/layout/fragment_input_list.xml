@@ -13,8 +13,10 @@
 
         <Button
             android:id="@+id/search_close_btn"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+
             android:background="?attr/selectableItemBackground"
             android:text="x" />
 
@@ -29,6 +31,7 @@
             android:id="@+id/donebtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:background="?attr/selectableItemBackground"
             android:text="done" />
 

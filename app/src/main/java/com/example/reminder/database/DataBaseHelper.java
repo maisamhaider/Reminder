@@ -21,7 +21,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String reminderText = "REMINDER_TEXT";
     private static final String reminder_date = "REMINDER_DATE";
     private static final String date_to_place_task = "DATE_TO_PLACE_TASK";
-    int id = 0;
 
 
 
@@ -31,7 +30,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL( " create table "+ TABLE_NAME + "(ID INTEGER PRIMARY KEY ,REMINDER_TEXT TEXT,REMINDER_DATE TEXT,DATE_TO_PLACE_TASK TEXT)");
+        db.execSQL( " create table "+ TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT ,REMINDER_TEXT TEXT,REMINDER_DATE TEXT,DATE_TO_PLACE_TASK TEXT)");
 
 
     }
@@ -46,11 +45,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues(  );
-        contentValues.put(ID, id);
         contentValues.put( reminderText,text );
         contentValues.put( this.reminder_date,reminder_date );
         contentValues.put( this.date_to_place_task,date_to_place_task );
-        id++;
+
 
         long result = database.insert( TABLE_NAME, null,contentValues );
 
@@ -64,9 +62,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         String today = todayPlaceDate();
 
-        Cursor day = database.rawQuery( " SELECT * FROM " + TABLE_NAME + " WHERE DATE_TO_PLACE_TASK LIKE \'" + today + "\'", null );
-
-
+        Cursor day = database.rawQuery( " SELECT * FROM " + TABLE_NAME+ " WHERE DATE_TO_PLACE_TASK LIKE \'"+ today +"\'", null );
             return day;
     }
     public  Cursor getTomorrow()
@@ -74,7 +70,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         Cursor day ;
         String tomorrow = tomorrowPlaceDate();
-        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+" WHERE DATE_TO_PLACE_TASK LIKE \'"+tomorrow+"\'",null );
+        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+ " WHERE DATE_TO_PLACE_TASK LIKE \'"+ tomorrow +"\'",null );
         return day;
 
     }
@@ -83,7 +79,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         Cursor day ;
         String upcoming = nextWeekPlaceDate();
-        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+" WHERE DATE_TO_PLACE_TASK LIKE \'"+upcoming+"\'",null );
+        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+ " WHERE DATE_TO_PLACE_TASK LIKE \'"+ upcoming +"\'",null );
         return day;
 
     }

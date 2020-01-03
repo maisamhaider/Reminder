@@ -17,18 +17,18 @@ import com.example.reminder.R;
 import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.MyItemClickListener;
-import com.example.reminder.models.MyAllTasksModel;
+import com.example.reminder.models.AllTasksModel;
 
 import java.util.List;
 
-public class MyAllTasksAdapter extends RecyclerView.Adapter<MyAllTasksAdapter.MyHolder> {
+public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHolder> {
 
     private final Context context;
-    public static List<MyAllTasksModel> modelListForDeletion;
-    private List<MyAllTasksModel> myModelList;
+    public static List<AllTasksModel> modelListForDeletion;
+    private List<AllTasksModel> myModelList;
     DataBaseHelper dataBaseHelper;
 
-    public MyAllTasksAdapter(Context context, List<MyAllTasksModel> myModelList, DataBaseHelper dataBaseHelper) {
+    public AllTasksAdapter(Context context, List<AllTasksModel> myModelList, DataBaseHelper dataBaseHelper) {
         this.modelListForDeletion = myModelList;
         this.context = context;
         this.myModelList = myModelList;

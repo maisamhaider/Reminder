@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.example.reminder.Fragments.CalendarFrag;
 import com.example.reminder.Fragments.SettingsFrag;
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
     BottomNavigationView bottomNavigationView;
     EditTextStringListener mEditTextStringListener;
     Fragment mFragment;
+    private static final int REQUEST_PERMISSION =1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +57,7 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
 
         //function calls
         bottomNavBar();
-        setDefaultBNBItem();
-
+        setTaskFragDefaultBNBItem();
     }
 
     public void bottomNavBar()
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
                         loadmyfrag( allTasksFrag );
                         break;
                     case R.id.calendar:
+
                         CalendarFrag calendarFrag = new CalendarFrag();
                         loadmyfrag( calendarFrag );
                         break;
@@ -83,10 +88,38 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
             }
         } );
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-    public void setDefaultBNBItem()
+        if (requestCode==REQUEST_PERMISSION)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED)
+            {
+                Log.i( "Calendar Permission","Granted" );
+               setCalendarBNBItem();
+            }
+            else
+            {
+                Toast.makeText( this, "Permission is required for working application properly ",
+                        Toast.LENGTH_SHORT ).show();
+                Log.i( "Calendar Permission","Not Granted" );
+            }
+
+
+
+        }
+        super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+    }
+
+    public void setTaskFragDefaultBNBItem()
     {
         bottomNavigationView.setSelectedItemId( R.id.tasks );
+
+    }
+    public void setCalendarBNBItem()
+    {
+        bottomNavigationView.setSelectedItemId( R.id.calendar );
 
     }
 
@@ -134,4 +167,6 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
             mEditTextStringListener.mystring( ss );
         }
     }
+
+
 }

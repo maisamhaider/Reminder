@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
-import com.example.reminder.adapter.InputAdapter;
+import com.example.reminder.adapter.InputTaskListAdapter;
 import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
@@ -51,27 +51,28 @@ public class InputListFrag extends Fragment {
     private RecyclerView recyclerView;
     BottomNavigationView bottomNavigationView;
 
-    DataBaseHelper dataBaseHelper;
+    private DataBaseHelper dataBaseHelper;
 
-    private InputAdapter inputAdapter;
+    private InputTaskListAdapter inputTaskListAdapter;
 
     AllTasksFrag allTasksFrag;
     private EditText input_ET;
     private Button doneBtn, close_btn;
 
-    String input_from_inputRV,dateToPlaceTask = "",alamTime="";
-    EditTextStringListener editTextStringListener;
+    private String input_from_inputRV,dateToPlaceTask = "",alamTime="";
+    private EditTextStringListener editTextStringListener;
 
     private MainActivity mainActivity;
     private MyTimeSettingClass myTimeSettingClass;
 
-    LinearLayout remindTvLo,
+    private LinearLayout remindTvLo,
             dayslLo, todayLo, tomorrowLo, nextweekLo, daycustomLo,
             timeLo, nineLo, threeLo, sixLo, timeCustomLo;
-    boolean today=false,tomorrow=false,nextWeek=false;
+    private boolean today=false,tomorrow=false,nextWeek=false;
 
-    Calendar c = Calendar.getInstance();
-    int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+    private Calendar c = Calendar.getInstance();
+    private int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+    SimpleDateFormat sformat;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -175,26 +176,26 @@ public class InputListFrag extends Fragment {
         List<InputRemiderModel> inputRemiderModelList = new ArrayList<>();
 
 
-        inputRemiderModelList.add( new InputRemiderModel( "Call", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Check", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Get", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Email", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Buy", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Call", R.drawable.call_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Check", R.drawable.search_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Get", R.drawable.get_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Email", R.drawable.email_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Buy", R.drawable.shopping_cart_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Meet/Schedule", R.drawable.ic_launcher_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Clean", R.drawable.ic_launcher_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Take", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Send", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Pay", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Send", R.drawable.send_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Pay", R.drawable.pay_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Make", R.drawable.ic_launcher_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Pick", R.drawable.ic_launcher_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Do", R.drawable.ic_launcher_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Read", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Print", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Print", R.drawable.print_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Finish", R.drawable.ic_launcher_foreground ) );
         inputRemiderModelList.add( new InputRemiderModel( "Study", R.drawable.ic_launcher_foreground ) );
 
-        inputAdapter = new InputAdapter( getContext(), inputRemiderModelList );
-        inputAdapter.addlistener( new EditTextStringListener() {
+        inputTaskListAdapter = new InputTaskListAdapter( getContext(), inputRemiderModelList );
+        inputTaskListAdapter.addlistener( new EditTextStringListener() {
             @Override
             public void mystring(String ss) {
                 input_ET.setText( ss + " " );
@@ -216,7 +217,7 @@ public class InputListFrag extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                inputAdapter.getFilter().filter( s );
+                inputTaskListAdapter.getFilter().filter( s );
             }
         } );
         remindTvLo.setVisibility( View.VISIBLE );
@@ -227,14 +228,14 @@ public class InputListFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 mainActivity.showBottomNView();
-                mainActivity.setDefaultBNBItem();//it will go on AllTasks fragment and
+                mainActivity.setTaskFragDefaultBNBItem();//it will go on AllTasks fragment and
                                                 // make highlighted Task item of bottom navigation view
             }
         } );
 
 
-        recyclerView.setAdapter( inputAdapter );
-        inputAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter( inputTaskListAdapter );
+        inputTaskListAdapter.notifyDataSetChanged();
 
         //this saves task from InputListFrag into AllTasks Fragment
         doneBtn.setOnClickListener( new View.OnClickListener() {
@@ -248,11 +249,11 @@ public class InputListFrag extends Fragment {
         return view;
     }
 
-    public void onDoneButtonClick()
+    private void onDoneButtonClick()
     {
         if (input_ET.length()==0)
         {
-            mainActivity.setDefaultBNBItem();
+            mainActivity.setTaskFragDefaultBNBItem();
             mainActivity.showBottomNView();
         }
         if (input_ET.length() != 0)
@@ -304,7 +305,7 @@ public class InputListFrag extends Fragment {
             }
 
 
-            mainActivity.setDefaultBNBItem();
+            mainActivity.setTaskFragDefaultBNBItem();
             mainActivity.showBottomNView();
 
         }
@@ -327,10 +328,54 @@ public class InputListFrag extends Fragment {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
             Calendar calendar =  Calendar.getInstance();
+            Calendar calendar1 = Calendar.getInstance();
+
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE,minute );
-            SimpleDateFormat sformat = new SimpleDateFormat( "h:mm a" );
 
+            int checkYear = calendar.get( Calendar.YEAR );
+            int currentYear =calendar1.get( Calendar.YEAR );
+            int istomorrow = calendar.get(Calendar.DAY_OF_MONTH);
+            int tomorrow   = calendar1.get( Calendar.DAY_OF_MONTH )+1;
+            int isToday  = calendar.get( Calendar.DAY_OF_MONTH);
+            int today    = calendar1.get( Calendar.DAY_OF_MONTH );
+
+            if (minute == 0 && (checkYear>currentYear || checkYear<currentYear)&& istomorrow !=tomorrow )
+            {
+                sformat = new SimpleDateFormat( "dd MMM yyyy, h a" );
+            }
+            else
+            if (minute != 0 && (checkYear>currentYear || checkYear<currentYear)&& istomorrow !=tomorrow )
+            {
+                sformat = new SimpleDateFormat( "d MMM yyyy, h:mm a" );
+            }
+            else
+            if (minute == 0 && checkYear == currentYear && istomorrow !=tomorrow )
+            {
+                sformat = new SimpleDateFormat( "d MMM,h a" );
+            }
+            else
+            if (minute != 0 && checkYear == currentYear && istomorrow !=tomorrow )
+            {
+                sformat = new SimpleDateFormat( "d MMM, h:mm a" );
+            }
+            else
+            if(minute == 0 && istomorrow==tomorrow)
+                {
+                 sformat = new SimpleDateFormat( "EEE, h a " );
+                }
+            else
+            if(minute != 0 && istomorrow==tomorrow)
+            {
+                sformat = new SimpleDateFormat( "EEE, h:mm a" );
+            }
+            else
+                if (minute == 0 && isToday ==today){
+                sformat = new SimpleDateFormat( "h a" );
+            } else
+                {
+                sformat =new SimpleDateFormat( "h:mm a" );
+                }
             alamTime = sformat.format( calendar.getTime() );
 
         }
@@ -338,7 +383,7 @@ public class InputListFrag extends Fragment {
 
 
 
-      public void setDateTimeOfTask()
+      private void setDateTimeOfTask()
           {
         remindTvLo.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -461,7 +506,7 @@ public class InputListFrag extends Fragment {
 
                       TimePickerDialog tP = new TimePickerDialog( getContext(),timePickerListener,hour,minutes,false );
                       tP.show();
-                      DatePickerDialog dP = new DatePickerDialog( getContext(),datePickerDialog,year,month,day );
+                      DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ),datePickerDialog,year,month,day );
                       dP.show();
                   }
               } );
@@ -477,16 +522,7 @@ public class InputListFrag extends Fragment {
 
     }
 
-    public void addListenerIF(EditTextStringListener editTextStringListener) {
-        input_from_inputRV = editTextStringListener.toString();
-    }
 
-    public void sString(String s) {
-        if (editTextStringListener != null) {
-            editTextStringListener.mystring( s );
-        }
-
-    }
 
     @Override
     public void onPause() {
@@ -527,15 +563,15 @@ public class InputListFrag extends Fragment {
     }
 
 
-    public void goToTaskFrag() {
+    private void goToTaskFrag() {
         MainActivity mainActivity = (MainActivity) getActivity();
         AllTasksFrag allTasksFrag = new AllTasksFrag();
+        assert mainActivity != null;
         mainActivity.loadmyfrag( allTasksFrag );
     }
 
-
     private void closeKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService( Context.INPUT_METHOD_SERVICE );
+        InputMethodManager imm = (InputMethodManager) Objects.requireNonNull( getContext() ).getSystemService( Context.INPUT_METHOD_SERVICE );
         imm.toggleSoftInput( InputMethodManager.SHOW_FORCED, 0 );
     }
 

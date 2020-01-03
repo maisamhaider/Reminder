@@ -1,12 +1,12 @@
 package com.example.reminder.models;
 
-public class MyAllTasksModel {
+public class AllTasksModel {
 
     private String notes;
     private String date;
     private String id;
 
-    public MyAllTasksModel(String id, String notes, String date) {
+    public AllTasksModel(String id,String notes, String date) {
         this.id = id;
         this.notes = notes;
         this.date = date;

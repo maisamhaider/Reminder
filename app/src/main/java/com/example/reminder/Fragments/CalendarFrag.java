@@ -54,7 +54,7 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class CalendarFrag extends Fragment {
 
-    private static final int REQUEST_PERMISSION =1 ;
+    private static final int REQUEST_PERMISSION =1;
     MainActivity mainActivity;
     AllTasksFrag allTasksFrag;
     private CalendarAdapter adapter;
@@ -79,6 +79,7 @@ public class CalendarFrag extends Fragment {
         // Inflate the layout for this fragment
        View view= inflater.inflate(R.layout.fragment_calendar, container, false);
         checkPermission();
+
         mainActivity = (MainActivity)getActivity();
         allTasksFrag = new AllTasksFrag();
         recyclerView =view.findViewById(R.id.recyclerView);
@@ -188,42 +189,43 @@ public class CalendarFrag extends Fragment {
         adapter.notifyDataSetChanged();
     }
     private void initData() {
+        if (checkPermission()) {
+            Cursor cursor;
+            ContentResolver contentResolver = getContext().getContentResolver();
+            cursor = contentResolver.query( Uri.parse( "content://com.android.calendar/events" ), (new String[]{"title", "dtstart"}), null, null, null );
 
-        Cursor cursor;
-        ContentResolver contentResolver = getContext().getContentResolver();
-        cursor = contentResolver.query( Uri.parse("content://com.android.calendar/events"), (new String[] {"title", "dtstart"}), null, null, null);
+            List<GoogleCalendar> gCalendar = new ArrayList<GoogleCalendar>();
+            List<CalendarModel> modelList = new ArrayList<>();
+            try {
 
-        List<GoogleCalendar> gCalendar = new ArrayList<GoogleCalendar>();
-        List<CalendarModel> modelList = new ArrayList<>();
-        try {
+                if (cursor.getCount() > 0) {
+                    while (cursor.moveToNext()) {
+                        GoogleCalendar googleCalendar = new GoogleCalendar();
 
-            if (cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
-                    GoogleCalendar googleCalendar = new GoogleCalendar();
+                        // title of Event
+                        String title = cursor.getString( 0 );
+                        googleCalendar.setTitle( title );
 
-                    // title of Event
-                    String title = cursor.getString(0);
-                    googleCalendar.setTitle(title);
+                        CalendarModel model = new CalendarModel( googleCalendar.getTitle(), ItemType.EVENT );
+                        modelList.add( model );
 
-                    CalendarModel model = new CalendarModel(googleCalendar.getTitle(), ItemType.EVENT);
-                    modelList.add( model );
+                        // Date start of Event
+                        String dtStart = cursor.getString( 1 );
+                        googleCalendar.setDtstart( dtStart );
+                        gCalendar.add( googleCalendar );
 
-                    // Date start of Event
-                    String dtStart = cursor.getString(1);
-                    googleCalendar.setDtstart(dtStart);
-                    gCalendar.add(googleCalendar);
-
-                    CalendarModel headerModel = new CalendarModel(googleCalendar.getDtstart(), ItemType.EVENT_DATE);
-                    modelList.add(headerModel);
+                        CalendarModel headerModel = new CalendarModel( googleCalendar.getDtstart(), ItemType.EVENT_DATE );
+                        modelList.add( headerModel );
 
 
+                    }
+                    adapter.submitList( modelList );
                 }
-                adapter.submitList( modelList );
+            } catch (AssertionError ex) {
+                ex.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (AssertionError ex) {
-            ex.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
     }
@@ -291,24 +293,5 @@ public class CalendarFrag extends Fragment {
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode==REQUEST_PERMISSION)
-        {
-            if (grantResults.length > 0 && grantResults[0] ==PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED)
-            {
-                Log.i( "Calendar Permission","Granted" );
-
-            }
-            else
-            {
-                Toast.makeText( getContext(), "Permission is required for working application properly ",
-                        Toast.LENGTH_SHORT ).show();
-                Log.i( "Calendar Permission","Not Granted" );
-            }
-        }
-        super.onRequestPermissionsResult( requestCode, permissions, grantResults );
-    }
 }

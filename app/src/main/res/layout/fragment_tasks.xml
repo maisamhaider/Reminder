@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.AllTasksFrag">
-
 
 
     <androidx.core.widget.NestedScrollView
@@ -119,6 +117,11 @@
                         android:layout_height="wrap_content"
                         android:scrollbars="none" />
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/upcomingtasksRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -166,10 +169,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/upcomingtasksRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -227,52 +226,164 @@
     </androidx.core.widget.NestedScrollView>
 
 
-    <LinearLayout
-        android:id="@+id/tagsLlayout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+    <HorizontalScrollView
         android:layout_above="@+id/addETRelativeLayout"
+        android:layout_width="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/colorDodgerBlue">
+        android:scrollbars="none"
+        android:layout_height="35dp">
 
-        <RadioGroup
-            android:id="@+id/radiogroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/tagsLlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:background="@color/colorAliceBlue">
 
-            <RadioButton
-                android:id="@+id/todaytagRb"
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:background="@drawable/tagsbackgroundbeforeclick"
+            android:id="@+id/thisMorningtagLL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/notification_foreground"
+                android:id="@+id/thisMorningIv"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:padding="2dp"
+                android:paddingEnd="5dp"
+                android:id="@+id/thisMorningtagTv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
+                android:backgroundTint="@android:color/transparent"
                 android:layout_gravity="start|center"
-                android:text="Today"
-                android:textSize="15dp" />
+                android:text="This Morning"
+                tools:ignore="RtlSymmetry" />
+        </LinearLayout>
 
-            <RadioButton
-                android:id="@+id/tomorrowtagRb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center"
-                android:text="Tomorrow" />
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:background="@drawable/tagsbackgroundbeforeclick"
+            android:id="@+id/laterTodaytagLL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/upcomingtagRb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center"
-                android:text="Upcoming" />
+            <ImageView
+                android:src="@drawable/notification_foreground"
+                android:id="@+id/laterTodayIv"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"/>
 
-            <RadioButton
-                android:id="@+id/somedaytagRb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center"
-                android:text="Someday" />
-        </RadioGroup>
+        <TextView
+            android:padding="2dp"
+            android:paddingEnd="5dp"
+            android:id="@+id/todaytagTv"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_gravity="start|center"
+            android:text="Later Today"
+            tools:ignore="RtlSymmetry" />
+        </LinearLayout>
 
+    <LinearLayout
+        android:layout_margin="5dp"
+        android:id="@+id/tomorrowtagLL"
+        android:background="@drawable/tagsbackgroundbeforeclick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
+        <ImageView
+            android:src="@drawable/notification_foreground"
+            android:id="@+id/tomorrowIv"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:padding="2dp"
+            android:paddingEnd="5dp"
+            android:backgroundTint="@android:color/transparent"
+            android:id="@+id/tomorrowtagTv"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_gravity="start|center"
+            android:text="Tomorrow Morning" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:id="@+id/nextweekLL"
+            android:background="@drawable/tagsbackgroundbeforeclick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/notification_foreground"
+                android:id="@+id/nextweekIv"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"/>
+        <TextView
+            android:padding="2dp"
+            android:paddingEnd="5dp"
+            android:backgroundTint="@android:color/transparent"
+            android:id="@+id/upcomingtagTv"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_gravity="start|center"
+            android:text="Next Week" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:id="@+id/somedayLL"
+            android:background="@drawable/tagsbackgroundbeforeclick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/notification_foreground"
+                android:id="@+id/somedayIv"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"/>
+        <TextView
+            android:backgroundTint="@android:color/transparent"
+            android:padding="2dp"
+            android:paddingEnd="5dp"
+            android:id="@+id/somedaytagTv"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_gravity="start|center"
+            android:text="Someday" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:id="@+id/customLL"
+            android:background="@drawable/tagsbackgroundbeforeclick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+
+                android:src="@drawable/notification_foreground"
+                android:id="@+id/customIv"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"/>
+        <TextView
+            android:padding="2dp"
+            android:paddingEnd="5dp"
+            android:background="@android:color/transparent"
+            android:id="@+id/customtagTv"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_gravity="start|center"
+            android:text="Custom" />
+        </LinearLayout>
     </LinearLayout>
+    </HorizontalScrollView>
 
 
     <RelativeLayout
