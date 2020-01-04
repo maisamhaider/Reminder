@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
     public void onBackPressed() {
 
         MainActivity.this.finish();
-        System.exit(0);
         super.onBackPressed();
     }
 

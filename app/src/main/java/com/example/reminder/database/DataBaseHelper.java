@@ -78,8 +78,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase database = getWritableDatabase();
         Cursor day ;
-        String upcoming = nextWeekPlaceDate();
-        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+ " WHERE DATE_TO_PLACE_TASK LIKE \'"+ upcoming +"\'",null );
+        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME,null,null );
         return day;
 
     }
@@ -87,7 +86,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase database = getReadableDatabase();
         Cursor day;
-        String someday = "someday";
+        String someday = "";
         day = database.rawQuery( "SELECT * FROM "+TABLE_NAME+" WHERE DATE_TO_PLACE_TASK LIKE \'"+someday+"\'",null);
         return day;
     }

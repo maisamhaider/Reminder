@@ -58,15 +58,13 @@
         android:id="@+id/remindLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/layout2"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="0dp"
-        android:gravity="start|center"
+        android:layout_marginBottom="20dp"
         android:background="?android:attr/selectableItemBackground"
+        android:gravity="start|center"
         android:orientation="horizontal">
 
         <TextView
@@ -82,9 +80,10 @@
         android:id="@+id/dayslayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignTop="@+id/remindLayout"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
@@ -93,8 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="?android:attr/selectableItemBackground"
             android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
             android:orientation="vertical">
 
             <ImageView
@@ -116,8 +115,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
@@ -139,8 +138,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
@@ -161,8 +160,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
@@ -183,10 +182,11 @@
         android:id="@+id/time_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_alignTop="@+id/remindLayout"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -194,8 +194,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
@@ -216,8 +216,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
@@ -239,8 +239,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
@@ -261,8 +261,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView

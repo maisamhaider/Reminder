@@ -17,27 +17,27 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getToday9am() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set( Calendar.HOUR_OF_DAY, 9 );
-        calendar.set( Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
+        calendar.add( Calendar.HOUR_OF_DAY, 9 );
+        calendar.add( Calendar.MINUTE, 0 );
+        calendar.add( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
     public static String getToday3pm() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set( Calendar.HOUR_OF_DAY, 15 );
-        calendar.set( Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
+        calendar.add( Calendar.HOUR_OF_DAY, 15 );
+        calendar.add( Calendar.MINUTE, 0 );
+        calendar.add( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
     public static String getToday6pm() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set( Calendar.HOUR_OF_DAY, 18 );
-        calendar.set( Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
+        calendar.add( Calendar.HOUR_OF_DAY, 18 );
+        calendar.add( Calendar.MINUTE, 0 );
+        calendar.add( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
     }
 
@@ -60,10 +60,10 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getTomorrowMorning() {
         Calendar cal = Calendar.getInstance();
-        cal.set( Calendar.HOUR_OF_DAY, 9 );
-        cal.set( Calendar.MINUTE, 0 );
-        cal.set( Calendar.SECOND, 0 );
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.HOUR_OF_DAY, 9 );
+        cal.add( Calendar.MINUTE, 0 );
+        cal.add( Calendar.SECOND, 0 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "EEE,h a" ).format( cal.getTime() );
 
     }
@@ -71,10 +71,10 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getTomorrow3pm() {
         Calendar cal = new GregorianCalendar();
-        cal.set( Calendar.HOUR_OF_DAY, 15 );
-        cal.set( Calendar.MINUTE, 0 );
-        cal.set( Calendar.SECOND, 0 );
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.HOUR_OF_DAY, 15 );
+        cal.add( Calendar.MINUTE, 0 );
+        cal.add( Calendar.SECOND, 0 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "EEE,h a" ).format( cal.getTime() );
 
     }
@@ -82,10 +82,10 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getTomorrow6pm() {
         Calendar cal = new GregorianCalendar();
-        cal.set( Calendar.HOUR_OF_DAY, 18 );
-        cal.set( Calendar.MINUTE, 0 );
-        cal.set( Calendar.SECOND, 0 );
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.HOUR_OF_DAY, 18 );
+        cal.add( Calendar.MINUTE, 0 );
+        cal.add( Calendar.SECOND, 0 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "EEE,h a" ).format( cal.getTime() );
 
     }
@@ -93,14 +93,14 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getTomorrow() {
         Calendar cal = new GregorianCalendar();
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "EEE,h a" ).format( cal.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
     public static String getTomorrow(String strFormat) {
         Calendar cal = new GregorianCalendar();
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( strFormat ).format( cal.getTime() );
     }
 
@@ -108,39 +108,39 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek9am() {
         Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE, 6 );
-        calendar.set( Calendar.HOUR_OF_DAY, 9 );
-        calendar.set( Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
+        calendar.add( Calendar.DATE, 6 );
+        calendar.add( Calendar.HOUR_OF_DAY, 9 );
+        calendar.add( Calendar.MINUTE, 0 );
+        calendar.add( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "EEE,h a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek3pm() {
         Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE, 6 );
-        calendar.set( Calendar.HOUR_OF_DAY, 15 );
-        calendar.set( Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
+        calendar.add( Calendar.DATE, 6 );
+        calendar.add( Calendar.HOUR_OF_DAY, 15 );
+        calendar.add( Calendar.MINUTE, 0 );
+        calendar.add( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "EEE,h a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek6pm() {
         Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE, 6 );
-        calendar.set( Calendar.HOUR_OF_DAY, 18 );
-        calendar.set(Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
+        calendar.add( Calendar.DATE, 6 );
+        calendar.add( Calendar.HOUR_OF_DAY, 18 );
+        calendar.add(Calendar.MINUTE, 0 );
+        calendar.add( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "EEE,h a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek() {
         Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE, 6 );
-        calendar.set( Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
+        calendar.add( Calendar.DATE,6);
+        calendar.add( Calendar.MINUTE, 0 );
+        calendar.add( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "EEE,h a" ).format( calendar.getTime() );
     }
 

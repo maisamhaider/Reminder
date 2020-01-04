@@ -117,10 +117,7 @@
                         android:layout_height="wrap_content"
                         android:scrollbars="none" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/upcomingtasksRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+
 
                 </LinearLayout>
             </LinearLayout>
@@ -169,6 +166,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/upcomingtasksRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -261,7 +262,7 @@
                 android:layout_height="25dp"
                 android:backgroundTint="@android:color/transparent"
                 android:layout_gravity="start|center"
-                android:text="This Morning"
+                android:text="This morning"
                 tools:ignore="RtlSymmetry" />
         </LinearLayout>
 
@@ -281,16 +282,40 @@
         <TextView
             android:padding="2dp"
             android:paddingEnd="5dp"
-            android:id="@+id/todaytagTv"
+            android:id="@+id/laterTodaytagTv"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:backgroundTint="@android:color/transparent"
             android:layout_gravity="start|center"
-            android:text="Later Today"
+            android:text="Later today"
             tools:ignore="RtlSymmetry" />
         </LinearLayout>
 
-    <LinearLayout
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:id="@+id/thisEveningtagLL"
+            android:background="@drawable/tagsbackgroundbeforeclick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/notification_foreground"
+                android:id="@+id/thisEveningIv"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:padding="2dp"
+                android:paddingEnd="5dp"
+                android:backgroundTint="@android:color/transparent"
+                android:id="@+id/thisEveningTv"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_gravity="start|center"
+                android:text="This evening" />
+        </LinearLayout>
+
+
+        <LinearLayout
         android:layout_margin="5dp"
         android:id="@+id/tomorrowtagLL"
         android:background="@drawable/tagsbackgroundbeforeclick"
@@ -310,7 +335,7 @@
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_gravity="start|center"
-            android:text="Tomorrow Morning" />
+            android:text="Tomorrow morning" />
         </LinearLayout>
 
         <LinearLayout
@@ -333,7 +358,7 @@
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_gravity="start|center"
-            android:text="Next Week" />
+            android:text="Next week" />
         </LinearLayout>
 
         <LinearLayout
@@ -392,7 +417,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="40dp"
         android:background="@color/colorAliceBlue"
         android:orientation="horizontal">
 

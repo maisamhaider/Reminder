@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -35,21 +36,17 @@ import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.adapter.AllTasksAdapter;
-import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.R;
-import com.example.reminder.interfaces.MyItemClickListener;
 import com.example.reminder.models.AllTasksModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.reminder.classes.MyTimeSettingClass.getCustomPlaceDate;
-import static com.example.reminder.classes.MyTimeSettingClass.getLaterToday;
-import static com.example.reminder.classes.MyTimeSettingClass.getNextWeek;
 import static com.example.reminder.classes.MyTimeSettingClass.getToday9am;
 import static com.example.reminder.classes.MyTimeSettingClass.todayPlaceDate;
 import static com.example.reminder.classes.MyTimeSettingClass.tomorrowPlaceDate;
@@ -66,25 +63,26 @@ public class AllTasksFrag extends Fragment {
     private RecyclerView recyclerView_today, recyclerView_tomorrow, recyclerView_upcoming, recyclerView_someday;
 
 
-    private EditText add_task_edittext, input_textView;
+    private EditText add_task_edittext;
     private Button addtodayBtn, addtomorrowbtn, addupcomingbtn, addsomedaybtn, mainAddbtn, addUpbtn;
     private String text = "", reminder_date = "", date_to_place_task = "";
     private SimpleDateFormat sformat;
 
     private boolean thisMorning = false,
             laterToday  = false,
+            thisEvening = false,
             tomorrow    = false,
             upcoming    = false,
             someday     = false,
             custom      = false;
 
 
-    private LinearLayout latertodaytagLL,thisMorningTagLL, tomorrowtagLL, upcomingtagLL, somedaytagLL,customTagLL;
-    private ImageView thisMorningTagImageView, laterTodayTagImageView,
+    private LinearLayout latertodaytagLL,thisMorningTagLL,thisEveningTagLL, tomorrowtagLL, upcomingtagLL, somedaytagLL,customTagLL;
+    private ImageView thisMorningTagImageView, laterTodayTagImageView,thisEveningTagImageView,
             tomorrowTagImageView,nextWeekTagImageView,somedayTagImageView,customTagImageView;
 
-    Calendar calendar =  Calendar.getInstance();
-
+    private Calendar calendar = Calendar.getInstance();
+    private int checkYear,currentYear,istomorrow,mtomorrow,isToday,mtoday;
 
     private DataBaseHelper dataBaseHelper;
 
@@ -112,6 +110,7 @@ public class AllTasksFrag extends Fragment {
 
         thisMorningTagLL = view.findViewById( R.id.thisMorningtagLL );
         latertodaytagLL  = view.findViewById( R.id.laterTodaytagLL );
+        thisEveningTagLL = view.findViewById( R.id.thisEveningtagLL );
         tomorrowtagLL    = view.findViewById( R.id.tomorrowtagLL );
         upcomingtagLL    = view.findViewById( R.id.nextweekLL );
         somedaytagLL     = view.findViewById( R.id.somedayLL );
@@ -119,6 +118,7 @@ public class AllTasksFrag extends Fragment {
 
         thisMorningTagImageView = view.findViewById( R.id.thisMorningIv );
         laterTodayTagImageView  = view.findViewById( R.id.laterTodayIv );
+        thisEveningTagImageView = view.findViewById( R.id.thisEveningIv );
         tomorrowTagImageView    = view.findViewById( R.id.tomorrowIv );
         nextWeekTagImageView    = view.findViewById( R.id.nextweekIv );
         somedayTagImageView     = view.findViewById( R.id.somedayIv );
@@ -126,7 +126,6 @@ public class AllTasksFrag extends Fragment {
 
 
         add_task_edittext = view.findViewById( R.id.addtaskedittext );
-        input_textView = view.findViewById( R.id.inputRVItemTV );
         addtodayBtn = view.findViewById( R.id.Todaytaskaddbutton );
         addtomorrowbtn = view.findViewById( R.id.tomorrowtaskaddbutton );
         addupcomingbtn = view.findViewById( R.id.upcomingtaskaddbutton );
@@ -148,6 +147,7 @@ public class AllTasksFrag extends Fragment {
         readTodayfromDb();
         readTomorrowFromDb();
         readUpcomingfromDb();
+        readSomedayFromDb();
         loadedfragonbtnclick();
         witchTagLayoutIsTouched();
 
@@ -170,6 +170,7 @@ public class AllTasksFrag extends Fragment {
                             add_task_edittext.setImeOptions( EditorInfo.IME_ACTION_DONE );
                             add_task_edittext.setSingleLine();
                             showlinearLayoutTags();
+                            showTagsWRTTime();
 
                         }
                     } );
@@ -196,9 +197,9 @@ public class AllTasksFrag extends Fragment {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
 
 
-                    HideAndShowViewClass.hideView( linearLayoutTags );
-                    HideAndShowViewClass.hideView( addUpbtn );
-                    HideAndShowViewClass.showView(mainAddbtn);
+                    linearLayoutTags.setVisibility( View.GONE );
+                    addUpbtn.setVisibility( View.GONE );
+                    mainAddbtn.setVisibility( View.VISIBLE );
                     mainActivity.showBottomNView();
                     setDataInRecyclerView();
                     add_task_edittext.setText( "" );
@@ -338,6 +339,12 @@ public class AllTasksFrag extends Fragment {
            insertLaterTodayTasksFun();
            laterToday =false;
        }
+       else if (thisEvening)
+        {
+            insertThisEveningTaskFun();
+            thisEvening = false;
+        }
+
        else if (tomorrow)
        {
            insertTomorrowTasksFun();
@@ -372,13 +379,14 @@ public class AllTasksFrag extends Fragment {
             public void onClick(View v) {
                 thisMorning = true;
                 laterToday =false;
+                thisEvening = false;
                 tomorrow = false;
                 upcoming = false;
                 someday  = false;
                 custom = false;
-                setTagsBackground(thisMorningTagLL,thisMorningTagImageView,latertodaytagLL,tomorrowtagLL ,upcomingtagLL ,somedaytagLL,
-                        customTagLL,tomorrowTagImageView,laterTodayTagImageView,nextWeekTagImageView,
-                        somedayTagImageView,customTagImageView );
+                setTagsBackground(thisMorningTagLL,thisMorningTagImageView,latertodaytagLL,thisEveningTagLL,tomorrowtagLL,
+                        upcomingtagLL ,somedaytagLL,customTagLL,tomorrowTagImageView,laterTodayTagImageView,thisEveningTagImageView,
+                        nextWeekTagImageView,somedayTagImageView,customTagImageView );
             }
         } );
         latertodaytagLL.setOnClickListener( new View.OnClickListener() {
@@ -387,12 +395,30 @@ public class AllTasksFrag extends Fragment {
 
                 laterToday =true;
                 thisMorning = false;
+                thisEvening = false;
                 tomorrow = false;
                 upcoming = false;
                 someday  = false;
                 custom   = false;
-                setTagsBackground(latertodaytagLL  ,laterTodayTagImageView  ,thisMorningTagLL,tomorrowtagLL ,upcomingtagLL,
-                        somedaytagLL,customTagLL,tomorrowTagImageView,thisMorningTagImageView,nextWeekTagImageView,somedayTagImageView,customTagImageView );
+                setTagsBackground(latertodaytagLL  ,laterTodayTagImageView  ,thisMorningTagLL,thisEveningTagLL,tomorrowtagLL ,upcomingtagLL,
+                        somedaytagLL,customTagLL,tomorrowTagImageView,thisMorningTagImageView,thisEveningTagImageView,nextWeekTagImageView,
+                        somedayTagImageView,customTagImageView );
+            }
+        } );
+        thisMorningTagLL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                laterToday =false;
+                thisEvening = true;
+                tomorrow = false;
+                upcoming = false;
+                someday  = false;
+                custom   = false;
+
+                setTagsBackground(thisEveningTagLL,thisEveningTagImageView,thisMorningTagLL,latertodaytagLL,tomorrowtagLL ,upcomingtagLL,
+                        somedaytagLL,customTagLL,tomorrowTagImageView,laterTodayTagImageView,thisMorningTagImageView,nextWeekTagImageView,somedayTagImageView,customTagImageView );
+
+
             }
         } );
         tomorrowtagLL.setOnClickListener( new View.OnClickListener() {
@@ -400,13 +426,14 @@ public class AllTasksFrag extends Fragment {
             public void onClick(View v) {
                 thisMorning = false;
                 laterToday =false;
+                thisEvening = false;
                 tomorrow = true;
                 upcoming = false;
                 someday  = false;
                 custom   = false;
-                setTagsBackground(tomorrowtagLL ,tomorrowTagImageView , latertodaytagLL,thisMorningTagLL,upcomingtagLL ,somedaytagLL,
-                        customTagLL,laterTodayTagImageView,thisMorningTagImageView,nextWeekTagImageView,
-                        somedayTagImageView,customTagImageView );
+                setTagsBackground(tomorrowtagLL ,tomorrowTagImageView ,latertodaytagLL,thisMorningTagLL,thisEveningTagLL,
+                        upcomingtagLL, somedaytagLL,customTagLL,laterTodayTagImageView,thisMorningTagImageView,
+                        thisEveningTagImageView,nextWeekTagImageView, somedayTagImageView,customTagImageView );
             }
         } );
 
@@ -415,12 +442,14 @@ public class AllTasksFrag extends Fragment {
             public void onClick(View v) {
                 thisMorning = false;
                 laterToday =false;
+                thisEvening = false;
                 tomorrow = false;
                 upcoming = true;
                 someday  = false;
                 custom   = false;
-                setTagsBackground( upcomingtagLL,nextWeekTagImageView, latertodaytagLL,thisMorningTagLL,tomorrowtagLL,somedaytagLL,
-                        customTagLL,laterTodayTagImageView,thisMorningTagImageView,tomorrowTagImageView,somedayTagImageView,customTagImageView );
+                setTagsBackground( upcomingtagLL,nextWeekTagImageView, latertodaytagLL,thisMorningTagLL,thisEveningTagLL,
+                        tomorrowtagLL,somedaytagLL,customTagLL,laterTodayTagImageView,thisMorningTagImageView,thisEveningTagImageView,
+                        tomorrowTagImageView,somedayTagImageView,customTagImageView );
             }
         } );
 
@@ -429,14 +458,15 @@ public class AllTasksFrag extends Fragment {
             public void onClick(View v) {
                 thisMorning = false;
                 laterToday =false;
+                thisEvening = false;
                 tomorrow = false;
                 upcoming = false;
                 someday  = true;
                 custom   = false;
 
-                setTagsBackground( somedaytagLL,somedayTagImageView, latertodaytagLL,thisMorningTagLL,tomorrowtagLL,upcomingtagLL
-                        ,customTagLL,laterTodayTagImageView,thisMorningTagImageView,tomorrowTagImageView,
-                        nextWeekTagImageView,customTagImageView );
+                setTagsBackground( somedaytagLL,somedayTagImageView, latertodaytagLL,thisMorningTagLL,thisEveningTagLL,tomorrowtagLL,
+                        upcomingtagLL,customTagLL,laterTodayTagImageView,thisMorningTagImageView,thisEveningTagImageView,
+                        tomorrowTagImageView,nextWeekTagImageView,customTagImageView );
             }
         } );
 
@@ -445,13 +475,14 @@ public class AllTasksFrag extends Fragment {
             public void onClick(View v) {
                 thisMorning = false;
                 laterToday  = false;
+                thisEvening = false;
                 tomorrow = false;
                 upcoming = false;
                 someday  = false;
                 custom   = true;
 
-                setTagsBackground( customTagLL, customTagImageView ,thisMorningTagLL,latertodaytagLL, tomorrowtagLL, upcomingtagLL
-                        ,somedaytagLL,laterTodayTagImageView,thisMorningTagImageView,tomorrowTagImageView,nextWeekTagImageView,
+                setTagsBackground( customTagLL, customTagImageView ,thisMorningTagLL,latertodaytagLL,thisEveningTagLL, tomorrowtagLL, upcomingtagLL
+                        ,somedaytagLL,laterTodayTagImageView,thisMorningTagImageView,thisEveningTagImageView,tomorrowTagImageView,nextWeekTagImageView,
                         somedayTagImageView );
 
                 Calendar calendar = Calendar.getInstance();
@@ -461,9 +492,15 @@ public class AllTasksFrag extends Fragment {
                 final int hour = calendar.get( Calendar.HOUR_OF_DAY );
                 final int minutes = calendar.get( Calendar.MINUTE );
 
+                Date newDate = calendar.getTime();
+
                 TimePickerDialog tP = new TimePickerDialog( getContext(),timePickerListener,hour,minutes,false );
                 tP.show();
+
+
                 DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ),datePickerDialog,year,month,day );
+                dP.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
                 dP.show();
 
 
@@ -473,9 +510,9 @@ public class AllTasksFrag extends Fragment {
 
 
     private void setTagsBackground(View enAbleView,ImageView enAbleImageView, View disAbleView1,
-                                   View disAbleView2, View disAbleView3,View disAbleView4,View disAbleView5,ImageView disAbleImageView1,
+                                   View disAbleView2, View disAbleView3,View disAbleView4,View disAbleView5,View disAbleView6,ImageView disAbleImageView1,
                                    ImageView disAbleImageView2,ImageView disAbleImageView3,ImageView disAbleImageView4,
-                                   ImageView disAbleImageView5)
+                                   ImageView disAbleImageView5,ImageView disAbleImageView6)
     {
         //set layout background
         enAbleView.setBackground( getResources().getDrawable( R.drawable.tagsbackgroundafterclick ) );
@@ -484,6 +521,7 @@ public class AllTasksFrag extends Fragment {
         disAbleView3.setBackground( getResources().getDrawable( R.drawable.tagsbackgroundbeforeclick ) );
         disAbleView4.setBackground( getResources().getDrawable( R.drawable.tagsbackgroundbeforeclick ) );
         disAbleView5.setBackground( getResources().getDrawable( R.drawable.tagsbackgroundbeforeclick ) );
+        disAbleView6.setBackground( getResources().getDrawable( R.drawable.tagsbackgroundbeforeclick ) );
 
         //set images
         enAbleImageView.setImageResource( R.drawable.notification_active_foreground );
@@ -492,7 +530,7 @@ public class AllTasksFrag extends Fragment {
         disAbleImageView3.setImageResource( R.drawable.notification_foreground );
         disAbleImageView4.setImageResource( R.drawable.notification_foreground );
         disAbleImageView5.setImageResource( R.drawable.notification_foreground );
-
+        disAbleImageView6.setImageResource( R.drawable.notification_foreground );
     }
 
     private void insertTodayMorningFun()
@@ -530,6 +568,25 @@ public class AllTasksFrag extends Fragment {
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
+        }
+
+        private void insertThisEveningTaskFun()
+        {
+            text = add_task_edittext.getText().toString();
+            reminder_date = MyTimeSettingClass.getToday3pm();
+            if (text.matches( "" ))
+            {
+                //do nothing
+            }
+            else {
+                boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate() );
+                if (isInsert) {
+                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                } else {
+                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                }
+                mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
+            }
         }
 
     private void insertTomorrowTasksFun() {
@@ -573,6 +630,22 @@ public class AllTasksFrag extends Fragment {
     private void insertSomedayTasksFun() {
         text = add_task_edittext.getText().toString();
         reminder_date = "";
+        text = add_task_edittext.getText().toString();
+        reminder_date = MyTimeSettingClass.getNextWeek();
+        String someday = "";
+        if (text.matches( "" ))
+        {
+            //do nothing
+        }
+        else {
+            boolean isInsert = dataBaseHelper.insert( text, "", someday );
+            if (isInsert) {
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            } else {
+                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            }
+            mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
+        }
 
     }
 
@@ -599,6 +672,18 @@ public class AllTasksFrag extends Fragment {
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
             calendar.set( Calendar.YEAR,year );
+            calendar.set( Calendar.MONTH,month );
+            calendar.set( Calendar.DAY_OF_MONTH,dayOfMonth );
+
+            Calendar calendar1 = Calendar.getInstance();
+
+                 checkYear = calendar.get( Calendar.YEAR );
+                 currentYear =calendar1.get( Calendar.YEAR );
+                 istomorrow = calendar.get(Calendar.DAY_OF_MONTH);
+                 mtomorrow   = calendar1.get( Calendar.DAY_OF_MONTH )+1;
+                 isToday  = calendar.get( Calendar.DAY_OF_MONTH);
+                 mtoday  = calendar1.get( Calendar.DAY_OF_MONTH );
+
             myTimeSettingClass.setCustomPlaceDate( dayOfMonth,month,year );
             date_to_place_task = MyTimeSettingClass.getCustomPlaceDate();
 
@@ -609,60 +694,84 @@ public class AllTasksFrag extends Fragment {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-            Calendar calendar1 = Calendar.getInstance();
-
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE,minute );
 
-            int checkYear = calendar.get( Calendar.YEAR );
-            int currentYear =calendar1.get( Calendar.YEAR );
-            int istomorrow = calendar.get(Calendar.DAY_OF_MONTH);
-            int tomorrow   = calendar1.get( Calendar.DAY_OF_MONTH )+1;
-            int isToday  = calendar.get( Calendar.DAY_OF_MONTH);
-            int today    = calendar1.get( Calendar.DAY_OF_MONTH );
-
-            if (minute == 0 && (checkYear>currentYear || checkYear<currentYear) )
+            if (minute == 0 && checkYear>currentYear && istomorrow!=mtomorrow && isToday!=mtoday )
             {
                 sformat = new SimpleDateFormat( "dd MMM yyyy, h a" );
             }
             else
-            if (minute != 0 && (checkYear>currentYear || checkYear<currentYear))
+            if (minute != 0 && checkYear>currentYear && istomorrow!=mtomorrow && isToday!=mtoday)
             {
                 sformat = new SimpleDateFormat( "d MMM yyyy, h:mm a" );
             }
 
-            if (minute == 0 && checkYear == currentYear  )
+            if (minute == 0 && checkYear == currentYear  && istomorrow!= mtomorrow )
             {
                 sformat = new SimpleDateFormat( "d MMM, h a" );
             }
             else
-            if (minute != 0 && checkYear == currentYear  )
+            if (minute != 0 && checkYear == currentYear && istomorrow!=mtomorrow  )
             {
                 sformat = new SimpleDateFormat( "d MMM, h:mm a" );
             }
 
-            if(minute == 0 && istomorrow==tomorrow  ) {
+            if(minute == 0 && istomorrow==mtomorrow && isToday!=mtoday  ) {
                 sformat = new SimpleDateFormat( "EEE, h a " );
             }
             else
-            if(minute != 0 && istomorrow==tomorrow )
+            if(minute != 0 && istomorrow==mtomorrow && isToday!=mtoday )
             {
                 sformat = new SimpleDateFormat( "EEE, h:mm a" );
             }
 
-            if (minute == 0 && isToday==today)
+            if (minute == 0 && isToday==mtoday && istomorrow!=mtomorrow)
             {
                 sformat = new SimpleDateFormat( "h a" );
             }
             else
-            if (minute!=0 && isToday==today )
+            if (minute!=0 && isToday==mtoday && istomorrow!=mtomorrow)
             {
                 sformat =new SimpleDateFormat( "h:mm a" );
             }
             reminder_date = sformat.format( calendar.getTime() );
+            Log.i( "formated date", reminder_date );
 
         }
     };
+
+    private void showTagsWRTTime()
+    {
+        Calendar calendar = Calendar.getInstance();
+       int timeOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+
+        if (timeOfDay>0 && timeOfDay>9)
+        {
+            thisMorningTagLL.setVisibility( View.GONE );
+        }
+        else
+        {
+            thisMorningTagLL.setVisibility( View.VISIBLE );
+        }
+        if (timeOfDay>14)
+        {
+            latertodaytagLL.setVisibility( View.GONE );
+        }
+        else
+        {
+            latertodaytagLL.setVisibility( View.VISIBLE );
+        }
+        if (timeOfDay>0 && timeOfDay<18)
+        {
+            thisEveningTagLL.setVisibility( View.GONE );
+        }
+        else
+        {
+            thisEveningTagLL.setVisibility( View.VISIBLE );
+        }
+
+    }
     private void readTodayfromDb() {
         AllTasksAdapter allTasksAdapter;
         List<AllTasksModel> model2List = new ArrayList<>();
@@ -691,7 +800,9 @@ public class AllTasksFrag extends Fragment {
     }
 
     private void readTomorrowFromDb() {
+
         AllTasksAdapter allTasksAdapter;
+
         List<AllTasksModel> model2List = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
@@ -719,7 +830,7 @@ public class AllTasksFrag extends Fragment {
     }
 
     private void readUpcomingfromDb() {
-        AllTasksAdapter allTasksAdapter;
+        AllTasksAdapter allTasksAdapter1;
         List<AllTasksModel> allTasksModels = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
@@ -737,13 +848,52 @@ public class AllTasksFrag extends Fragment {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            allTasksModels.add( new AllTasksModel(cursor.getString( 0 ),cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            AllTasksModel filter = new AllTasksModel(cursor.getString( 0 ),cursor.getString( 1 ), cursor.getString( 2 ) );
+            String today=todayPlaceDate();
+            String tommorow=tomorrowPlaceDate();
+            String someday = "";
+            String provDate=cursor.getString( 3 );
+            if(!provDate.equals(tommorow)&&!provDate.equals(today)&&!provDate.equals( someday ))
+            allTasksModels.add(filter );
         }
 
-        allTasksAdapter = new AllTasksAdapter( getContext(), allTasksModels,dataBaseHelper );
-        recyclerView_upcoming.setAdapter( allTasksAdapter );
-        allTasksAdapter.notifyDataSetChanged();
+        allTasksAdapter1 = new AllTasksAdapter( getContext(), allTasksModels,dataBaseHelper );
+        recyclerView_upcoming.setAdapter( allTasksAdapter1 );
+        allTasksAdapter1.notifyDataSetChanged();
 
     }
+
+
+    private void readSomedayFromDb() {
+
+        AllTasksAdapter allTasksAdapter;
+
+        List<AllTasksModel> model2List = new ArrayList<>();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
+        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
+        linearLayoutManager = new LinearLayoutManager( getContext() ) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        recyclerView_someday.setLayoutManager( linearLayoutManager );
+
+
+        Cursor cursor = dataBaseHelper.getSomeday();
+        if (cursor.getCount() == 0) {
+            Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
+        }
+        while (cursor.moveToNext()) {
+            model2List.add( new AllTasksModel(cursor.getString( 0 ),cursor.getString( 1 ), cursor.getString( 2 ) ) );
+        }
+        allTasksAdapter = new AllTasksAdapter( getContext(), model2List,dataBaseHelper );
+        recyclerView_someday.setAdapter( allTasksAdapter );
+        allTasksAdapter.notifyDataSetChanged();
+
+
+    }
+
+
 
 }

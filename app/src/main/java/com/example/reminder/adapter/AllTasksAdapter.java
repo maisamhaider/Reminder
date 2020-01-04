@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.R;
-import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.MyItemClickListener;
 import com.example.reminder.models.AllTasksModel;
@@ -51,9 +50,9 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
         holder.notes_TextView.setText( myModelList.get( position ).getNotes() );
         holder.date_textView.setText( myModelList.get( position ).getDate() );
 
-        HideAndShowViewClass.hideView( holder.deleteItemIv );
-        HideAndShowViewClass.hideView( holder.attachmentsIv );
-        HideAndShowViewClass.hideView( holder.subTasksIv);
+        holder.deleteItemIv.setVisibility( View.GONE );
+        holder.attachmentsIv.setVisibility( View.GONE );
+        holder.subTasksIv.setVisibility( View.GONE );
 
 
         holder.setItemClickListener( new MyItemClickListener() {
@@ -63,10 +62,10 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
                 if (checkBox.isChecked())
                 {
-                    HideAndShowViewClass.showView( holder.deleteItemIv );
+                    holder.deleteItemIv.setVisibility( View.VISIBLE );
                 }
                 else
-                    HideAndShowViewClass.hideView( holder.deleteItemIv );
+                    holder.deleteItemIv.setVisibility( View.GONE );
             }
         } );
         holder.deleteItemIv.setOnClickListener( new View.OnClickListener() {

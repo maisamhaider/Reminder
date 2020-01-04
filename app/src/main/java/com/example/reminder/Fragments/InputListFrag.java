@@ -31,7 +31,6 @@ import android.widget.Toast;
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.InputTaskListAdapter;
-import com.example.reminder.classes.HideAndShowViewClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.EditTextStringListener;
@@ -69,6 +68,9 @@ public class InputListFrag extends Fragment {
             dayslLo, todayLo, tomorrowLo, nextweekLo, daycustomLo,
             timeLo, nineLo, threeLo, sixLo, timeCustomLo;
     private boolean today=false,tomorrow=false,nextWeek=false;
+
+    private Calendar calendar = Calendar.getInstance();
+    private int checkYear,currentYear,istomorrow,mtomorrow,isToday,mtoday;
 
     private Calendar c = Calendar.getInstance();
     private int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
@@ -317,6 +319,21 @@ public class InputListFrag extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
+
+            calendar.set( Calendar.YEAR,year );
+            calendar.set( Calendar.MONTH,month );
+            calendar.set( Calendar.DAY_OF_MONTH,dayOfMonth );
+
+
+            Calendar calendar1 = Calendar.getInstance();
+
+            checkYear = calendar.get( Calendar.YEAR );
+            currentYear =calendar1.get( Calendar.YEAR );
+            istomorrow = calendar.get(Calendar.DAY_OF_MONTH);
+            mtomorrow   = calendar1.get( Calendar.DAY_OF_MONTH )+1;
+            isToday  = calendar.get( Calendar.DAY_OF_MONTH);
+            mtoday  = calendar1.get( Calendar.DAY_OF_MONTH );
+
             myTimeSettingClass.setCustomPlaceDate( dayOfMonth,month,year );
             dateToPlaceTask = MyTimeSettingClass.getCustomPlaceDate();
 
@@ -327,55 +344,47 @@ public class InputListFrag extends Fragment {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-            Calendar calendar =  Calendar.getInstance();
-            Calendar calendar1 = Calendar.getInstance();
-
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE,minute );
 
-            int checkYear = calendar.get( Calendar.YEAR );
-            int currentYear =calendar1.get( Calendar.YEAR );
-            int istomorrow = calendar.get(Calendar.DAY_OF_MONTH);
-            int tomorrow   = calendar1.get( Calendar.DAY_OF_MONTH )+1;
-            int isToday  = calendar.get( Calendar.DAY_OF_MONTH);
-            int today    = calendar1.get( Calendar.DAY_OF_MONTH );
-
-            if (minute == 0 && (checkYear>currentYear || checkYear<currentYear)&& istomorrow !=tomorrow )
+            if (minute == 0 && checkYear>currentYear && istomorrow!=mtomorrow && isToday!=mtoday )
             {
                 sformat = new SimpleDateFormat( "dd MMM yyyy, h a" );
             }
             else
-            if (minute != 0 && (checkYear>currentYear || checkYear<currentYear)&& istomorrow !=tomorrow )
+            if (minute != 0 && checkYear>currentYear && istomorrow!=mtomorrow && isToday!=mtoday)
             {
                 sformat = new SimpleDateFormat( "d MMM yyyy, h:mm a" );
             }
-            else
-            if (minute == 0 && checkYear == currentYear && istomorrow !=tomorrow )
+
+            if (minute == 0 && checkYear == currentYear  && istomorrow!= mtomorrow )
             {
-                sformat = new SimpleDateFormat( "d MMM,h a" );
+                sformat = new SimpleDateFormat( "d MMM, h a" );
             }
             else
-            if (minute != 0 && checkYear == currentYear && istomorrow !=tomorrow )
+            if (minute != 0 && checkYear == currentYear && istomorrow!=mtomorrow  )
             {
                 sformat = new SimpleDateFormat( "d MMM, h:mm a" );
             }
+
+            if(minute == 0 && istomorrow==mtomorrow && isToday!=mtoday  ) {
+                sformat = new SimpleDateFormat( "EEE, h a " );
+            }
             else
-            if(minute == 0 && istomorrow==tomorrow)
-                {
-                 sformat = new SimpleDateFormat( "EEE, h a " );
-                }
-            else
-            if(minute != 0 && istomorrow==tomorrow)
+            if(minute != 0 && istomorrow==mtomorrow && isToday!=mtoday )
             {
                 sformat = new SimpleDateFormat( "EEE, h:mm a" );
             }
-            else
-                if (minute == 0 && isToday ==today){
+
+            if (minute == 0 && isToday==mtoday && istomorrow!=mtomorrow)
+            {
                 sformat = new SimpleDateFormat( "h a" );
-            } else
-                {
+            }
+            else
+            if (minute!=0 && isToday==mtoday && istomorrow!=mtomorrow)
+            {
                 sformat =new SimpleDateFormat( "h:mm a" );
-                }
+            }
             alamTime = sformat.format( calendar.getTime() );
 
         }
@@ -388,9 +397,9 @@ public class InputListFrag extends Fragment {
         remindTvLo.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HideAndShowViewClass.hideView( remindTvLo );
-                HideAndShowViewClass.showView( dayslLo );
-                HideAndShowViewClass.hideView( timeLo );
+                remindTvLo.setVisibility( View.GONE );
+                dayslLo.setVisibility( View.VISIBLE );
+                timeLo.setVisibility( View.GONE );
             }
         } );
 
@@ -402,8 +411,8 @@ public class InputListFrag extends Fragment {
                     nextWeek =false;
 
                     dateToPlaceTask = MyTimeSettingClass.todayPlaceDate();
-                    HideAndShowViewClass.hideView(  dayslLo );
-                    HideAndShowViewClass.showView( timeLo );
+                    dayslLo.setVisibility( View.GONE );
+                    timeLo.setVisibility( View.VISIBLE );
 
                 }
             } );
@@ -414,8 +423,8 @@ public class InputListFrag extends Fragment {
                     today = false;
                     nextWeek =false;
                     dateToPlaceTask = MyTimeSettingClass.tomorrowPlaceDate();
-                    HideAndShowViewClass.hideView(  dayslLo );
-                    HideAndShowViewClass.showView( timeLo );
+                    dayslLo.setVisibility( View.GONE );
+                    timeLo.setVisibility( View.VISIBLE );
                     nineLo.setClickable( true );
                     threeLo.setClickable( true );
                     sixLo.setClickable( true );
@@ -429,8 +438,8 @@ public class InputListFrag extends Fragment {
                     tomorrow = false;
                     today = false;
                     dateToPlaceTask= MyTimeSettingClass.nextWeekPlaceDate();
-                    HideAndShowViewClass.hideView(  dayslLo );
-                    HideAndShowViewClass.showView( timeLo );
+                    dayslLo.setVisibility( View.GONE );
+                    timeLo.setVisibility( View.VISIBLE );
                     nineLo.setClickable( true );
                     threeLo.setClickable( true );
                     sixLo.setClickable( true );
