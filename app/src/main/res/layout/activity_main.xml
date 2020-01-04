@@ -14,8 +14,10 @@
         android:id="@+id/fragcontainer"
         android:name="com.example.reminder.Fragments.mainfrag"
         android:layout_width="match_parent"
+        android:layout_gravity="bottom"
         android:layout_height="match_parent"
         android:layout_weight="1" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNV"

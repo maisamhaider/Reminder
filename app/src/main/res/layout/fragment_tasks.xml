@@ -417,7 +417,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="40dp"
         android:background="@color/colorAliceBlue"
         android:orientation="horizontal">
 
