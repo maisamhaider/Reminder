@@ -86,6 +86,7 @@ public class AllTasksFrag extends Fragment {
 
     private DataBaseHelper dataBaseHelper;
 
+    FragmentManager fragmentManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class AllTasksFrag extends Fragment {
 
         mainActivity = (MainActivity) getActivity();
         myTimeSettingClass = new MyTimeSettingClass();
+        fragmentManager = getActivity().getSupportFragmentManager();
         recyclerView_today = view.findViewById( R.id.todaytasksRecyclerView );
         recyclerView_tomorrow = view.findViewById( R.id.TomorrowtasksRecyclerView );
         recyclerView_upcoming = view.findViewById( R.id.upcomingtasksRecyclerView );
@@ -793,7 +795,7 @@ public class AllTasksFrag extends Fragment {
         while (cursor.moveToNext()) {
             model2List.add( new AllTasksModel(cursor.getString( 0 ),cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
-        allTasksAdapter = new AllTasksAdapter( getContext(), model2List,dataBaseHelper );
+        allTasksAdapter = new AllTasksAdapter( getContext(), model2List,dataBaseHelper,fragmentManager );
         recyclerView_today.setAdapter( allTasksAdapter );
         allTasksAdapter.notifyDataSetChanged();
 
@@ -822,7 +824,7 @@ public class AllTasksFrag extends Fragment {
         while (cursor.moveToNext()) {
             model2List.add( new AllTasksModel(cursor.getString( 0 ),cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
-        allTasksAdapter = new AllTasksAdapter( getContext(), model2List,dataBaseHelper );
+        allTasksAdapter = new AllTasksAdapter( getContext(), model2List,dataBaseHelper,fragmentManager );
         recyclerView_tomorrow.setAdapter( allTasksAdapter );
         allTasksAdapter.notifyDataSetChanged();
 
@@ -857,7 +859,7 @@ public class AllTasksFrag extends Fragment {
             allTasksModels.add(filter );
         }
 
-        allTasksAdapter1 = new AllTasksAdapter( getContext(), allTasksModels,dataBaseHelper );
+        allTasksAdapter1 = new AllTasksAdapter( getContext(), allTasksModels,dataBaseHelper,fragmentManager );
         recyclerView_upcoming.setAdapter( allTasksAdapter1 );
         allTasksAdapter1.notifyDataSetChanged();
 
@@ -887,11 +889,17 @@ public class AllTasksFrag extends Fragment {
         while (cursor.moveToNext()) {
             model2List.add( new AllTasksModel(cursor.getString( 0 ),cursor.getString( 1 ), cursor.getString( 2 ) ) );
         }
-        allTasksAdapter = new AllTasksAdapter( getContext(), model2List,dataBaseHelper );
+        allTasksAdapter = new AllTasksAdapter( getContext(), model2List,dataBaseHelper,fragmentManager );
         recyclerView_someday.setAdapter( allTasksAdapter );
         allTasksAdapter.notifyDataSetChanged();
 
 
+    }
+
+    public void editTAskBSHeet()
+    {
+        EditTask editTask = new EditTask().editTaskInstence();
+        editTask.show( getActivity().getSupportFragmentManager(),"edit Task BSHeet" );
     }
 
 

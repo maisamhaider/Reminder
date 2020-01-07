@@ -1,5 +1,6 @@
 package com.example.reminder.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.FragmentTransitionSupport;
 
+import com.example.reminder.Activity.MainActivity;
+import com.example.reminder.Fragments.AllTasksFrag;
+import com.example.reminder.Fragments.EditTask;
 import com.example.reminder.R;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.MyItemClickListener;
@@ -22,16 +28,19 @@ import java.util.List;
 
 public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHolder> {
 
+    MainActivity mainActivity;
     private final Context context;
     public static List<AllTasksModel> modelListForDeletion;
     private List<AllTasksModel> myModelList;
     DataBaseHelper dataBaseHelper;
+    FragmentManager fragmentManager;
 
-    public AllTasksAdapter(Context context, List<AllTasksModel> myModelList, DataBaseHelper dataBaseHelper) {
+    public AllTasksAdapter(Context context, List<AllTasksModel> myModelList, DataBaseHelper dataBaseHelper,FragmentManager fragmentManager) {
         this.modelListForDeletion = myModelList;
         this.context = context;
         this.myModelList = myModelList;
         this.dataBaseHelper = dataBaseHelper;
+        this.fragmentManager = fragmentManager;
     }
 
     @NonNull
@@ -78,7 +87,6 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             }
         } );
 
-
     }
 
     @Override
@@ -111,7 +119,8 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             mainLayout.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    EditTask editTask = EditTask.editTaskInstence();
+                    editTask.show( fragmentManager,"editTask BSheet " );
                     Toast.makeText( itemView.getContext(), "Position:" + Integer.toString( getPosition() ), Toast.LENGTH_SHORT ).show();
                 }
             } );

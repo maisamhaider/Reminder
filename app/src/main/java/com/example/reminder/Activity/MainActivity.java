@@ -17,6 +17,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.reminder.Fragments.CalendarFrag;
+import com.example.reminder.Fragments.EditTask;
 import com.example.reminder.Fragments.SettingsFrag;
 import com.example.reminder.Fragments.AllTasksFrag;
 import com.example.reminder.R;
@@ -166,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
             mEditTextStringListener.mystring( ss );
         }
     }
+
 
 
 }
