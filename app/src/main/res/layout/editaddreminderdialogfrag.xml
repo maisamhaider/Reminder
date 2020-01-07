@@ -79,6 +79,7 @@
             tools:layout_editor_absoluteX="15dp">
 
             <LinearLayout
+                android:id="@+id/editTagsLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
