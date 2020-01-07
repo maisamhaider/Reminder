@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <Button
-            android:text="Location soon"
+            android:text="Location"
             android:id="@+id/location_button"
             android:background="@android:color/transparent"
             android:layout_weight="1"
@@ -271,6 +271,7 @@
                         android:text="time" />
 
                 </LinearLayout>
+
             </LinearLayout>
         </HorizontalScrollView>
 

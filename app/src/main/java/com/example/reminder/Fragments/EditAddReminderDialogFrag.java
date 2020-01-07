@@ -1,23 +1,25 @@
 package com.example.reminder.Fragments;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import android.graphics.Typeface;
+
 
 import com.example.reminder.R;
 
 public class EditAddReminderDialogFrag extends DialogFragment {
 
-    Button oneTimeBtn,repeatBtn,locationSoonBtn;
+    Button oneTimeBtn,repeatBtn, locationBtn;
     LinearLayout repeatLL,editTagsLL;
 
     @Nullable
@@ -28,7 +30,7 @@ public class EditAddReminderDialogFrag extends DialogFragment {
 
         oneTimeBtn = view.findViewById( R.id.oneTime_button );
         repeatBtn  = view.findViewById( R.id.repeat_button );
-        locationSoonBtn = view.findViewById( R.id.location_button );
+        locationBtn = view.findViewById( R.id.location_button );
 
         repeatLL =view.findViewById( R.id.repeatLL );
         editTagsLL = view.findViewById( R.id.editTagsLL );
@@ -50,22 +52,22 @@ public class EditAddReminderDialogFrag extends DialogFragment {
             public void onClick(View v) {
                 editTagsLL.setVisibility( View.VISIBLE );
                 repeatLL.setVisibility( View.GONE );
-                changeButtonBg(oneTimeBtn,repeatBtn,locationSoonBtn);
+                changeButtonBg(oneTimeBtn,repeatBtn, locationBtn );
             }
         } );
 
         repeatBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeButtonBg(repeatBtn,oneTimeBtn,locationSoonBtn);
+                changeButtonBg(repeatBtn,oneTimeBtn, locationBtn );
                 editTagsLL.setVisibility( View.GONE );
                 repeatLL.setVisibility( View.VISIBLE );
             }
         } );
-        locationSoonBtn.setOnClickListener( new View.OnClickListener() {
+        locationBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeButtonBg(locationSoonBtn,oneTimeBtn,repeatBtn);
+                changeButtonBg( locationBtn,oneTimeBtn,repeatBtn);
             }
         } );
     }
@@ -73,11 +75,15 @@ public class EditAddReminderDialogFrag extends DialogFragment {
     public void changeButtonBg(Button setBg, Button removeBg1, Button removeBg2)
     {
         setBg.setBackground( getResources().getDrawable( R.drawable.threebuttonsafterclickbg) );
-        setBg.setTextColor( R.color.colorWhite );
+        setBg.setTextColor( Color.WHITE );
+        setBg.setTypeface( setBg.getTypeface(),Typeface.BOLD );
         removeBg1.setBackground( getResources().getDrawable( R.drawable.threebuttonsbeforeclickbg ) );
-        removeBg1.setTextColor( R.color.colorBlack );
+        removeBg1.setTextColor(Color.BLACK );
+        removeBg1.setTypeface( removeBg1.getTypeface(),Typeface.NORMAL );
         removeBg2.setBackground( getResources().getDrawable( R.drawable.threebuttonsbeforeclickbg ) );
-        removeBg2.setTextColor( R.color.colorBlack );
+        removeBg2.setTextColor(Color.BLACK );
+        removeBg2.setTypeface( removeBg2.getTypeface(),Typeface.NORMAL );
+
 
     }
     {
