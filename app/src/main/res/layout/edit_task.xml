@@ -28,7 +28,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="64dp"
                 android:textSize="25sp"
-                android:text="TextView"
+                android:text="Title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -257,6 +257,8 @@
                 android:id="@+id/lower_itemCon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_container">
 
                 <TextView
@@ -313,14 +315,30 @@
                     app:layout_constraintTop_toBottomOf="@+id/addNewSubTaskLL" />
 
                 <TextView
-                    android:id="@+id/notesTv"
+                    android:id="@+id/holdNotesTv"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_margin="16dp"
-                    android:text="Tap to add notes"
-                    android:gravity="center"
+                    android:background="@color/colorBlueGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/notes_tv" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/tapToAddNotesLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_margin="16dp"
+                    android:gravity="center"
+                    android:background="@color/colorBlueGray"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/notes_tv">
+                    <TextView
+                        android:text="Tap to add notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/AttachmenTv"
@@ -328,10 +346,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:text="ATTACHMENTS"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/notesTv"
-                    app:layout_constraintVertical_bias="0.015" />
+                    app:layout_constraintTop_toBottomOf="@+id/tapToAddNotesLL" />
 
 
                 <TextView
@@ -342,17 +358,20 @@
                     android:layout_marginEnd="16dp"
                     android:text="UPLOAD"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/notesTv" />
+                    app:layout_constraintTop_toBottomOf="@+id/tapToAddNotesLL" />
 
                 <LinearLayout
+                    android:id="@+id/tabToAddNotesLL"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_margin="16sp"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:background="@color/colorBlueGray"
+                    android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@+id/AttachmenTv">
 
                     <TextView
+                        android:background="@color/colorBlueGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tap to add notes" />
@@ -379,11 +398,11 @@
                     android:id="@+id/createdDateTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="date"
                     android:layout_margin="16dp"
                     android:layout_marginBottom="20dp"
+                    android:text="date"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/createdTv"/>
+                    app:layout_constraintTop_toBottomOf="@+id/createdTv" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

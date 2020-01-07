@@ -1,7 +1,8 @@
 package com.example.reminder.adapter;
 
-import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.transition.FragmentTransitionSupport;
 
 import com.example.reminder.Activity.MainActivity;
-import com.example.reminder.Fragments.AllTasksFrag;
 import com.example.reminder.Fragments.EditTask;
 import com.example.reminder.R;
 import com.example.reminder.database.DataBaseHelper;
@@ -56,7 +55,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
     @Override
     public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
-        holder.notes_TextView.setText( myModelList.get( position ).getNotes() );
+        holder.notes_TextView.setText( myModelList.get( position ).getTask() );
         holder.date_textView.setText( myModelList.get( position ).getDate() );
 
         holder.deleteItemIv.setVisibility( View.GONE );
@@ -84,6 +83,39 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
                 myModelList.remove( position );
                 notifyDataSetChanged();
 
+            }
+        } );
+        holder.itemView.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle(  );
+
+
+                Cursor DC =  dataBaseHelper.getCreatedDate(  myModelList.get( position ).getId() );
+                Cursor NC = dataBaseHelper.getTaskNote( myModelList.get( position ).getId() );
+                if (DC.getCount()== 0 )
+                {
+                    bundle.putString( "Task_Created_Date","Error");
+                }
+
+                while (DC.moveToNext())
+                {
+                    bundle.putString( "Task_Created_Date",DC.getString( 0 ));
+                }
+                if (NC.getCount()==0)
+                {
+                    bundle.putString( "Task_Note","Error" );
+                }
+                while (NC.moveToNext()){
+                    bundle.putString( "Task_Note",NC.getString( 0 ) );
+                }
+
+
+                bundle.putString( "Task_Title",myModelList.get( position ).getTask() );
+                bundle.putString( "task_position", String.valueOf( position ) );
+                EditTask editTask = EditTask.editTaskInstence();
+                editTask.show( fragmentManager,"editTask BSheet " );
+                editTask.setArguments( bundle );
             }
         } );
 
@@ -115,12 +147,13 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             checkBox.setOnClickListener( this);
 
 
-            mainLayout = (RelativeLayout) itemView.findViewById( R.id.mainindivduallayout );
+            mainLayout = itemView.findViewById( R.id.mainindivduallayout );
             mainLayout.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EditTask editTask = EditTask.editTaskInstence();
-                    editTask.show( fragmentManager,"editTask BSheet " );
+
+
+
                     Toast.makeText( itemView.getContext(), "Position:" + Integer.toString( getPosition() ), Toast.LENGTH_SHORT ).show();
                 }
             } );

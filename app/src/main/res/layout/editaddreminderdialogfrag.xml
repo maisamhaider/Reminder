@@ -7,9 +7,9 @@
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,42 +26,45 @@
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginRight="15dp"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:background="@drawable/threebuttonsbackground"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/oneTime_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="One Time"
-            android:background="@android:color/transparent"
-            android:textAllCaps="false"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:textAllCaps="false" />
+
         <Button
-            android:text="Repeat"
             android:id="@+id/repeat_button"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:background="@android:color/transparent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="Repeat"
+            android:textAllCaps="false" />
+
         <Button
-            android:text="Location"
             android:id="@+id/location_button"
-            android:background="@android:color/transparent"
-            android:layout_weight="1"
-            android:textAllCaps="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="Location"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 
@@ -80,7 +83,7 @@
 
             <LinearLayout
                 android:id="@+id/editTagsLL"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -92,6 +95,7 @@
                     android:layout_height="100dp"
                     android:layout_margin="16dp"
                     android:orientation="vertical"
+                    android:background="@color/colorBlueGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -100,7 +104,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/notification_active_foreground" />
+                        android:src="@drawable/notification_foreground" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -123,6 +127,7 @@
                     android:layout_height="100dp"
                     android:layout_margin="16dp"
                     android:orientation="vertical"
+                    android:background="@color/colorBlueGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -154,6 +159,7 @@
                     android:layout_height="100dp"
                     android:layout_margin="16dp"
                     android:orientation="vertical"
+                    android:background="@color/colorBlueGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -185,6 +191,7 @@
                     android:layout_height="100dp"
                     android:layout_margin="16dp"
                     android:orientation="vertical"
+                    android:background="@color/colorBlueGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -216,6 +223,7 @@
                     android:layout_height="100dp"
                     android:layout_margin="16dp"
                     android:orientation="vertical"
+                    android:background="@color/colorBlueGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -247,6 +255,7 @@
                     android:layout_height="100dp"
                     android:layout_margin="16dp"
                     android:orientation="vertical"
+                    android:background="@color/colorBlueGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -285,13 +294,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/edit_yearlyLL"
-                android:layout_width="0dp"
+                android:id="@+id/edit_dailyLL"
+                android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_margin="16dp"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:background="@color/colorBlueGray"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -299,38 +309,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Yearly" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/edit_monthlyLL"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_margin="16dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Monthly" />
+                    android:text="Daily" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/edit_weeklyLL"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_margin="16dp"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:background="@color/colorBlueGray"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -343,13 +334,35 @@
 
             </LinearLayout>
 
+
             <LinearLayout
-                android:id="@+id/edit_dailyLL"
-                android:layout_width="0dp"
+                android:id="@+id/edit_monthlyLL"
+                android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_margin="16dp"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:orientation="vertical"
+                android:background="@color/colorBlueGray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Monthly" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/edit_yearlyLL"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@color/colorBlueGray"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -358,30 +371,49 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Daily" />
+                    android:text="Yearly" />
+
 
             </LinearLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/editLocationLL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/oneTimeHorizontalScrollView"
+         >
+
+            <TextView
+                android:textSize="50sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Coming Soon" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <Button
-        android:layout_weight="1"
-        android:id="@+id/edit_task_cancelBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:text="Cancel"/>
-    <Button
-        android:layout_weight="1"
-        android:background="@android:color/white"
-        android:id="@+id/edit_task_Btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Set"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/edit_task_cancelBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:text="Cancel" />
+
+        <Button
+            android:id="@+id/edit_task_Btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:text="Set" />
     </LinearLayout>
 </LinearLayout>

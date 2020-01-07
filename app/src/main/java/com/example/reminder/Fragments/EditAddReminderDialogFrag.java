@@ -20,7 +20,7 @@ import com.example.reminder.R;
 public class EditAddReminderDialogFrag extends DialogFragment {
 
     Button oneTimeBtn,repeatBtn, locationBtn;
-    LinearLayout repeatLL,editTagsLL;
+    LinearLayout repeatLL,editTagsLL,editLocationLL;
 
     @Nullable
     @Override
@@ -34,9 +34,10 @@ public class EditAddReminderDialogFrag extends DialogFragment {
 
         repeatLL =view.findViewById( R.id.repeatLL );
         editTagsLL = view.findViewById( R.id.editTagsLL );
+        editLocationLL = view.findViewById( R.id.editLocationLL );
 
         repeatLL.setVisibility( View.GONE );
-
+        editLocationLL.setVisibility( View.GONE );
         onUpperButtonClick();
 
         return view;
@@ -52,6 +53,7 @@ public class EditAddReminderDialogFrag extends DialogFragment {
             public void onClick(View v) {
                 editTagsLL.setVisibility( View.VISIBLE );
                 repeatLL.setVisibility( View.GONE );
+                editLocationLL.setVisibility( View.GONE );
                 changeButtonBg(oneTimeBtn,repeatBtn, locationBtn );
             }
         } );
@@ -62,12 +64,17 @@ public class EditAddReminderDialogFrag extends DialogFragment {
                 changeButtonBg(repeatBtn,oneTimeBtn, locationBtn );
                 editTagsLL.setVisibility( View.GONE );
                 repeatLL.setVisibility( View.VISIBLE );
+                editLocationLL.setVisibility( View.GONE );
+
             }
         } );
         locationBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeButtonBg( locationBtn,oneTimeBtn,repeatBtn);
+                editTagsLL.setVisibility( View.GONE );
+                repeatLL.setVisibility( View.GONE );
+                editLocationLL.setVisibility( View.VISIBLE );
             }
         } );
     }
