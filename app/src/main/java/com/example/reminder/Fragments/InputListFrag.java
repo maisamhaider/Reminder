@@ -34,6 +34,7 @@ import com.example.reminder.adapter.InputTaskListAdapter;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.EditTextStringListener;
+import com.example.reminder.interfaces.VisibilityListener;
 import com.example.reminder.models.InputRemiderModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -207,6 +208,14 @@ public class InputListFrag extends Fragment {
             }
         } );
 
+        inputTaskListAdapter.addVisiblelistener(new VisibilityListener() {
+            @Override
+            public void VeiwVisibility() {
+                 remindTvLo.setVisibility( View.VISIBLE );
+
+            }
+        });
+
         //on done button data should go to task fragment.
 
         //search
@@ -224,7 +233,6 @@ public class InputListFrag extends Fragment {
                 inputTaskListAdapter.getFilter().filter( s );
             }
         } );
-        remindTvLo.setVisibility( View.VISIBLE );
 
 
         //go to task fragment

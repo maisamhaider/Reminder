@@ -1,6 +1,7 @@
 package com.example.reminder.adapter;
 
 import android.content.Context;
+import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.R;
 import com.example.reminder.interfaces.EditTextStringListener;
+import com.example.reminder.interfaces.VisibilityListener;
 import com.example.reminder.models.InputRemiderModel;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
     private List<InputRemiderModel> inputRemiderModelListfull;
 
     List<EditTextStringListener>stringListenerslist=new ArrayList<>();
+    List<VisibilityListener>visibilityListeners=new ArrayList<>();
     private ArrayList<String> names;
 
     public InputTaskListAdapter(Context context, List<InputRemiderModel> inputRemiderModelList) {
@@ -62,6 +65,7 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+                invokeVisible();
                 etvString(text);
 
             }
@@ -100,6 +104,15 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
 
     public void addlistener(EditTextStringListener editTextStringListener){
          stringListenerslist.add(editTextStringListener);
+    }
+   public void addVisiblelistener(VisibilityListener visible){
+         visibilityListeners.add(visible);
+    }
+
+    void invokeVisible(){
+        for(VisibilityListener visibleListen:visibilityListeners){
+            visibleListen.VeiwVisibility();
+        }
     }
 
     void etvString(String string){
