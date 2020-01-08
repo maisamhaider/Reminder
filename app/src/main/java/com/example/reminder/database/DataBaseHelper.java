@@ -78,9 +78,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public boolean updateNotesColumn(String notes,String position)
     {
         SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues(  );
+        contentValues.put( task_notes,notes );
 
-      database.execSQL( "UPDATE"+TABLE_NAME+" SET TASK_NOTES = "+notes+" WHERE ID =  \'"+position+"\'" );
+       long isUpdate = database.update( TABLE_NAME,contentValues,"ID=?",new String[]{position} );
 
+       if (isUpdate==-1)
+       {
+           return false;
+       }
         return true;
     }
 

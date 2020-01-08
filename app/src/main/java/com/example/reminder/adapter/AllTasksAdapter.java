@@ -112,10 +112,11 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
 
                 bundle.putString( "Task_Title",myModelList.get( position ).getTask() );
-                bundle.putString( "task_position", String.valueOf( position ) );
+                bundle.putString( "task_position", myModelList.get( position ).getId() );
                 EditTask editTask = EditTask.editTaskInstence();
                 editTask.show( fragmentManager,"editTask BSheet " );
                 editTask.setArguments( bundle );
+
             }
         } );
 
@@ -171,6 +172,4 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
         }
     }
-
-
 }
