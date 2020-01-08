@@ -81,11 +81,9 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
         TextView input_RV_Item_TV;
         ImageView input_RV_Item_IV;
         LinearLayout linearLayout ;
-        RecyclerView recyclerView;
 
         public InputHolder(@NonNull View itemView) {
             super(itemView);
-            recyclerView =itemView.findViewById(R.id.inputRemiderRV);
             input_RV_Item_TV =itemView.findViewById(R.id.inputRVItemTV);
             input_RV_Item_IV =itemView.findViewById(R.id.inputRVItemIV);
             linearLayout = itemView.findViewById(R.id.inputindividualLLayout);

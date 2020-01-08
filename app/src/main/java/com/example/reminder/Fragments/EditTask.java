@@ -3,6 +3,7 @@ package com.example.reminder.Fragments;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -42,6 +43,9 @@ public class EditTask extends BottomSheetDialogFragment {
 
     String notesHolderStg;
 
+    boolean isDbNotesEmpty = false;
+
+
 
 
     public static EditTask editTaskInstence()
@@ -55,6 +59,9 @@ public class EditTask extends BottomSheetDialogFragment {
         View view = inflater.inflate( R.layout.edit_task,container,false );
 
         dataBaseHelper = new DataBaseHelper( getContext() );
+
+        taskPosition = getArguments().getString( "task_position" );
+
 
         setTimeCV = view.findViewById( R.id.setTaskTimeCV );
         tomorrow9AmCV =view.findViewById( R.id.tomorrow9amCv );
@@ -91,7 +98,6 @@ public class EditTask extends BottomSheetDialogFragment {
         editTaskNotesLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 myNotesAlertDialog();
             }
         } );
@@ -102,10 +108,23 @@ public class EditTask extends BottomSheetDialogFragment {
 
         edittaskTitle.setText( getArguments().getString("Task_Title") );
         createdTextView.setText( getArguments().getString( "Task_Created_Date" ) );
-        notesHolderTv.setText( getArguments().getString( "Task_Note" ) );
 
-        taskPosition = getArguments().getString( "task_position" );
-        String isNotesHolderEmpty = notesHolderTv.getText().toString();
+        String isNotesHolderEmpty = getArguments().getString( "Task_Note" );
+
+        if (isNotesHolderEmpty.matches( "Error" ) || isNotesHolderEmpty.matches( ""))
+        {
+           isDbNotesEmpty = true;
+           editTaskNotesLL.setVisibility( View.VISIBLE );
+
+        }
+        else
+            {
+                isDbNotesEmpty=false;
+                notesHolderTv.setVisibility( View.VISIBLE);
+                editTaskNotesLL.setVisibility( View.GONE );
+                notesHolderTv.setText( isNotesHolderEmpty );
+
+            }
 
 //
 //
@@ -198,7 +217,10 @@ public class EditTask extends BottomSheetDialogFragment {
         myNotesET = view.findViewById( R.id. editAddNotesET);
         myNotesSaveBtn = view.findViewById( R.id.editNotesSaveBTn );
 
-        notesHolderStg = myNotesET.getText().toString();
+
+        String notesFromDBStg ;
+     //   notesHolderStg =
+
 
         final AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
         builder.setView( view );
@@ -220,7 +242,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 }
                 else
                 {
-                   boolean isUpdate = dataBaseHelper.updateNotesColumn( notesHolderStg,getArguments().getString( "task_position" ) );
+                   boolean isUpdate = dataBaseHelper.updateNotesColumn( notesHolderStg,taskPosition);
                 if (isUpdate)
                 {
                     Toast.makeText( getContext(), "updated", Toast.LENGTH_SHORT ).show();

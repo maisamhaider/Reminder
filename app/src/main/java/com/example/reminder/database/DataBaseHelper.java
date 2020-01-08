@@ -74,6 +74,34 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             else
                 return true;
     }
+    public boolean insert(String notes)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues(  );
+        contentValues.put( task_notes,notes );
+
+        long result = database.insert( TABLE_NAME,null,contentValues );
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean updateSubTaskColumn(String sub_tasks,String position)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues(  );
+        contentValues.put( DataBaseHelper.sub_tasks,sub_tasks );
+
+        long isUpdate = database.update( TABLE_NAME,contentValues,"ID=?",new String[]{position} );
+
+        if (isUpdate==-1)
+        {
+            return false;
+        }
+        return true;
+    }
+
 
     public boolean updateNotesColumn(String notes,String position)
     {
@@ -89,6 +117,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
        }
         return true;
     }
+
 
     public Cursor getToday() {
         SQLiteDatabase database = getWritableDatabase();
