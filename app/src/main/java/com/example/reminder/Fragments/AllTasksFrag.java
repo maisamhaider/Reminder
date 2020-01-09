@@ -121,7 +121,7 @@ public class AllTasksFrag extends Fragment {
         customTagLL      = view.findViewById( R.id.customLL );
 
         thisMorningTagImageView = view.findViewById( R.id.thisMorningIv );
-        laterTodayTagImageView  = view.findViewById( R.id.laterTodayIv );
+        laterTodayTagImageView  = view.findViewById( R.id.mainTaskFraglaterTodayIv );
         thisEveningTagImageView = view.findViewById( R.id.thisEveningIv );
         tomorrowTagImageView    = view.findViewById( R.id.tomorrowIv );
         nextWeekTagImageView    = view.findViewById( R.id.nextweekIv );
@@ -409,7 +409,7 @@ public class AllTasksFrag extends Fragment {
                         somedayTagImageView,customTagImageView );
             }
         } );
-        thisMorningTagLL.setOnClickListener( new View.OnClickListener() {
+        thisEveningTagLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 laterToday =false;

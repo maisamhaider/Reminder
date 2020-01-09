@@ -45,6 +45,7 @@
                 android:id="@+id/edit_somelayout_lCon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@+id/tagTv">
 
@@ -155,13 +156,53 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:text="REMIND ME ABOUT THIS"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/editDeleteUpperTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="DELETE"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <LinearLayout
+                    android:id="@+id/editSetTimeLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@color/colorBlueGray"
+                    android:orientation="horizontal"
+                    android:layout_margin="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/RMBT">
+
+                    <TextView
+                        android:id="@+id/editSetTimeTv"
+                        android:layout_gravity="start|center"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Switch
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:id="@+id/editReminderOnOffSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/editRemindTagsLL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/RMBT">
@@ -314,31 +355,38 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/addNewSubTaskLL" />
 
-                <TextView
-                    android:id="@+id/holdNotesTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="16dp"
-                    android:background="@color/colorBlueGray"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/notes_tv" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:orientation="vertical"
-                    android:id="@+id/tapToAddNotesLL"
+                    android:id="@+id/editTapToAddNotesLL"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:gravity="center"
                     android:background="@color/colorBlueGray"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/notes_tv">
-                    <TextView
-                        android:text="Tap to add notes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
 
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/tapToAddNotesTV"
+                        android:layout_width="108dp"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="Tap to add notes"
+                        app:layout_constraintEnd_toEndOf="@+id/holdNotesTv"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/holdNotesTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorBlueGray"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/AttachmenTv"
@@ -347,7 +395,7 @@
                     android:layout_margin="16dp"
                     android:text="ATTACHMENTS"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tapToAddNotesLL" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTapToAddNotesLL" />
 
 
                 <TextView
@@ -358,7 +406,7 @@
                     android:layout_marginEnd="16dp"
                     android:text="UPLOAD"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tapToAddNotesLL" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTapToAddNotesLL" />
 
                 <LinearLayout
                     android:id="@+id/tabToAddNotesLL"
@@ -390,6 +438,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
+                    android:layout_marginTop="20sp"
                     android:text="CREATED"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/AttachmentRv" />

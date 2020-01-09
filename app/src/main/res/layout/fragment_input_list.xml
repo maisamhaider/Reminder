@@ -55,7 +55,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
 
         android:id="@+id/remindLayout"
         android:layout_width="match_parent"
@@ -79,7 +78,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/dayslayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -193,7 +191,6 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/nine_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -216,7 +213,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
 
             android:id="@+id/three_layout"
             android:layout_width="wrap_content"
@@ -241,8 +237,6 @@
 
 
         <LinearLayout
-            android:visibility="gone"
-
             android:id="@+id/six_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -265,7 +259,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
 
             android:id="@+id/custom_time_layout"
             android:layout_width="wrap_content"

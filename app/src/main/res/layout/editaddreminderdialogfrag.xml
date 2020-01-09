@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@drawable/threebuttonsafterclickbg"
             android:text="One Time"
             android:textAllCaps="false" />
 
@@ -113,7 +113,7 @@
                         android:text="Later Today" />
 
                     <TextView
-                        android:id="@+id/later_todayTv"
+                        android:id="@+id/edit_latertodayTimeTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -145,7 +145,7 @@
                         android:text="This Evening" />
 
                     <TextView
-                        android:id="@+id/this_tomorrowTv"
+                        android:id="@+id/editThis_EveningTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -177,11 +177,11 @@
                         android:text="@string/tomorrow" />
 
                     <TextView
-                        android:id="@+id/tomorrowTv"
+                        android:id="@+id/editTimeTomorrowTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="time" />
+                         />
 
                 </LinearLayout>
 
@@ -209,7 +209,7 @@
                         android:text="Next Week" />
 
                     <TextView
-                        android:id="@+id/nextweekTv"
+                        android:id="@+id/ediTimeNextweekTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -240,12 +240,6 @@
                         android:layout_gravity="center"
                         android:text="Someday" />
 
-                    <TextView
-                        android:id="@+id/edit_somedayTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="time" />
 
                 </LinearLayout>
 
@@ -272,12 +266,6 @@
                         android:layout_gravity="center"
                         android:text="custom" />
 
-                    <TextView
-                        android:id="@+id/edit_customTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="time" />
 
                 </LinearLayout>
 
@@ -393,6 +381,42 @@
                 android:layout_gravity="center"
                 android:text="Coming Soon" />
         </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/edit_showReminderTimeCL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/edit_remindMeOrNoReminderTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/edit_addReminderShowTimeTv"
+                android:layout_margin="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_remindMeOrNoReminderTv" />
+
+            <ImageView
+                android:id="@+id/edit_addReminderDeleteTimeIV"
+                android:layout_margin="16dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/deletebin_foreground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -409,7 +433,7 @@
             android:text="Cancel" />
 
         <Button
-            android:id="@+id/edit_task_Btn"
+            android:id="@+id/edit_task_SaveBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

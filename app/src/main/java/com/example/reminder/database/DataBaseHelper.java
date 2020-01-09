@@ -66,7 +66,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues(  );
         contentValues.put( sub_tasks,subTask );
-        contentValues.put( task_notes,notes );
 
         long result = database.insert( TABLE_NAME,null,contentValues );
         if (result == -1)
@@ -81,6 +80,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put( task_notes,notes );
 
         long result = database.insert( TABLE_NAME,null,contentValues );
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean update(String reminder_date,String date_to_place_task,String position)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues(  );
+        contentValues.put( this.reminder_date,reminder_date );
+        contentValues.put( this.date_to_place_task,date_to_place_task );
+
+        long result = database.update( TABLE_NAME,contentValues,"ID=?",new String[]{position} );
+
         if (result == -1)
             return false;
         else
@@ -172,6 +186,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
        Cursor CDC = database.rawQuery("SELECT CREATED_DATE FROM "+TABLE_NAME+" WHERE ID LIKE \'"+position+"\'",null );
         return CDC;
+    }
+    public Cursor getReminderDate(String position)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor RDC = database.rawQuery( "SELECT REMINDER_DATE FROM "+TABLE_NAME+" WHERE ID LIKE \'"+position+"\'",null );
+        return RDC;
     }
 
 

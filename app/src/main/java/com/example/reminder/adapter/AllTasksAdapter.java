@@ -93,21 +93,36 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
                 Cursor DC =  dataBaseHelper.getCreatedDate(  myModelList.get( position ).getId() );
                 Cursor NC = dataBaseHelper.getTaskNote( myModelList.get( position ).getId() );
+                Cursor RDC = dataBaseHelper.getReminderDate( myModelList.get( position ).getId() );
                 if (DC.getCount()== 0 )
-                {
-                    bundle.putString( "Task_Created_Date","Error");
-                }
-
+                {}
                 while (DC.moveToNext())
-                {
-                    bundle.putString( "Task_Created_Date",DC.getString( 0 ));
-                }
+                { bundle.putString( "Task_Created_Date",DC.getString( 0 )); }
+
                 if (NC.getCount()==0)
                 {
-                    bundle.putString( "Task_Note","Error" );
                 }
                 while (NC.moveToNext()){
-                    bundle.putString( "Task_Note",NC.getString( 0 ) );
+                    String isNote =NC.getString( 0 );
+                    if (isNote == null)
+                    { bundle.putString( "Task_Note",null );}
+                    else
+                    {bundle.putString( "Task_Note",NC.getString( 0 ) );}
+
+                }
+                if (RDC.getCount()== 0)
+                {}
+                while (RDC.moveToNext())
+                {
+                  String isDate = RDC.getString( 0 );
+                  if (isDate == null)
+                  {
+                      bundle.putString( "Reminder_date",null);
+                  }
+                  else
+                      {
+                          bundle.putString( "Reminder_date",RDC.getString( 0 ) );
+                      }
                 }
 
 
