@@ -50,8 +50,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues(  );
         contentValues.put( reminderText,text );
-        contentValues.put( this.reminder_date,reminder_date );
-        contentValues.put( this.date_to_place_task,date_to_place_task );
+        contentValues.put( DataBaseHelper.reminder_date,reminder_date );
+        contentValues.put( DataBaseHelper.date_to_place_task,date_to_place_task );
         contentValues.put( task_created_date,createdDate );
 
         long result = database.insert( TABLE_NAME, null,contentValues );

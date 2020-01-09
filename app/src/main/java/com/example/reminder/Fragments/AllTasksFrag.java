@@ -90,6 +90,9 @@ public class AllTasksFrag extends Fragment {
 
     FragmentManager fragmentManager;
 
+   private   InputListFrag inputListFrag = new InputListFrag();
+    private  Bundle bundle = new Bundle(  );
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -257,40 +260,38 @@ public class AllTasksFrag extends Fragment {
         super.onDetach();
     }
 
-    private void setfrag() {
-        Fragment fragment = new InputListFrag();
-        FragmentManager fragmentManager = getFragmentManager();
-        assert fragmentManager != null;
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace( R.id.fragcontainer, fragment );
-        fragmentTransaction.commit();
-    }
 
     private void loadedfragonbtnclick() {
+
+
 
         addtodayBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bundle.putBoolean( "today_Clicked",true );
                 setfrag();
             }
         } );
         addtomorrowbtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bundle.putBoolean( "tomorrow_Clicked",true );
                 setfrag();
             }
         } );
         addupcomingbtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bundle.putBoolean( "upcoming_Clicked",true );
                 setfrag();
             }
         } );
         addsomedaybtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bundle.putBoolean( "someday_Clicked",true );
                 setfrag();
-            }
+          }
         } );
         mainAddbtn.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -299,6 +300,15 @@ public class AllTasksFrag extends Fragment {
             }
         } );
 
+    }
+    private void setfrag() {
+        Fragment fragment = new InputListFrag();
+        FragmentManager fragmentManager = getFragmentManager();
+        assert fragmentManager != null;
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace( R.id.fragcontainer, fragment );
+        inputListFrag.setArguments( bundle );
+        fragmentTransaction.commit();
     }
 
     @Override

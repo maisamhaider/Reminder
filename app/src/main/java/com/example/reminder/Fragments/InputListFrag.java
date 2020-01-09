@@ -79,6 +79,7 @@ public class InputListFrag extends Fragment {
     private  Calendar taskCreatedDate = Calendar.getInstance();
     private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy" );
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -94,7 +95,6 @@ public class InputListFrag extends Fragment {
         mainActivity = (MainActivity) getActivity();
         myTimeSettingClass = new MyTimeSettingClass();
         dataBaseHelper = new DataBaseHelper( getContext() );
-
 
 
         recyclerView = view.findViewById( R.id.inputRemiderRV );
@@ -263,6 +263,8 @@ public class InputListFrag extends Fragment {
 
     private void onDoneButtonClick()
     {
+
+
         if (input_ET.length()==0)
         {
             mainActivity.setTaskFragDefaultBNBItem();
@@ -272,14 +274,14 @@ public class InputListFrag extends Fragment {
         {
             if (dateToPlaceTask.matches( "" ))
             {
-                boolean isInsert =  dataBaseHelper.insert( input_ET.getText().toString(),alamTime,MyTimeSettingClass.todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime()) );
+                    boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()) );
 
-                if (isInsert)
-                {
-                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-                }
-                else
-                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                    if (isInsert)
+                    {
+                        Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                    }
+                    else
+                        Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
 
             }
             else
@@ -298,12 +300,12 @@ public class InputListFrag extends Fragment {
             {
                 boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()) );
 
-                if (isInsert)
-                {
-                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-                }
-                else
-                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                        if (isInsert)
+                        {
+                            Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                        }
+                        else
+                            Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
             }
             else
             {

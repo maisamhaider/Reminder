@@ -299,6 +299,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_container">
 
@@ -357,13 +358,13 @@
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:orientation="vertical"
-                    android:id="@+id/editTapToAddNotesLL"
+                    android:id="@+id/editTapToAddNotesCL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:gravity="center"
                     android:background="@color/colorBlueGray"
+                    android:gravity="center"
+                    android:orientation="vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/notes_tv">
 
@@ -382,6 +383,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/colorBlueGray"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -395,7 +397,7 @@
                     android:layout_margin="16dp"
                     android:text="ATTACHMENTS"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTapToAddNotesLL" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTapToAddNotesCL" />
 
 
                 <TextView
@@ -406,22 +408,22 @@
                     android:layout_marginEnd="16dp"
                     android:text="UPLOAD"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTapToAddNotesLL" />
+                    app:layout_constraintTop_toBottomOf="@+id/editTapToAddNotesCL" />
 
                 <LinearLayout
                     android:id="@+id/tabToAddNotesLL"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_margin="16sp"
-                    android:gravity="center"
                     android:background="@color/colorBlueGray"
+                    android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@+id/AttachmenTv">
 
                     <TextView
-                        android:background="@color/colorBlueGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@color/colorBlueGray"
                         android:text="Tap to add notes" />
                 </LinearLayout>
 
