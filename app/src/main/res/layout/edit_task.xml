@@ -5,8 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
@@ -299,7 +297,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_container">
 
@@ -316,7 +313,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/subTasksRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="16sp"
                     android:layout_marginTop="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -327,18 +324,20 @@
                     android:id="@+id/addNewSubTaskLL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16sp"
+                    android:layout_margin="16dp"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/subTasksRecyclerView">
 
                     <ImageView
                         android:id="@+id/newSubTaskIv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:src="@drawable/ic_add_circle_black_24dp" />
 
                     <TextView
+                        android:layout_gravity="center"
                         android:id="@+id/newSubTaskTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -346,16 +345,16 @@
 
                 </LinearLayout>
 
+
                 <TextView
                     android:id="@+id/notes_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="20dp"
                     android:text="NOTES"
+                    android:layout_marginTop="70dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/addNewSubTaskLL" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/subTasksRecyclerView" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/editTapToAddNotesCL"
@@ -369,68 +368,61 @@
                     app:layout_constraintTop_toBottomOf="@+id/notes_tv">
 
                     <TextView
-                        android:id="@+id/tapToAddNotesTV"
-                        android:layout_width="108dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
-                        android:text="Tap to add notes"
-                        app:layout_constraintEnd_toEndOf="@+id/holdNotesTv"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
                         android:id="@+id/holdNotesTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/colorBlueGray"
+                        android:text="Tap to add note"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <TextView
                     android:id="@+id/AttachmenTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
                     android:text="ATTACHMENTS"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTapToAddNotesCL" />
 
-
                 <TextView
-                    android:id="@+id/uploadTv"
+                    android:id="@+id/edit_uploadTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="20dp"
                     android:text="UPLOAD"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTapToAddNotesCL" />
 
                 <LinearLayout
-                    android:id="@+id/tabToAddNotesLL"
+                    android:id="@+id/tabToAddAttachmentsLL"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="16sp"
                     android:background="@color/colorBlueGray"
-                    android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@+id/AttachmenTv">
 
                     <TextView
+                        android:id="@+id/edit_tapToAddAttachmentTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/colorBlueGray"
-                        android:text="Tap to add notes" />
+                        android:text="Tap to add attachment" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/AttachmentRv"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:layout_margin="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/AttachmenTv" />
@@ -450,8 +442,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:layout_marginBottom="20dp"
                     android:text="date"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/createdTv" />
 

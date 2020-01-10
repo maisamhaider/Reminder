@@ -16,6 +16,7 @@
             android:id="@+id/editAddNotesBackIV"
             android:layout_width="73dp"
             android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
             android:src="@drawable/keybackarrow_foreground" />
         <TextView
             android:gravity="center|start"
@@ -29,20 +30,24 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-    <EditText
-        android:id="@+id/editAddNotesET"
-        android:backgroundTint="@android:color/transparent"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp"
+        android:scrollbars="none">
+
+        <EditText
+            android:id="@+id/editAddNotesET"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:gravity="start"
+            android:backgroundTint="@android:color/transparent" />
     </ScrollView>
 
     <Button
         android:id="@+id/editNotesSaveBTn"
         android:text="Save"
         android:textAllCaps="false"
-        android:background="@color/colorWhite"
+        android:backgroundTint="@color/colorWhite"
         android:textColor="@color/colorDodgerBlue"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="60dp"/>
 

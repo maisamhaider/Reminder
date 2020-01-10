@@ -61,30 +61,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             else
         return true;
     }
-    public boolean insert(String subTask,String notes)
-    {
-        SQLiteDatabase database = getWritableDatabase();
-        ContentValues contentValues = new ContentValues(  );
-        contentValues.put( sub_tasks,subTask );
-
-        long result = database.insert( TABLE_NAME,null,contentValues );
-        if (result == -1)
-            return false;
-            else
-                return true;
-    }
-    public boolean insert(String notes)
-    {
-        SQLiteDatabase database = getWritableDatabase();
-        ContentValues contentValues = new ContentValues(  );
-        contentValues.put( task_notes,notes );
-
-        long result = database.insert( TABLE_NAME,null,contentValues );
-        if (result == -1)
-            return false;
-        else
-            return true;
-    }
 
     public boolean update(String reminder_date,String date_to_place_task,String position)
     {

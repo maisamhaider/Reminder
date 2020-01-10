@@ -848,14 +848,15 @@ public class AllTasksFrag extends Fragment {
     private void readUpcomingfromDb() {
         AllTasksAdapter allTasksAdapter1;
         List<AllTasksModel> allTasksModels = new ArrayList<>();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
+        LinearLayoutManager linearLayoutManager ;
         linearLayoutManager = new LinearLayoutManager( getContext() ) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         };
+        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
+
         recyclerView_upcoming.setLayoutManager( linearLayoutManager );
 
 
