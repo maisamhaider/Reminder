@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginBottom="60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:layout_above="@+id/addETRelativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_gravity="bottom"
+        android:scrollbars="none"
+        android:layout_height="35dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/tagsLlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@color/colorAliceBlue">
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick"
+                android:id="@+id/thisMorningtagLL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/notification_foreground"
+                    android:id="@+id/thisMorningIv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:id="@+id/thisMorningtagTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:layout_gravity="start|center"
+                    android:text="This morning"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick"
+                android:id="@+id/laterTodaytagLL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/notification_foreground"
+                    android:id="@+id/mainTaskFraglaterTodayIv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:id="@+id/laterTodaytagTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:layout_gravity="start|center"
+                    android:text="Later today"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:id="@+id/thisEveningtagLL"
+                android:background="@drawable/tagsbackgroundbeforeclick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/notification_foreground"
+                    android:id="@+id/thisEveningIv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:id="@+id/thisEveningTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="start|center"
+                    android:text="This evening" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:id="@+id/tomorrowtagLL"
+                android:background="@drawable/tagsbackgroundbeforeclick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/notification_foreground"
+                    android:id="@+id/tomorrowIv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:id="@+id/tomorrowtagTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="start|center"
+                    android:text="Tomorrow morning" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:id="@+id/nextweekLL"
+                android:background="@drawable/tagsbackgroundbeforeclick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/notification_foreground"
+                    android:id="@+id/nextweekIv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:id="@+id/upcomingtagTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="start|center"
+                    android:text="Next week" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:id="@+id/somedayLL"
+                android:background="@drawable/tagsbackgroundbeforeclick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/notification_foreground"
+                    android:id="@+id/somedayIv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:backgroundTint="@android:color/transparent"
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:id="@+id/somedaytagTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="start|center"
+                    android:text="Someday" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:id="@+id/customLL"
+                android:background="@drawable/tagsbackgroundbeforeclick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+
+                    android:src="@drawable/notification_foreground"
+                    android:id="@+id/customIv"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/customtagTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="start|center"
+                    android:text="Custom" />
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+    <RelativeLayout
+        android:id="@+id/addETRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/colorAliceBlue"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/addtaskedittext"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:paddingRight="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/mainAddButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="310dp"
+            android:background="@drawable/ic_add_circle_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/AddUpButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="310dp"
+            android:background="@drawable/updone_foreground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

@@ -107,11 +107,12 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
                 Log.i( "Calendar Permission","Not Granted" );
             }
 
-
-
         }
         super.onRequestPermissionsResult( requestCode, permissions, grantResults );
     }
+
+
+
 
     public void setTaskFragDefaultBNBItem()
     {

@@ -10,21 +10,31 @@ import androidx.annotation.Nullable;
 
 import static com.example.reminder.classes.MyTimeSettingClass.todayPlaceDate;
 import static com.example.reminder.classes.MyTimeSettingClass.tomorrowPlaceDate;
-import static com.example.reminder.classes.MyTimeSettingClass.nextWeekPlaceDate;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
-
+    // Task table
     private static final String DATABASE_NAME = "Reminder.db";
     private static final String TABLE_NAME = "Day_List";
     private static final String ID = "ID";
     private static final String reminderText = "REMINDER_TEXT";
     private static final String reminder_date = "REMINDER_DATE";
     private static final String date_to_place_task = "DATE_TO_PLACE_TASK";
-    private static final String sub_tasks = "SUB_TASKS";
     private static final String task_notes = "TASK_NOTES";
     private static final String task_created_date = "CREATED_DATE";
 
+    // sub task table
+
+    private static final String SUB_TASK_TABLE = "Sub_Task_Table";
+    private static final String SUB_TASKS = "SUB_TASKS";
+    private static final String SUB_TASK_PID = "P_ID";
+    private static final String SUB_TASKS_FID = "F_ID";
+
+    // FILE TABLE
+    private static final String IMAGE_TABLE = "image_table";
+    private static final String IMAGE = "IMAGE";
+    private static final String IMAGE_PID = "IMAGE_P_KEY";
+    private static final String IMAGE_FID = "IMAGE_F_KEY";
 
 
     public DataBaseHelper(@Nullable Context context) {
@@ -33,43 +43,29 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL( " create table "+ TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT ,REMINDER_TEXT TEXT,REMINDER_DATE TEXT" +
-                ",DATE_TO_PLACE_TASK TEXT,SUB_TASKS TEXT,TASK_NOTES TEXT,CREATED_DATE TEXT)");
+        db.execSQL( " create table " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT ,REMINDER_TEXT TEXT,REMINDER_DATE TEXT" +
+                ",DATE_TO_PLACE_TASK TEXT,TASK_NOTES TEXT,CREATED_DATE TEXT)" );
+        db.execSQL( "Create table " + SUB_TASK_TABLE + "(P_ID INTEGER PRIMARY KEY AUTOINCREMENT,SUB_TASKS TEXT,F_ID TEXT)" );
+        db.execSQL( "create table " + IMAGE_TABLE + "(IMAGE_P_KEY INTEGER PRIMARY KEY AUTOINCREMENT,IMAGE_F_KEY TEXT,IMAGE TEXT)" );
 
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL( " DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL( " DROP TABLE IF EXISTS " + TABLE_NAME );
         onCreate( db );
     }
 
-    public boolean insert(String text,String reminder_date,String date_to_place_task,String createdDate)
-    {
+    public boolean insert(String text, String reminder_date, String date_to_place_task, String createdDate) {
         SQLiteDatabase database = getWritableDatabase();
-        ContentValues contentValues = new ContentValues(  );
-        contentValues.put( reminderText,text );
-        contentValues.put( DataBaseHelper.reminder_date,reminder_date );
-        contentValues.put( DataBaseHelper.date_to_place_task,date_to_place_task );
-        contentValues.put( task_created_date,createdDate );
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( reminderText, text );
+        contentValues.put( DataBaseHelper.reminder_date, reminder_date );
+        contentValues.put( DataBaseHelper.date_to_place_task, date_to_place_task );
+        contentValues.put( task_created_date, createdDate );
 
-        long result = database.insert( TABLE_NAME, null,contentValues );
-
-        if (result == -1)
-            return false;
-            else
-        return true;
-    }
-
-    public boolean update(String reminder_date,String date_to_place_task,String position)
-    {
-        SQLiteDatabase database = getWritableDatabase();
-        ContentValues contentValues = new ContentValues(  );
-        contentValues.put( this.reminder_date,reminder_date );
-        contentValues.put( this.date_to_place_task,date_to_place_task );
-
-        long result = database.update( TABLE_NAME,contentValues,"ID=?",new String[]{position} );
+        long result = database.insert( TABLE_NAME, null, contentValues );
 
         if (result == -1)
             return false;
@@ -77,34 +73,60 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean updateSubTaskColumn(String sub_tasks,String position)
-    {
+    public boolean insertSubTask(String sub_tasks, String F_KEY) {
         SQLiteDatabase database = getWritableDatabase();
-        ContentValues contentValues = new ContentValues(  );
-        contentValues.put( DataBaseHelper.sub_tasks,sub_tasks );
+        ContentValues cv = new ContentValues();
+        cv.put( SUB_TASKS, sub_tasks );
+        cv.put( SUB_TASKS_FID, F_KEY );
 
-        long isUpdate = database.update( TABLE_NAME,contentValues,"ID=?",new String[]{position} );
-
-        if (isUpdate==-1)
-        {
+        long result = database.insert( SUB_TASK_TABLE, null, cv );
+        if (result == -1) {
             return false;
-        }
-        return true;
+        } else
+            return true;
+
+    }
+
+    public boolean insertFile(String filePath, String fk) {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put( IMAGE, filePath );
+        cv.put( IMAGE_FID, fk );
+
+
+        long result = database.insert( IMAGE_TABLE, null, cv );
+        if (result == -1) {
+            return false;
+        } else
+            return true;
+
     }
 
 
-    public boolean updateNotesColumn(String notes,String position)
-    {
+    public boolean update(String reminder_date, String date_to_place_task, String position) {
         SQLiteDatabase database = getWritableDatabase();
-        ContentValues contentValues = new ContentValues(  );
-        contentValues.put( task_notes,notes );
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( this.reminder_date, reminder_date );
+        contentValues.put( this.date_to_place_task, date_to_place_task );
 
-       long isUpdate = database.update( TABLE_NAME,contentValues,"ID=?",new String[]{position} );
+        long result = database.update( TABLE_NAME, contentValues, "ID=?", new String[]{position} );
 
-       if (isUpdate==-1)
-       {
-           return false;
-       }
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean updateNotesColumn(String notes, String position) {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( task_notes, notes );
+
+        long isUpdate = database.update( TABLE_NAME, contentValues, "ID=?", new String[]{position} );
+
+        if (isUpdate == -1) {
+            return false;
+        }
         return true;
     }
 
@@ -113,77 +135,86 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         String today = todayPlaceDate();
 
-        Cursor day = database.rawQuery( " SELECT * FROM " + TABLE_NAME+ " WHERE DATE_TO_PLACE_TASK LIKE \'"+ today +"\'", null );
-            return day;
+        Cursor day = database.rawQuery( " SELECT * FROM " + TABLE_NAME + " WHERE DATE_TO_PLACE_TASK LIKE \'" + today + "\'", null );
+        return day;
     }
-    public  Cursor getTomorrow()
-    {
+
+    public Cursor getTomorrow() {
         SQLiteDatabase database = getWritableDatabase();
-        Cursor day ;
+        Cursor day;
         String tomorrow = tomorrowPlaceDate();
-        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME+ " WHERE DATE_TO_PLACE_TASK LIKE \'"+ tomorrow +"\'",null );
+        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE DATE_TO_PLACE_TASK LIKE \'" + tomorrow + "\'", null );
         return day;
 
     }
-    public  Cursor getUpcoming()
-    {
+
+    public Cursor getUpcoming() {
         SQLiteDatabase database = getWritableDatabase();
-        Cursor day ;
-        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME,null,null );
+        Cursor day;
+        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME, null, null );
         return day;
 
     }
-    public Cursor getSomeday()
-    {
+
+    public Cursor getSomeday() {
         SQLiteDatabase database = getReadableDatabase();
         Cursor day;
         String someday = "";
-        day = database.rawQuery( "SELECT * FROM "+TABLE_NAME+" WHERE DATE_TO_PLACE_TASK LIKE \'"+someday+"\'",null);
+        day = database.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE DATE_TO_PLACE_TASK LIKE \'" + someday + "\'", null );
         return day;
     }
+
 
     public Cursor getSubTasks(String position)
     {
         SQLiteDatabase database = getWritableDatabase();
-        Cursor STC = database.rawQuery( "SELECT SUB_TASKS FROM "+TABLE_NAME+" WHERE ID LIKE \'"+position+"\'",null );
-        return STC;
+        return database.rawQuery( "SELECT * FROM " + SUB_TASK_TABLE + " WHERE F_ID LIKE \'" + position + "\'",null );
     }
 
-    public Cursor getTaskNote(String position)
-    {
+    public Cursor getTaskNote(String position) {
         SQLiteDatabase database = getWritableDatabase();
-      Cursor TNC = database.rawQuery( "SELECT TASK_NOTES FROM "+TABLE_NAME+" WHERE ID LIKE \'"+position+"\'",null );
-        return TNC;
+        return database.rawQuery( "SELECT TASK_NOTES FROM " + TABLE_NAME + " WHERE ID LIKE \'" + position + "\'", null );
     }
 
 
-    public Cursor getCreatedDate(String position)
-    {
+    public Cursor getCreatedDate(String position) {
         SQLiteDatabase database = getWritableDatabase();
-       Cursor CDC = database.rawQuery("SELECT CREATED_DATE FROM "+TABLE_NAME+" WHERE ID LIKE \'"+position+"\'",null );
+        Cursor CDC = database.rawQuery( "SELECT CREATED_DATE FROM " + TABLE_NAME + " WHERE ID LIKE \'" + position + "\'", null );
         return CDC;
     }
-    public Cursor getReminderDate(String position)
-    {
+
+    public Cursor getReminderDate(String position) {
         SQLiteDatabase database = getWritableDatabase();
-        Cursor RDC = database.rawQuery( "SELECT REMINDER_DATE FROM "+TABLE_NAME+" WHERE ID LIKE \'"+position+"\'",null );
+        Cursor RDC = database.rawQuery( "SELECT REMINDER_DATE FROM " + TABLE_NAME + " WHERE ID LIKE \'" + position + "\'", null );
         return RDC;
     }
 
-
-    public void deleteOneItem(String position)
+    public Cursor getAttachment(String position)
     {
         SQLiteDatabase database = getWritableDatabase();
-        int DOT = database.delete( TABLE_NAME, "ID=?", new String[]{String.valueOf(position)} );
+        Cursor AC = database.rawQuery( "SELECT * FROM " + IMAGE_TABLE + " WHERE IMAGE_F_KEY LIKE \'" + position + "\'", null );
+        return AC;
+    }
+
+    public void deleteOneTask(String position) {
+        SQLiteDatabase database = getWritableDatabase();
+        int DOT = database.delete( TABLE_NAME, "ID=?", new String[]{String.valueOf( position )} );
 
     }
 
-    public void deleteSubTask(String position)
+    public void deleteSubTask(String fKey) {
+        SQLiteDatabase database = getWritableDatabase();
+        int DST = database.delete(  SUB_TASK_TABLE, " F_ID=?", new String[]{String.valueOf( fKey )} );
+    }
+    public void deleteEachSubTask(String pKey) {
+        SQLiteDatabase database = getWritableDatabase();
+        int DEST = database.delete(SUB_TASK_TABLE, "P_ID=?", new String[]{String.valueOf( pKey )} );
+    }
+    public  void deleteAttachment(String pKey)
     {
         SQLiteDatabase database = getWritableDatabase();
-        int DST = database.delete( "DELETE FROM "+TABLE_NAME," WHERE ID=?",new String[]{String.valueOf( position )} );
+        int DA = database.delete(IMAGE_TABLE, "IMAGE_P_KEY=?", new String[]{String.valueOf( pKey )} );
+
 
     }
-
-
 }

@@ -239,13 +239,6 @@ public class CalendarFrag extends Fragment {
                 dtstart,
                 dtend;
 
-        public int getEvent_id() {
-            return event_id;
-        }
-
-        public void setEvent_id(int calendar_id) {
-            event_id = calendar_id;
-        }
 
         public String getTitle() { return title;}
 
@@ -290,7 +283,6 @@ public class CalendarFrag extends Fragment {
                     ,REQUEST_PERMISSION);
             return false;
         }
-
     }
 
 

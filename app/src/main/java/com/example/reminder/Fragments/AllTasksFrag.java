@@ -203,14 +203,12 @@ public class AllTasksFrag extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
 
-
                     linearLayoutTags.setVisibility( View.GONE );
                     addUpbtn.setVisibility( View.GONE );
                     mainAddbtn.setVisibility( View.VISIBLE );
                     mainActivity.showBottomNView();
                     setDataInRecyclerView();
                     add_task_edittext.setText( "" );
-
 
                 }
                 return false;
@@ -220,8 +218,6 @@ public class AllTasksFrag extends Fragment {
 
         return view;
     }
-
-
 
 
     @Override
@@ -237,8 +233,6 @@ public class AllTasksFrag extends Fragment {
                         hidelinearLayoutTags();
                         addUpbtn.setVisibility( View.GONE );
                         mainAddbtn.setVisibility( View.VISIBLE );
-//                        HideAndShowViewClass.hideView( addUpbtn );
-//                        HideAndShowViewClass.showView( mainAddbtn );
                         mainActivity.showBottomNView();
 
                 }

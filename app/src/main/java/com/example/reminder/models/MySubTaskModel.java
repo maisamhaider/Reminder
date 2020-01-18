@@ -2,14 +2,19 @@ package com.example.reminder.models;
 
 public class MySubTaskModel {
 
-    String[] subTaskTitle;
+    String subTaskTitle;
+    String id;
 
-    public MySubTaskModel(String[] subTaskTitle) {
-        this.subTaskTitle =  subTaskTitle;
-
+    public MySubTaskModel(String id,String subTaskTitle) {
+        this.subTaskTitle = subTaskTitle;
+        this.id = id;
     }
 
-    public String[] getSubTaskTitle() {
+    public String getSubTaskTitle() {
         return subTaskTitle;
+    }
+
+    public String getId() {
+        return id;
     }
 }
