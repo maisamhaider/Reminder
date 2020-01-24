@@ -79,6 +79,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             public void onClick(View v) {
                 dataBaseHelper.deleteOneTask(myModelList.get( position ).getId());
                 dataBaseHelper.deleteSubTask( myModelList.get( position ).getDate() );
+                dataBaseHelper.deleteAllAttachments( myModelList.get( position ).getId() );
                 myModelList.remove( position );
                 notifyDataSetChanged();
 

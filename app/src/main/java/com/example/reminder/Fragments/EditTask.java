@@ -80,7 +80,7 @@ public class EditTask extends BottomSheetDialogFragment {
 
     private String taskPosition, taskTitle, task_reminderDate, task_placeDate, subTasks, taskNotes, taskCreatedDate, attachments;
     private String reminder_date = "", date_to_place_task = "";
-    private String checkRepeat = "";
+    private String checkRepeat = "daily";
 
     private Calendar calendar = Calendar.getInstance();
     private int checkYear, currentYear, isTomorrow, mTomorrow, isToday, mToday;
@@ -97,13 +97,14 @@ public class EditTask extends BottomSheetDialogFragment {
             edit_tomorrowLL, edit_nextWeekLL, edit_somedayLL, edit_customLL, repeat_Daily_LL, repeat_Weekly_LL, repeat_Monthly_LL,
             repeat_Yearly_LL;
     private TextView editLaterTodayTimeTv, editThisEvening, edit_remindMeOrNoReminderTv, edit_addReminderShowTimeTv,
-            editTimeTomorrowTv, ediTimeNextweekTv;
+            editTimeTomorrowTv, ediTimeNextweekTv, repeatTimeHolderTv;
+
     private ImageView edit_addReminderDeleteTimeIV;
     private Button edit_task_SetBtn, edit_task_cancelBtn;
     ConstraintLayout edit_showReminderTimeCL;
     private Switch edit_oneTimeAddReminderSwitch;
 
-    private String whichButtonIs;
+    private boolean isOneButton = true;
 
 
     DataBaseHelper dataBaseHelper;
@@ -177,9 +178,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    dataBaseHelper.updateRepeatTable( taskPosition, checkRepeat, "yes" );
                 } else {
-                    dataBaseHelper.updateRepeatTable( taskPosition, "", "No" );
 
                 }
             }
@@ -253,7 +252,7 @@ public class EditTask extends BottomSheetDialogFragment {
         setTimeCV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editAddReminderAlerDialog();
+                editAddReminderAlertDialog();
             }
         } );
         tomorrow9AmCV.setOnClickListener( new View.OnClickListener() {
@@ -268,14 +267,14 @@ public class EditTask extends BottomSheetDialogFragment {
         daily_WeeklyCV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editAddReminderAlerDialog();
+                editAddReminderAlertDialog();
             }
         } );
 
         editSetTimeLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editAddReminderAlerDialog();
+                editAddReminderAlertDialog();
 
             }
 
@@ -429,7 +428,7 @@ public class EditTask extends BottomSheetDialogFragment {
     }
 
     //add reminder AlertDialog work
-    private void editAddReminderAlerDialog() {
+    private void editAddReminderAlertDialog() {
         Calendar c = Calendar.getInstance();
         final int timeOfDay = c.get( Calendar.HOUR_OF_DAY );
 
@@ -457,6 +456,8 @@ public class EditTask extends BottomSheetDialogFragment {
         repeat_Weekly_LL = view.findViewById( R.id.edit_weeklyLL );
         repeat_Monthly_LL = view.findViewById( R.id.edit_monthlyLL );
         repeat_Yearly_LL = view.findViewById( R.id.edit_yearlyLL );
+
+        repeatTimeHolderTv = view.findViewById( R.id.repeatTimeHolderTv );
 
         locationBtn = view.findViewById( R.id.location_button );
 
@@ -606,19 +607,37 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
 
-                if (whichButtonIs.matches( "oneTimeBtn" )) {
+                if (isOneButton) {
                     mainActivity.setTaskFragDefaultBNBItem();
                     Toast.makeText( getContext(), "i am Clicked", Toast.LENGTH_SHORT ).show();
                     hideEditRemindTagsLLAndStuffs();
                     edit_addReminderShowTimeTv.setText( reminder_date );
                     editSetTimeTv.setText( reminder_date );
                     dataBaseHelper.update( reminder_date, date_to_place_task, taskPosition );
-                    dialog.dismiss();
-                } else if (whichButtonIs.matches( "repeatBtn" )) {
-
                 } else {
 
+                    if (checkRepeat.matches( "daily" ))
+                    {
+
+                    }else if (checkRepeat.matches( "weekly" ))
+                    {
+
+                    }
+                    else if (checkRepeat.matches( "monthly" ))
+                    {
+
+                    }
+                     else if (checkRepeat.matches( "yearly" ))
+                    {
+
+                    }
+                     else
+                    {
+
+                    }
                 }
+
+                dialog.dismiss();
 
 
             }
@@ -635,7 +654,7 @@ public class EditTask extends BottomSheetDialogFragment {
         edit_addReminderDeleteTimeIV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                edit_task_SetBtn.setEnabled( false );
                 edit_oneTimeAddReminderSwitch.setChecked( false );
                 edit_remindMeOrNoReminderTv.setText( "No reminder set" );
                 edit_addReminderShowTimeTv.setText( "Tap To add" );
@@ -681,7 +700,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 edit_task_SetBtn.setText( "set" );
-                whichButtonIs = "oneTimeBtn";
+                isOneButton = true;
                 edit_showReminderTimeCL.setVisibility( View.GONE );
                 editTagsLL.setVisibility( View.VISIBLE );
                 repeatLL.setVisibility( View.GONE );
@@ -690,10 +709,16 @@ public class EditTask extends BottomSheetDialogFragment {
             }
         } );
 
+        if (reminder_date.matches( "" )) {
+            repeatTimeHolderTv.setText( MyTimeSettingClass.getCurrentTimeLongFormat() );
+        } else {
+            repeatTimeHolderTv.setText( reminder_date );
+        }
+
         repeatBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                whichButtonIs = "repeatBtn";
+                isOneButton = false;
                 edit_task_SetBtn.setText( "save" );
                 edit_showReminderTimeCL.setVisibility( View.GONE );
                 changeButtonBg( repeatBtn, oneTimeBtn, locationBtn );
@@ -708,6 +733,7 @@ public class EditTask extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 checkRepeat = "daily";
                 edit_task_SetBtn.setText( "save" );
+                edit_task_SetBtn.setEnabled( true );
 
             }
         } );
@@ -738,7 +764,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 edit_task_SetBtn.setText( "set" );
-                whichButtonIs = "locationBtn";
+
                 edit_showReminderTimeCL.setVisibility( View.GONE );
                 changeButtonBg( locationBtn, oneTimeBtn, repeatBtn );
                 editTagsLL.setVisibility( View.GONE );

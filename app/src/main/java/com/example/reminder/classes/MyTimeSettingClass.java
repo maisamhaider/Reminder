@@ -15,6 +15,12 @@ public class MyTimeSettingClass {
     public static int day, month, year, hour, minutes;
 
     @SuppressLint("SimpleDateFormat")
+    public static String getCurrentTimeLongFormat(){
+        Calendar calendar = Calendar.getInstance();
+        return new SimpleDateFormat( " dd MMM yyyy h:mm a" ).format( calendar.getTime() );
+    }
+
+    @SuppressLint("SimpleDateFormat")
     public static String getToday9am() {
         Calendar calendar = Calendar.getInstance();
         calendar.set( Calendar.HOUR_OF_DAY, 9 );

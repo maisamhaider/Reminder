@@ -273,7 +273,7 @@ public class InputListFrag extends Fragment {
         {
             if (dateToPlaceTask.matches( "" ))
             {
-                    boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()) );
+                    boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"" );
 
                     if (isInsert)
                     {
@@ -286,7 +286,7 @@ public class InputListFrag extends Fragment {
             else
             if (alamTime.matches( "" ))
             {
-               boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()) );
+               boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()),"" );
                 if (isInsert)
                 {
                     Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
@@ -297,7 +297,7 @@ public class InputListFrag extends Fragment {
             }
             else if (alamTime.matches( "" ) && dateToPlaceTask.matches( "" ))
             {
-                boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()) );
+                boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"" );
 
                         if (isInsert)
                         {
@@ -308,7 +308,7 @@ public class InputListFrag extends Fragment {
             }
             else
             {
-              boolean isInsert =   dataBaseHelper.insert( input_ET.getText().toString(),alamTime,dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()) );
+              boolean isInsert =   dataBaseHelper.insert( input_ET.getText().toString(),alamTime,dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()),"" );
                 if (isInsert)
                 {
                     Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();

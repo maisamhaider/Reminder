@@ -533,7 +533,7 @@ public class AllTasksFrag extends Fragment {
 
         } else {
             boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ) );
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -550,7 +550,7 @@ public class AllTasksFrag extends Fragment {
             //do nothing
         } else {
             boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ) );
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -566,7 +566,7 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime() ) );
+            boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -583,7 +583,7 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
 
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, tomorrow, taskCreatedDateSF.format( taskCreatedDate.getTime() ) );
+            boolean isInsert = dataBaseHelper.insert( text, reminder_date, tomorrow, taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -600,7 +600,7 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, upcoming, taskCreatedDateSF.format( taskCreatedDate.getTime() ) );
+            boolean isInsert = dataBaseHelper.insert( text, reminder_date, upcoming, taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -619,7 +619,7 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, "", someday, taskCreatedDateSF.format( taskCreatedDate.getTime() ) );
+            boolean isInsert = dataBaseHelper.insert( text, "", someday, taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -635,7 +635,7 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, date_to_place_task, taskCreatedDateSF.format( taskCreatedDate.getTime() ) );
+            boolean isInsert = dataBaseHelper.insert( text, reminder_date, date_to_place_task, taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
