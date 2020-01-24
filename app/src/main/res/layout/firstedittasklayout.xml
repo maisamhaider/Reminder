@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/shareTasklayout"
+            android:id="@+id/shareTaskCv"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"

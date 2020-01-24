@@ -14,12 +14,13 @@
         android:text="NOTES"
         />
 
+
     <TextView
         android:id="@+id/holdNotesTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBlueGray"
-        android:text="Tap to add note"
+        android:text="Tap to add note "
+        android:paddingLeft="5dp"
          />
 
 </LinearLayout>

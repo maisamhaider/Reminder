@@ -159,7 +159,6 @@ public class InputListFrag extends Fragment {
                 input_ET.setImeOptions( EditorInfo.IME_ACTION_DONE );
                 input_ET.setSingleLine();
 
-
             }
         } );
         input_ET.setOnEditorActionListener( new EditText.OnEditorActionListener() {
@@ -200,9 +199,9 @@ public class InputListFrag extends Fragment {
         inputRemiderModelList.add( new InputRemiderModel( "Study", R.drawable.ic_launcher_foreground ) );
 
         inputTaskListAdapter = new InputTaskListAdapter( getContext(), inputRemiderModelList );
-        inputTaskListAdapter.addlistener( new EditTextStringListener() {
+        inputTaskListAdapter.addListener( new EditTextStringListener() {
             @Override
-            public void mystring(String ss) {
+            public void myString(String ss) {
                 input_ET.setText( ss + " " );
                 input_ET.setSelection( input_ET.getText().length() );
             }
@@ -210,7 +209,7 @@ public class InputListFrag extends Fragment {
 
         inputTaskListAdapter.addVisiblelistener(new VisibilityListener() {
             @Override
-            public void VeiwVisibility() {
+            public void veiwVisibility() {
                  remindTvLo.setVisibility( View.VISIBLE );
 
             }
@@ -397,6 +396,7 @@ public class InputListFrag extends Fragment {
             {
                 sformat =new SimpleDateFormat( "h:mm a" );
             }
+
             alamTime = sformat.format( calendar.getTime() );
 
         }
@@ -548,7 +548,7 @@ public class InputListFrag extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        closeKeyboard();
+
     }
 
     @Override
@@ -566,8 +566,8 @@ public class InputListFrag extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    goToTaskFrag();
-
+                    InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
+                    inputMethodManager.hideSoftInputFromWindow( input_ET.getWindowToken(),0 );
                     return true;
                 }
                 return false;
@@ -580,7 +580,7 @@ public class InputListFrag extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        closeKeyboard();
+
     }
 
 
@@ -591,10 +591,4 @@ public class InputListFrag extends Fragment {
         mainActivity.loadmyfrag( allTasksFrag );
     }
 
-    private void closeKeyboard() {
-        InputMethodManager imm = (InputMethodManager) Objects.requireNonNull( getContext() ).getSystemService( Context.INPUT_METHOD_SERVICE );
-        imm.toggleSoftInput( InputMethodManager.SHOW_FORCED, 0 );
     }
-
-
-}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,7 +9,7 @@
     android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/edit_deletetaskLL"
+            android:id="@+id/edit_deleteTaskLL"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -29,9 +30,15 @@
                 android:text="Delete task"
                 android:textAllCaps="false" />
         </LinearLayout>
+    <TextView
+        android:gravity="center"
+        android:text="|"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
 
         <LinearLayout
-            android:id="@+id/edit_MarkasDoneLL"
+            android:id="@+id/edit_MarkAsDoneLL"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

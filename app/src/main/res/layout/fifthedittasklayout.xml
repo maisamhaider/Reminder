@@ -11,6 +11,8 @@
         android:id="@+id/AttachmenTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:padding="5dp"
         android:text="ATTACHMENTS"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,6 +21,10 @@
         android:id="@+id/edit_uploadTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/blackbordertvbg"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:text="UPLOAD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@color/colorBlueGray"
+        android:background="@drawable/blackdotedbgfortaplayout"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/AttachmenTv">
 
@@ -38,7 +44,6 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:background="@color/colorBlueGray"
             android:text="Tap to add attachment" />
     </LinearLayout>
 

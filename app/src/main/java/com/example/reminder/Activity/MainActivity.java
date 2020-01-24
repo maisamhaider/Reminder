@@ -17,7 +17,6 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.reminder.Fragments.CalendarFrag;
-import com.example.reminder.Fragments.EditTask;
 import com.example.reminder.Fragments.SettingsFrag;
 import com.example.reminder.Fragments.AllTasksFrag;
 import com.example.reminder.R;
@@ -124,6 +123,13 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
         bottomNavigationView.setSelectedItemId( R.id.calendar );
 
     }
+    public void setSettingsBNBItem()
+    {
+        bottomNavigationView.setSelectedItemId( R.id.settings );
+
+    }
+
+
 
 
 
@@ -160,12 +166,12 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
 
 
     @Override
-    public void mystring(String ss) {
+    public void myString(String ss) {
         if (mFragment instanceof EditTextStringListener)
         mEditTextStringListener = (EditTextStringListener) mFragment;
 
         if (mEditTextStringListener!=null){
-            mEditTextStringListener.mystring( ss );
+            mEditTextStringListener.myString( ss );
         }
     }
 

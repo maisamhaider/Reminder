@@ -22,6 +22,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String date_to_place_task = "DATE_TO_PLACE_TASK";
     private static final String task_notes = "TASK_NOTES";
     private static final String task_created_date = "CREATED_DATE";
+    private static final String completed_tasks = "COMPLETED_TASK";
+
+
 
     // sub task table
 
@@ -33,8 +36,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // FILE TABLE
     private static final String IMAGE_TABLE = "image_table";
     private static final String IMAGE = "IMAGE";
+    private static final String FILE_CREATED_DATE = "FILE_CREATED_DATE";
     private static final String IMAGE_PID = "IMAGE_P_KEY";
     private static final String IMAGE_FID = "IMAGE_F_KEY";
+
+    // Repeat Alarm Table
+    private static final String REPEAT_ALARM_TABLE = "repeat_alarm_table";
+    private static final String REPEAT = "REPETITION";
+    private static final String REPEAT_PID = "REPEAT_P_KEY";
+    private static final String REPEAT_FID = "REPEAT_F_KEY";
+    private static final String IS_REPEAT = "IS_REPEAT";
 
 
     public DataBaseHelper(@Nullable Context context) {
@@ -44,10 +55,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL( " create table " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT ,REMINDER_TEXT TEXT,REMINDER_DATE TEXT" +
-                ",DATE_TO_PLACE_TASK TEXT,TASK_NOTES TEXT,CREATED_DATE TEXT)" );
-        db.execSQL( "Create table " + SUB_TASK_TABLE + "(P_ID INTEGER PRIMARY KEY AUTOINCREMENT,SUB_TASKS TEXT,F_ID TEXT)" );
-        db.execSQL( "create table " + IMAGE_TABLE + "(IMAGE_P_KEY INTEGER PRIMARY KEY AUTOINCREMENT,IMAGE_F_KEY TEXT,IMAGE TEXT)" );
-
+                ",DATE_TO_PLACE_TASK TEXT,TASK_NOTES TEXT,CREATED_DATE TEXT,COMPLETED_TASK TEXT)" );
+        db.execSQL( "create table " + SUB_TASK_TABLE + "(P_ID INTEGER PRIMARY KEY AUTOINCREMENT,SUB_TASKS TEXT,F_ID TEXT)" );
+        db.execSQL( "create table " + IMAGE_TABLE + "(IMAGE_P_KEY INTEGER PRIMARY KEY AUTOINCREMENT,IMAGE_F_KEY TEXT,IMAGE TEXT,FILE_CREATED_DATE TEXT)" );
+        db.execSQL( "create table " + REPEAT_ALARM_TABLE + "(REPEAT_P_KEY INTEGER PRIMARY KEY AUTOINCREMENT,REPEAT_F_KEY TEXT,REPETITION TEXT,IS_REPEAT TEXT)");
 
     }
 
@@ -72,6 +83,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else
             return true;
     }
+    public boolean upDate(String key,String isCompleted) {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( completed_tasks,isCompleted );
+        long result = database.update( TABLE_NAME, contentValues, "ID=?",new String[]{key} );
+
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
+
 
     public boolean insertSubTask(String sub_tasks, String F_KEY) {
         SQLiteDatabase database = getWritableDatabase();
@@ -87,10 +111,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean insertFile(String filePath, String fk) {
+    public boolean insertFile(String filePath,String c_date, String fk) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put( IMAGE, filePath );
+        cv.put(FILE_CREATED_DATE,c_date);
         cv.put( IMAGE_FID, fk );
 
 
@@ -101,6 +126,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             return true;
 
     }
+
+    public boolean updateRepeatTable(String f_key,String repetition,String YNFlag)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues(  );
+        contentValues.put( REPEAT_FID,f_key );
+        contentValues.put( REPEAT,repetition );
+        contentValues.put( IS_REPEAT,YNFlag );
+
+        long isUpdate = database.update( REPEAT_ALARM_TABLE,contentValues, "REPEAT_F_ID=?",new String[]{f_key} );
+        if (isUpdate==-1)
+        {
+          return false;
+        }
+        else
+        {
+            return true;
+        }
+
+    }
+
 
 
     public boolean update(String reminder_date, String date_to_place_task, String position) {
@@ -195,6 +241,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor AC = database.rawQuery( "SELECT * FROM " + IMAGE_TABLE + " WHERE IMAGE_F_KEY LIKE \'" + position + "\'", null );
         return AC;
     }
+    public Cursor getRepeatData(String position)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor RD = database.rawQuery( " SELECT * FROM "+ REPEAT_ALARM_TABLE + " WHERE REPEAT_F_KEY LIKE \'"+ position +"\' ",null );
+        return RD;
+    }
+    public Cursor getCompletedTask()
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor CTC = database.rawQuery( " SELECT * FROM "+ TABLE_NAME ,null,null );
+        return CTC;
+    }
+
 
     public void deleteOneTask(String position) {
         SQLiteDatabase database = getWritableDatabase();
@@ -213,8 +272,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public  void deleteAttachment(String pKey)
     {
         SQLiteDatabase database = getWritableDatabase();
-        int DA = database.delete(IMAGE_TABLE, "IMAGE_P_KEY=?", new String[]{String.valueOf( pKey )} );
-
-
+        int DA = database.delete(IMAGE_TABLE, "IMAGE_P_KEY=?", new String[]{ pKey } );
     }
+    public void deleteAllAttachments(String fkey)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        int DAA = database.delete(IMAGE_TABLE, "IMAGE_F_KEY=?", new String[]{ fkey } );
+    }
+    public void deleteRepeat(String fkey)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        int DR = database.delete( REPEAT_ALARM_TABLE,"REPEAT_F_KEY=?",new String[]{ fkey } );
+    }
+    public void deleteCompletedTasks()
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        int DR = database.delete( TABLE_NAME,"COMPLETED_TASK=?",new String[]{"yes"} );
+    }
+    public void deleteEachCompletedTask(String key)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        int DR = database.delete( TABLE_NAME,"ID=?",new String[]{key} );
+    }
+
 }

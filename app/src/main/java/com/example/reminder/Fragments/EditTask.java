@@ -6,19 +6,23 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -37,14 +41,17 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.AttachmentTaskAdapter;
 import com.example.reminder.adapter.SubTaskAdapter;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
+import com.example.reminder.interfaces.RecyclerCallBack;
 import com.example.reminder.models.AttachmentTaskModel;
 import com.example.reminder.models.MySubTaskModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -56,28 +63,28 @@ import java.util.Objects;
 
 public class EditTask extends BottomSheetDialogFragment {
 
+    MainActivity mainActivity;
     private static final int REQUEST_CODE = 1001;
     private MyTimeSettingClass myTimeSettingClass;
 
     // Edit task Views
-    private CardView setTimeCV, tomorrow9AmCV, daily_WeeklyCV, etcCv;
+    private CardView setTimeCV, tomorrow9AmCV, daily_WeeklyCV, etcCv, shareTaskCv;
     private TextView edittaskTitle, createdTextView, notesHolderTv, editSetTimeTv, editDeleteUpperTv, edit_uploadTv;
     private EditText addSubTasksET;
-    private LinearLayout editSetTimeLL,addNewSubTaskLL,tabToAddAttachmentsLL;
-    Switch editReminderOnOffSwitch;
-    RecyclerView subTaskRecyclerView,attachmentRecyclerView;
-    SubTaskAdapter subTaskAdapter;
-    AttachmentTaskAdapter attachmentTaskAdapter;
+    private LinearLayout editSetTimeLL, addNewSubTaskLL, tabToAddAttachmentsLL, edit_MarkAsDoneLL, edit_deleteTaskLL;
+    private Switch editReminderOnOffSwitch;
+    private RecyclerView subTaskRecyclerView, attachmentRecyclerView;
+    private SubTaskAdapter subTaskAdapter;
+    private AttachmentTaskAdapter attachmentTaskAdapter;
 
 
-    private String taskPosition, taskTitle, task_reminderDate, task_placeDate, subTasks, taskNotes, taskCreatedDate,attachments;
+    private String taskPosition, taskTitle, task_reminderDate, task_placeDate, subTasks, taskNotes, taskCreatedDate, attachments;
     private String reminder_date = "", date_to_place_task = "";
+    private String checkRepeat = "";
 
     private Calendar calendar = Calendar.getInstance();
     private int checkYear, currentYear, isTomorrow, mTomorrow, isToday, mToday;
 
-
-    private boolean firstSwitchBtn = false, secondSwitch = false;
 
     // Edit Notes AlerDialog Views
     Button myNotesSaveBtn;
@@ -87,13 +94,17 @@ public class EditTask extends BottomSheetDialogFragment {
     // addReminder views
     private Button oneTimeBtn, repeatBtn, locationBtn;
     private LinearLayout repeatLL, editTagsLL, editLocationLL, editRemindTagsLL, edit_thisEveningLL, edit_later_todayLL,
-            edit_tomorrowLL, edit_nextWeekLL, edit_somedayLL, edit_customLL;
+            edit_tomorrowLL, edit_nextWeekLL, edit_somedayLL, edit_customLL, repeat_Daily_LL, repeat_Weekly_LL, repeat_Monthly_LL,
+            repeat_Yearly_LL;
     private TextView editLaterTodayTimeTv, editThisEvening, edit_remindMeOrNoReminderTv, edit_addReminderShowTimeTv,
             editTimeTomorrowTv, ediTimeNextweekTv;
-    ImageView edit_addReminderDeleteTimeIV;
+    private ImageView edit_addReminderDeleteTimeIV;
     private Button edit_task_SetBtn, edit_task_cancelBtn;
     ConstraintLayout edit_showReminderTimeCL;
-    Switch edit_oneTimeAddReminderSwitch;
+    private Switch edit_oneTimeAddReminderSwitch;
+
+    private String whichButtonIs;
+
 
     DataBaseHelper dataBaseHelper;
 
@@ -106,11 +117,13 @@ public class EditTask extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.edit_task, container, false );
 
+        mainActivity = (MainActivity) getActivity();
         dataBaseHelper = new DataBaseHelper( getContext() );
         myTimeSettingClass = new MyTimeSettingClass();
         subTaskRecyclerView = view.findViewById( R.id.subTasksRecyclerView );
-        attachmentRecyclerView =view.findViewById( R.id.AttachmentRv );
+        attachmentRecyclerView = view.findViewById( R.id.AttachmentRv );
 
+        shareTaskCv = view.findViewById( R.id.shareTaskCv );
 
         setTimeCV = view.findViewById( R.id.setTaskTimeCV );
         tomorrow9AmCV = view.findViewById( R.id.tomorrow9amCv );
@@ -130,6 +143,8 @@ public class EditTask extends BottomSheetDialogFragment {
 
         tabToAddAttachmentsLL = view.findViewById( R.id.tabToAddAttachmentsLL );
         edit_uploadTv = view.findViewById( R.id.edit_uploadTv );
+        edit_MarkAsDoneLL = view.findViewById( R.id.edit_MarkAsDoneLL );
+        edit_deleteTaskLL = view.findViewById( R.id.edit_deleteTaskLL );
 
         editSetTimeLL.setVisibility( View.GONE );
 
@@ -140,6 +155,13 @@ public class EditTask extends BottomSheetDialogFragment {
         subTaskFun();
         attachmentFun();
 
+
+        shareTaskCv.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareTaskDataFun();
+            }
+        } );
 
         editDeleteUpperTv.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -155,9 +177,10 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    secondSwitch = true;
+                    dataBaseHelper.updateRepeatTable( taskPosition, checkRepeat, "yes" );
                 } else {
-                    secondSwitch = false;
+                    dataBaseHelper.updateRepeatTable( taskPosition, "", "No" );
+
                 }
             }
         } );
@@ -172,8 +195,52 @@ public class EditTask extends BottomSheetDialogFragment {
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         subTaskRecyclerView.setLayoutManager( linearLayoutManager );
 
+        edit_MarkAsDoneLL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isUpdate = dataBaseHelper.upDate( taskPosition, "yes" );
+                if (isUpdate) {
+                    Toast.makeText( getContext(), "updated", Toast.LENGTH_SHORT ).show();
+                } else {
+                    Toast.makeText( getContext(), "not updated", Toast.LENGTH_SHORT ).show();
+                }
+            }
+        } );
+
 
         return view;
+    }
+
+    private void shareTaskDataFun() {
+        ArrayList<String> subTasks = new ArrayList<>();
+        ArrayList<Uri> attachment = new ArrayList<>();
+        Cursor AC = dataBaseHelper.getAttachment( taskPosition );
+        Cursor STC = dataBaseHelper.getSubTasks( taskPosition );
+        if (STC.getCount() == 0) {
+        }
+        while (STC.moveToNext()) {
+            subTasks.add( STC.getString( 1 ) );
+        }
+        if (AC.getCount() == 0) {//do nothing
+        }
+        while (AC.moveToNext()) {
+
+            Uri uri = Uri.parse( AC.getString( 2 ) );
+            attachment.add( uri );
+        }
+
+        Intent intent = new Intent();
+        intent.setAction( Intent.ACTION_SEND );
+        intent.putExtra( Intent.EXTRA_EMAIL, "*/*" );
+        intent.putExtra( Intent.EXTRA_TITLE, " Task Title :" + taskTitle );
+        intent.putExtra( Intent.EXTRA_TEXT, "SubTasks : " + subTasks + "\nTask notes :" + taskNotes + "\n Task Reminder Time : " + reminder_date + "\n Task Created date: " + taskCreatedDate );
+        intent.putParcelableArrayListExtra( Intent.EXTRA_STREAM, attachment );
+        intent.setType( "*/*" );
+
+        Intent shareNow = Intent.createChooser( intent, "Share" + " \"" + taskTitle + " \"  " );
+
+        startActivity( shareNow );
+
     }
 
     public static EditTask editTaskInstence() {
@@ -208,21 +275,7 @@ public class EditTask extends BottomSheetDialogFragment {
         editSetTimeLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Calendar calendar = Calendar.getInstance();
-                final int year = calendar.get( Calendar.YEAR );
-                final int month = calendar.get( Calendar.MONTH );
-                final int day = calendar.get( Calendar.DAY_OF_MONTH );
-                final int hour = calendar.get( Calendar.HOUR_OF_DAY );
-                final int minutes = calendar.get( Calendar.MINUTE );
-
-
-                TimePickerDialog tP = new TimePickerDialog( getContext(), timePickerListener1, hour, minutes, false );
-                tP.show();
-
-                DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ), datePickerDialog1, year, month, day );
-                dP.getDatePicker().setMinDate( System.currentTimeMillis() - 1000 );
-                dP.show();
+                editAddReminderAlerDialog();
 
             }
 
@@ -328,12 +381,11 @@ public class EditTask extends BottomSheetDialogFragment {
         subTasks = getArguments().getString( "Sub_Tasks" );
         reminder_date = getArguments().getString( "Reminder_date" );
         taskNotes = getArguments().getString( "Task_Note" );
-        taskCreatedDate = getArguments().getString( "Task_Created_Date");
+        taskCreatedDate = getArguments().getString( "Task_Created_Date" );
         attachments = getArguments().getString( "Attachment" );
 
         edittaskTitle.setText( taskTitle );
         createdTextView.setText( taskCreatedDate );
-
 
 
         if (reminder_date.matches( "" )) {
@@ -349,30 +401,24 @@ public class EditTask extends BottomSheetDialogFragment {
         } else {
             notesHolderTv.setText( taskNotes );
         }
-        if (subTasks==null)
-        {
+        if (subTasks == null) {
             subTaskRecyclerView.setVisibility( View.GONE );
             Toast.makeText( getContext(), "null", Toast.LENGTH_SHORT ).show();
             addSubTasksET.setVisibility( View.VISIBLE );
             addNewSubTaskLL.setVisibility( View.GONE );
-        }
-        else
-        {
+        } else {
 
             subTaskRecyclerView.setVisibility( View.VISIBLE );
             addSubTasksET.setVisibility( View.GONE );
             addNewSubTaskLL.setVisibility( View.VISIBLE );
             getSubTaskFromDb();
         }
-        if (attachments == null)
-        {
+        if (attachments == null) {
             edit_uploadTv.setVisibility( View.GONE );
             tabToAddAttachmentsLL.setVisibility( View.VISIBLE );
             attachmentRecyclerView.setVisibility( View.GONE );
 
-        }
-        else
-        {
+        } else {
             edit_uploadTv.setVisibility( View.VISIBLE );
             tabToAddAttachmentsLL.setVisibility( View.GONE );
             attachmentRecyclerView.setVisibility( View.VISIBLE );
@@ -407,6 +453,11 @@ public class EditTask extends BottomSheetDialogFragment {
 
 
         repeatBtn = view.findViewById( R.id.repeat_button );
+        repeat_Daily_LL = view.findViewById( R.id.edit_dailyLL );
+        repeat_Weekly_LL = view.findViewById( R.id.edit_weeklyLL );
+        repeat_Monthly_LL = view.findViewById( R.id.edit_monthlyLL );
+        repeat_Yearly_LL = view.findViewById( R.id.edit_yearlyLL );
+
         locationBtn = view.findViewById( R.id.location_button );
 
         repeatLL = view.findViewById( R.id.repeatLL );
@@ -446,9 +497,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    firstSwitchBtn = true;
                 } else {
-                    firstSwitchBtn = false;
                 }
             }
         } );
@@ -556,12 +605,21 @@ public class EditTask extends BottomSheetDialogFragment {
         edit_task_SetBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText( getContext(), "i am Clicked", Toast.LENGTH_SHORT ).show();
-                hideEditRemindTagsLLAndStuffs();
-                edit_addReminderShowTimeTv.setText( reminder_date );
-                editSetTimeTv.setText( reminder_date );
-                dataBaseHelper.update( reminder_date, date_to_place_task, taskPosition );
-                dialog.dismiss();
+
+                if (whichButtonIs.matches( "oneTimeBtn" )) {
+                    mainActivity.setTaskFragDefaultBNBItem();
+                    Toast.makeText( getContext(), "i am Clicked", Toast.LENGTH_SHORT ).show();
+                    hideEditRemindTagsLLAndStuffs();
+                    edit_addReminderShowTimeTv.setText( reminder_date );
+                    editSetTimeTv.setText( reminder_date );
+                    dataBaseHelper.update( reminder_date, date_to_place_task, taskPosition );
+                    dialog.dismiss();
+                } else if (whichButtonIs.matches( "repeatBtn" )) {
+
+                } else {
+
+                }
+
 
             }
         } );
@@ -573,9 +631,11 @@ public class EditTask extends BottomSheetDialogFragment {
             }
         } );
 
+
         edit_addReminderDeleteTimeIV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 edit_oneTimeAddReminderSwitch.setChecked( false );
                 edit_remindMeOrNoReminderTv.setText( "No reminder set" );
                 edit_addReminderShowTimeTv.setText( "Tap To add" );
@@ -586,20 +646,26 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
 
-                Calendar calendar = Calendar.getInstance();
-                final int year = calendar.get( Calendar.YEAR );
-                final int month = calendar.get( Calendar.MONTH );
-                final int day = calendar.get( Calendar.DAY_OF_MONTH );
-                final int hour = calendar.get( Calendar.HOUR_OF_DAY );
-                final int minutes = calendar.get( Calendar.MINUTE );
+                String text = edit_addReminderShowTimeTv.getText().toString();
+                if (text.matches( "Tap To add" )) {
+                    edit_showReminderTimeCL.setVisibility( View.GONE );
+                    editTagsLL.setVisibility( View.VISIBLE );
+                } else {
+                    Calendar calendar = Calendar.getInstance();
+                    final int year = calendar.get( Calendar.YEAR );
+                    final int month = calendar.get( Calendar.MONTH );
+                    final int day = calendar.get( Calendar.DAY_OF_MONTH );
+                    final int hour = calendar.get( Calendar.HOUR_OF_DAY );
+                    final int minutes = calendar.get( Calendar.MINUTE );
 
 
-                TimePickerDialog tP = new TimePickerDialog( getContext(), timePickerListener, hour, minutes, false );
-                tP.show();
+                    TimePickerDialog tP = new TimePickerDialog( getContext(), timePickerListener, hour, minutes, false );
+                    tP.show();
 
-                DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ), datePickerDialog, year, month, day );
-                dP.getDatePicker().setMinDate( System.currentTimeMillis() - 1000 );
-                dP.show();
+                    DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ), datePickerDialog, year, month, day );
+                    dP.getDatePicker().setMinDate( System.currentTimeMillis() - 1000 );
+                    dP.show();
+                }
 
             }
         } );
@@ -614,6 +680,9 @@ public class EditTask extends BottomSheetDialogFragment {
         oneTimeBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                edit_task_SetBtn.setText( "set" );
+                whichButtonIs = "oneTimeBtn";
+                edit_showReminderTimeCL.setVisibility( View.GONE );
                 editTagsLL.setVisibility( View.VISIBLE );
                 repeatLL.setVisibility( View.GONE );
                 editLocationLL.setVisibility( View.GONE );
@@ -624,6 +693,9 @@ public class EditTask extends BottomSheetDialogFragment {
         repeatBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                whichButtonIs = "repeatBtn";
+                edit_task_SetBtn.setText( "save" );
+                edit_showReminderTimeCL.setVisibility( View.GONE );
                 changeButtonBg( repeatBtn, oneTimeBtn, locationBtn );
                 editTagsLL.setVisibility( View.GONE );
                 repeatLL.setVisibility( View.VISIBLE );
@@ -631,15 +703,50 @@ public class EditTask extends BottomSheetDialogFragment {
 
             }
         } );
+        repeat_Daily_LL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkRepeat = "daily";
+                edit_task_SetBtn.setText( "save" );
+
+            }
+        } );
+        repeat_Weekly_LL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkRepeat = "weekly";
+                edit_task_SetBtn.setText( "save" );
+
+            }
+        } );
+        repeat_Monthly_LL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_task_SetBtn.setText( "save" );
+                checkRepeat = "monthly";
+            }
+        } );
+        repeat_Yearly_LL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_task_SetBtn.setText( "save" );
+                checkRepeat = "yearly";
+            }
+        } );
+
         locationBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                edit_task_SetBtn.setText( "set" );
+                whichButtonIs = "locationBtn";
+                edit_showReminderTimeCL.setVisibility( View.GONE );
                 changeButtonBg( locationBtn, oneTimeBtn, repeatBtn );
                 editTagsLL.setVisibility( View.GONE );
                 repeatLL.setVisibility( View.GONE );
                 editLocationLL.setVisibility( View.VISIBLE );
             }
         } );
+
 
     }
 
@@ -766,8 +873,8 @@ public class EditTask extends BottomSheetDialogFragment {
                     notesHolderTv.setText( "tap To add notes" );
                 } else {
 
-                    boolean isupdate = dataBaseHelper.updateNotesColumn( myNotesET.getText().toString(), taskPosition );
-                    if (isupdate) {
+                    boolean isUpdate = dataBaseHelper.updateNotesColumn( myNotesET.getText().toString(), taskPosition );
+                    if (isUpdate) {
                         Toast.makeText( getContext(), "updated", Toast.LENGTH_SHORT ).show();
                     } else {
                         Toast.makeText( getContext(), "updated", Toast.LENGTH_SHORT ).show();
@@ -789,11 +896,9 @@ public class EditTask extends BottomSheetDialogFragment {
 
     }
 
-    private void subTaskFun()
-    {
-
-                addSubTasksET.setImeOptions( EditorInfo.IME_ACTION_DONE );
-                addSubTasksET.setSingleLine();
+    private void subTaskFun() {
+        addSubTasksET.setImeOptions( EditorInfo.IME_ACTION_DONE );
+        addSubTasksET.setSingleLine();
         addSubTasksET.setOnEditorActionListener( new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -801,28 +906,26 @@ public class EditTask extends BottomSheetDialogFragment {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
 
                     String ST = addSubTasksET.getText().toString(); // SB = sub task
-                    if (ST.matches( "" ))
-                    {
-                    }
-                    else
-                        {
-                            boolean isInsert =  dataBaseHelper.insertSubTask( ST,taskPosition );
+                    if (ST.matches( "" )) {
+                    } else {
+                        boolean isInsert = dataBaseHelper.insertSubTask( ST, taskPosition );
 
-                            if (isInsert)
-                            {
-                                Toast.makeText( getContext(), "Ok", Toast.LENGTH_SHORT ).show();
-                            }
-                            else
-                            {
-                                Toast.makeText( getContext(), "No", Toast.LENGTH_SHORT ).show();
-                            }
+                        if (isInsert) {
+                            getSubTaskFromDb();
+                            Toast.makeText( getContext(), "Ok", Toast.LENGTH_SHORT ).show();
+                        } else {
+                            Toast.makeText( getContext(), "No", Toast.LENGTH_SHORT ).show();
+                        }
                     }
 
                     addSubTasksET.setVisibility( View.GONE );
                     addNewSubTaskLL.setVisibility( View.VISIBLE );
+                    subTaskRecyclerView.setVisibility( View.VISIBLE );
+                    InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
+                    inputMethodManager.hideSoftInputFromWindow( addSubTasksET.getWindowToken(), 0 );
                     addSubTasksET.setText( "" );
 
-            }
+                }
                 return false;
             }
         } );
@@ -831,7 +934,9 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 addSubTasksET.setVisibility( View.VISIBLE );
-                addSubTasksET.setFocusable( true );
+                addSubTasksET.requestFocus();
+                InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
+                inputMethodManager.showSoftInput( addSubTasksET, InputMethodManager.SHOW_FORCED );
 
 
             }
@@ -840,106 +945,120 @@ public class EditTask extends BottomSheetDialogFragment {
 
     public void getSubTaskFromDb() {
         Cursor cursor = dataBaseHelper.getSubTasks( taskPosition );
-        List<MySubTaskModel> subTaskModeList = new ArrayList<>(  );
+        List<MySubTaskModel> subTaskModeList = new ArrayList<>();
 
 
-        if (cursor.getCount() == 0)
-        {
+        if (cursor.getCount() == 0) {
         }
-        while (cursor.moveToNext())
-        {
-            subTaskModeList.add( new MySubTaskModel(cursor.getString( 0 ),cursor.getString( 1 )) );
+        while (cursor.moveToNext()) {
+            subTaskModeList.add( new MySubTaskModel( cursor.getString( 0 ), cursor.getString( 1 ) ) );
         }
-        subTaskAdapter  = new SubTaskAdapter( getContext(), subTaskModeList,dataBaseHelper);
+        subTaskAdapter = new SubTaskAdapter( getContext(), subTaskModeList, dataBaseHelper );
         subTaskRecyclerView.setAdapter( subTaskAdapter );
         subTaskAdapter.notifyDataSetChanged();
     }
 
-    private  void attachmentFun()
-    {
+    private void attachmentFun() {
 
 
-            tabToAddAttachmentsLL.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checkPermission();
-                    if (checkPermission()) {
-                        Bundle bundle = new Bundle(  );
-                        bundle.putString( "Position",taskPosition );
-                        AttachmentsBottomSheet attachmentsBottomSheet = AttachmentsBottomSheet.getAttachInstance();
-                        attachmentsBottomSheet.show( getActivity().getSupportFragmentManager(), "attachment BSHeet" );
-                        attachmentsBottomSheet.setArguments( bundle );
-                    }
+        tabToAddAttachmentsLL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPermission();
+                if (checkPermission()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString( "Position", taskPosition );
+                    AttachmentsBottomSheet attachmentsBottomSheet = AttachmentsBottomSheet.getAttachInstance();
+                    attachmentsBottomSheet.show( getActivity().getSupportFragmentManager(), "attachment BSHeet" );
+                    attachmentsBottomSheet.setArguments( bundle );
                 }
-            } );
-
-            edit_uploadTv.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checkPermission();
-                    if (checkPermission()) {
-                        Bundle bundle = new Bundle(  );
-                        bundle.putString( "Position",taskPosition );
-                        AttachmentsBottomSheet attachmentsBottomSheet = AttachmentsBottomSheet.getAttachInstance();
-                        attachmentsBottomSheet.show( getActivity().getSupportFragmentManager(), "attachment BSHeet" );
-                        attachmentsBottomSheet.setArguments( bundle );
-                    }
-
-                }
-            } );
             }
-     public  void getAttachmentFromDB()
-     {
-         Cursor AC = dataBaseHelper.getAttachment( taskPosition ); // AC = ATTACHMENTS CURSOR
-         List<AttachmentTaskModel>attachmentTaskModelList = new ArrayList<>(  );
+        } );
+
+        edit_uploadTv.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPermission();
+                if (checkPermission()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString( "Position", taskPosition );
+                    AttachmentsBottomSheet attachmentsBottomSheet = AttachmentsBottomSheet.getAttachInstance();
+                    attachmentsBottomSheet.show( getActivity().getSupportFragmentManager(), "attachment BSHeet" );
+                    attachmentsBottomSheet.setArguments( bundle );
+                    attachmentsBottomSheet.setRecyclerCallBack( new RecyclerCallBack() {
+                        @Override
+                        public void mCallBack() {
+                            getAttachmentFromDB();
+                        }
+                    } );
+                }
+            }
+        } );
+    }
+
+    public void getAttachmentFromDB() {
+        Cursor AC = dataBaseHelper.getAttachment( taskPosition ); // AC = ATTACHMENTS CURSOR
+        List<AttachmentTaskModel> attachmentTaskModelList = new ArrayList<>();
 
         LinearLayoutManager linearLayoutManager;
-        linearLayoutManager =new LinearLayoutManager(  getContext())
-
-        {
+        linearLayoutManager = new LinearLayoutManager( getContext() ) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         };
         linearLayoutManager.setOrientation( RecyclerView.VERTICAL );
-        attachmentRecyclerView.setLayoutManager( linearLayoutManager);
+        attachmentRecyclerView.setLayoutManager( linearLayoutManager );
 
-         if (AC.getCount()==0)
-         {//do nothing
-         }
-         while (AC.moveToNext())
-         {
-             String string = AC.getString( 2 );
-             if (string.contains( ".png"))
-             {
-                 attachmentTaskModelList.add( new AttachmentTaskModel(AC.getString( 0 ),R.drawable.image_foreground,AC.getString( 2 )) );
-             }
-             if (string.contains( ".jpeg" ))
-             {
-                 attachmentTaskModelList.add( new AttachmentTaskModel(AC.getString( 0 ),R.drawable.image_foreground,AC.getString( 2)) );
-             }
-             if (string.contains( ".mp4" ))
-             {
-                 attachmentTaskModelList.add( new AttachmentTaskModel(AC.getString( 0 ),R.drawable.record_video_foreground,AC.getString( 2 )) );
-             }
-             if(string.contains( ".mp3" ))
-             {
-                 attachmentTaskModelList.add( new AttachmentTaskModel(AC.getString( 0 ),R.drawable.record_audio_foreground,AC.getString( 2 )) );
-             }
-         }
+        if (AC.getCount() == 0) {//do nothing
+        }
+        while (AC.moveToNext()) {
+            String string = AC.getString( 2 );
+            if (string.contains( ".png" )) {
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.image_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+            } else if (string.contains( ".jpg" )) {
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.image_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+            } else if (string.contains( ".jpeg" )) {
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.image_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+            } else if (string.contains( ".mp4" )) {
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.record_video_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+            } else if (string.contains( ".mp3" )) {
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.play_audio_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+            } else {
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.image_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+            }
+        }
+        FragmentManager fragmentManager = getFragmentManager();
+        attachmentTaskAdapter = new AttachmentTaskAdapter( getContext(), attachmentTaskModelList, dataBaseHelper, fragmentManager );
+        attachmentRecyclerView.setAdapter( attachmentTaskAdapter );
+        attachmentTaskAdapter.notifyDataSetChanged();
 
-         attachmentTaskAdapter = new AttachmentTaskAdapter( getContext(),attachmentTaskModelList,dataBaseHelper );
-         attachmentRecyclerView.setAdapter(attachmentTaskAdapter);
-         attachmentTaskAdapter.notifyDataSetChanged();
-
-     }
+    }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach( context );
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Objects.requireNonNull( getView() ).setFocusableInTouchMode( true );
+        getView().requestFocus();
+        getView().setOnKeyListener( new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getKeyCode() == MotionEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
+                    inputMethodManager.hideSoftInputFromWindow( addSubTasksET.getWindowToken(), 0 );
+
+                }
+                return false;
+            }
+        } );
     }
 
     @Override
@@ -950,13 +1069,14 @@ public class EditTask extends BottomSheetDialogFragment {
     public boolean checkPermission() {
         int cameraPermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.CAMERA );
         int readStoragePermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.READ_EXTERNAL_STORAGE );
+        int writeStoragePermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE );
 
-        if (cameraPermission == PackageManager.PERMISSION_GRANTED && readStoragePermission == PackageManager.PERMISSION_GRANTED) {
+        if (cameraPermission == PackageManager.PERMISSION_GRANTED && readStoragePermission == PackageManager.PERMISSION_GRANTED
+                && writeStoragePermission == PackageManager.PERMISSION_GRANTED) {
             return true;
-        } else
-        {
-            ActivityCompat.requestPermissions( getActivity(),new String[]{Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE );
+        } else {
+            ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE );
             return false;
         }
     }

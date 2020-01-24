@@ -10,7 +10,7 @@
     <color name="colorBlueGray">#90a4ae</color>
     <color name="colorGray">#424242</color>
     <color name="colorTransparentOne">#00000000</color>
-    <color name="colorTransparentTwo">#1A000000</color>
+    <color name="colorTransparentTwo">#0A000000</color>
     <color name="colorTransparentThree">#33000000</color>
     <color name="colorTransparentFour">#66000000</color>
     <color name="colorTransparentFive">#80000000</color>

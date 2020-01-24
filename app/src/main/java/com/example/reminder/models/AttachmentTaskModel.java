@@ -1,20 +1,20 @@
 package com.example.reminder.models;
 
-import android.media.Image;
-
 public class AttachmentTaskModel {
     String id;
     int image ;
-    String subTaskTitle;
+    String taskAttachmentTitle;
+    String createDate;
 
-    public AttachmentTaskModel(String id, int image, String subTaskTitle) {
+    public AttachmentTaskModel(String id, int image, String taskAttachmentTitle,String createDate) {
         this.id = id;
         this.image = image;
-        this.subTaskTitle = subTaskTitle;
+        this.taskAttachmentTitle = taskAttachmentTitle;
+        this.createDate = createDate;
     }
 
-    public String getSubTaskTitle() {
-        return subTaskTitle;
+    public String getTaskAttachmentTitle() {
+        return taskAttachmentTitle;
     }
 
     public String getId() {
@@ -23,5 +23,9 @@ public class AttachmentTaskModel {
 
     public int getImage() {
         return image;
+    }
+
+    public String getCreateDate() {
+        return createDate;
     }
 }

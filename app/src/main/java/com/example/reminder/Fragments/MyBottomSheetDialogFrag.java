@@ -297,7 +297,7 @@ public class MyBottomSheetDialogFrag extends BottomSheetDialogFragment implement
 
 
     @Override
-    public void mystring(String ss) {
+    public void myString(String ss) {
         Toast.makeText( getContext(), "Selected "+ss, Toast.LENGTH_SHORT ).show();
         if
         (isFirstFieldSelected){

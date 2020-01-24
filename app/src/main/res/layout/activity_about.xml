@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.AboutActivity">
+
+    <TextView
+        android:textColor="@color/colorDodgerBlue"
+        android:id="@+id/applicationNameTV"
+        android:layout_marginBottom="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:text="Application Name" />
+    <TextView
+        android:id="@+id/applicationVersion"
+        android:textColor="@color/colorDodgerBlue"
+        android:layout_gravity="bottom|center"
+        android:text="0.1"
+        android:layout_marginBottom="75dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginBottom="40dp"
+        android:layout_gravity="bottom|center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@drawable/copyright_foreground"
+            android:id="@+id/copyRightsIv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+        <TextView
+            android:textColor="@color/colorDodgerBlue"
+            android:layout_gravity="center"
+            android:text="@string/copy_rights_reserved_by_sky_rider_apps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

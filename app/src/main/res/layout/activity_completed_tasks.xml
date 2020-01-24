@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.CompletedTasksActivity">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/completedTaskRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/completedTaskDeleteLL" />
+
+    <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:id="@+id/completedTaskDeleteLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+    <ImageView
+        android:id="@+id/completedTaskDeleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:src="@drawable/deletebin_foreground" />
+
+        <TextView
+            android:textColor="@color/colorBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete All "
+            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+</RelativeLayout>

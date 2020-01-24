@@ -1,7 +1,6 @@
 package com.example.reminder.adapter;
 
 import android.content.Context;
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,6 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
                 invokeVisible();
                 etvString(text);
-
             }
         });
 
@@ -102,7 +100,7 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
 
     }
 
-    public void addlistener(EditTextStringListener editTextStringListener){
+    public void addListener(EditTextStringListener editTextStringListener){
          stringListenerslist.add(editTextStringListener);
     }
    public void addVisiblelistener(VisibilityListener visible){
@@ -111,13 +109,13 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
 
     void invokeVisible(){
         for(VisibilityListener visibleListen:visibilityListeners){
-            visibleListen.VeiwVisibility();
+            visibleListen.veiwVisibility();
         }
     }
 
-    void etvString(String string){
+    private void etvString(String string){
             for(EditTextStringListener editTextStringListener:stringListenerslist){
-                editTextStringListener.mystring(string);
+                editTextStringListener.myString(string);
             }
     }
 

@@ -64,7 +64,7 @@ public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<Botto
             @Override
             public void onClick(View v) {
                 if (mEditTextStringListener != null) {
-                    mEditTextStringListener.mystring( s );
+                    mEditTextStringListener.myString( s );
                 }
 
                 if (isVisible==position)

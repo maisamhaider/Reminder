@@ -24,4 +24,6 @@
     <string name="all_day_event">ALL DAY EVENT</string>
     <string name="tap_to_add_notes">Tap to add notes</string>
     <string name="repeat">REPEAT</string>
+    <string name="cancel">cancel</string>
+    <string name="copy_rights_reserved_by_sky_rider_apps">Copy Rights Reserved by Sky Rider Apps</string>
 </resources>

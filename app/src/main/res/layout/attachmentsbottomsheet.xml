@@ -5,6 +5,7 @@
     android:orientation="vertical"
     >
     <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/fromGalleryLL"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -24,6 +25,7 @@
 
     </LinearLayout>
     <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/takeAPictureLL"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -43,6 +45,7 @@
 
     </LinearLayout>
     <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/recordVideoLL"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -62,6 +65,7 @@
 
     </LinearLayout>
     <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/recordAudioLL"
         android:orientation="horizontal"
         android:layout_width="match_parent"

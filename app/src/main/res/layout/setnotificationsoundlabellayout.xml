@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorTransparentTwo"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/setNotificationSoundLabelTv"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="start|center"
+        android:paddingLeft="10dp"
+        android:text="set a notification sound"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+</LinearLayout>
