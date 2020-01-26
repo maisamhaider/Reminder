@@ -1,5 +1,7 @@
 package com.example.reminder.adapter;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,35 +10,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.reminder.Fragments.BShRepeatFragDiaglog;
-import com.example.reminder.Fragments.BottomShAlarmRvFragDialog;
 import com.example.reminder.R;
-import com.example.reminder.models.BottomShAlarmRVFragDialogModel;
-import com.example.reminder.interfaces.EditTextStringListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<BottomShAlarmRVFragDialogAdapter.MyHolder>{
 
     int isVisible = -1;
 
-    Fragment context;
-    String fragName;
-    List<BottomShAlarmRVFragDialogModel> list;
-    List<EditTextStringListener> stringlist=new ArrayList<>();
-    private EditTextStringListener mEditTextStringListener;
-    private String ss;
+    Context context;
+    List<String> list;
+    AlertDialog dialog;
 
-
-    public BottomShAlarmRVFragDialogAdapter(Fragment context, List<BottomShAlarmRVFragDialogModel> list, String fragName, EditTextStringListener mEditTextStringListener) {
+    public BottomShAlarmRVFragDialogAdapter(Context context, List<String> list, AlertDialog dialog) {
         this.context = context;
         this.list = list;
-        this.mEditTextStringListener = mEditTextStringListener;
-        this.fragName= fragName;
+        this.dialog = dialog;
     }
 
     @NonNull
@@ -49,7 +40,7 @@ public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<Botto
 
     @Override
     public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
-        final String s =list.get( position ).getString();
+        final String s =list.get( position );
         holder.setData( s );
 
         if (isVisible==position) {
@@ -63,29 +54,19 @@ public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<Botto
         holder.itemView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEditTextStringListener != null) {
-                    mEditTextStringListener.myString( s );
-                }
 
                 if (isVisible==position)
                 {
                     holder.imageView.setVisibility( View.INVISIBLE );
-
                 }
                 else
                 {
                     holder.imageView.setVisibility( View.VISIBLE );
                 }
                 isVisible=position;
+                dialog.dismiss();
                 notifyDataSetChanged();
-                if(fragName.equals("BottomShAlarmRvFragDialog")){
-                    BottomShAlarmRvFragDialog fr= (BottomShAlarmRvFragDialog) context;
-                    fr.dismiss();
-                }
-                else if (fragName.equals( "BShRepeatFragDiaglog" )){
-                    BShRepeatFragDiaglog fr= (BShRepeatFragDiaglog) context;
-                    fr.dismiss();
-                }
+
             }
         } );
     }

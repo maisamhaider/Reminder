@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -162,9 +161,9 @@ public class CalendarFrag extends Fragment {
 
                             if (index==1){
 
-                                MyBottomSheetDialogFrag myBottomSheetDialogFrag =
-                                        MyBottomSheetDialogFrag.newInstance();
-                                myBottomSheetDialogFrag.show( Objects.requireNonNull( getActivity() ).getSupportFragmentManager(),
+                                CalendarEventAddBottomSheetDialogFrag calendarEventAddBottomSheetDialogFrag =
+                                        CalendarEventAddBottomSheetDialogFrag.newInstance();
+                                calendarEventAddBottomSheetDialogFrag.show( Objects.requireNonNull( getActivity() ).getSupportFragmentManager(),
                                         "BSheet");
                             }
                             else

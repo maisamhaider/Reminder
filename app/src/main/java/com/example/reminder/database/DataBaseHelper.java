@@ -154,7 +154,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public boolean updateRepeatColumn(String position,String repeat,String reminder_date, String date_to_place_task ) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put( repeat, repeat );
+        contentValues.put( DataBaseHelper.repeat, repeat );
         contentValues.put( DataBaseHelper.reminder_date, reminder_date );
         contentValues.put( DataBaseHelper.date_to_place_task, date_to_place_task );
 
@@ -198,6 +198,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String someday = "";
         day = database.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE DATE_TO_PLACE_TASK LIKE \'" + someday + "\'", null );
         return day;
+    }
+
+    public Cursor getRepeatColumnValue()
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor repeatColumn;
+        repeatColumn = database.rawQuery( "SELECT * FROM " + TABLE_NAME, null, null );
+        return repeatColumn;
+
     }
 
 

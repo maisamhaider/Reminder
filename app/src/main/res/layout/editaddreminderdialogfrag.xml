@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    android:background="@drawable/alertdialogsbg"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <LinearLayout
+        android:background="@drawable/alertdialogsbg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <include layout="@layout/reminderupperlayout" />
 
@@ -24,5 +29,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include layout="@layout/remindercancelandsetbuttonlayout" />
+    </LinearLayout>
 
 </LinearLayout>

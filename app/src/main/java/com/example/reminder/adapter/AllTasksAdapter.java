@@ -33,7 +33,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
     DataBaseHelper dataBaseHelper;
     FragmentManager fragmentManager;
 
-    public AllTasksAdapter(Context context, List<AllTasksModel> myModelList, DataBaseHelper dataBaseHelper,FragmentManager fragmentManager) {
+    public AllTasksAdapter(Context context, List<AllTasksModel> myModelList, DataBaseHelper dataBaseHelper, FragmentManager fragmentManager) {
         this.context = context;
         this.myModelList = myModelList;
         this.dataBaseHelper = dataBaseHelper;
@@ -59,25 +59,26 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
         holder.deleteItemIv.setVisibility( View.GONE );
         holder.attachmentsIv.setVisibility( View.GONE );
         holder.subTasksIv.setVisibility( View.GONE );
+        holder.repeatTaskIv.setVisibility( View.GONE );
+
+
 
 
         holder.setItemClickListener( new MyItemClickListener() {
             @Override
             public void onMyClick(View view, int pos) {
-                CheckBox checkBox = (CheckBox)view;
+                CheckBox checkBox = (CheckBox) view;
 
-                if (checkBox.isChecked())
-                {
+                if (checkBox.isChecked()) {
                     holder.deleteItemIv.setVisibility( View.VISIBLE );
-                }
-                else
+                } else
                     holder.deleteItemIv.setVisibility( View.GONE );
             }
         } );
         holder.deleteItemIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataBaseHelper.deleteOneTask(myModelList.get( position ).getId());
+                dataBaseHelper.deleteOneTask( myModelList.get( position ).getId() );
                 dataBaseHelper.deleteSubTask( myModelList.get( position ).getDate() );
                 dataBaseHelper.deleteAllAttachments( myModelList.get( position ).getId() );
                 myModelList.remove( position );
@@ -88,81 +89,70 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
         holder.itemView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle(  );
+                Bundle bundle = new Bundle();
 
                 String position1 = myModelList.get( position ).getId();
 
                 Cursor STC = dataBaseHelper.getSubTasks( position1 );// STC Sub Task Cursor
-                Cursor CDC =  dataBaseHelper.getCreatedDate( position1 );// CDC = Created Date Cursor
-                Cursor NC = dataBaseHelper.getTaskNote( position1);//NC = Note Cursor
+                Cursor CDC = dataBaseHelper.getCreatedDate( position1 );// CDC = Created Date Cursor
+                Cursor NC = dataBaseHelper.getTaskNote( position1 );//NC = Note Cursor
                 Cursor RDC = dataBaseHelper.getReminderDate( position1 );// RDC = reminder date cursor
-                Cursor AC = dataBaseHelper.getAttachment(position1); // AC = Attachment Cursor
+                Cursor AC = dataBaseHelper.getAttachment( position1 ); // AC = Attachment Cursor
 
-                if (STC.getCount()==0)
-                {}
-                while (STC.moveToNext())
-                {
+                if (STC.getCount() == 0) {
+                }
+                while (STC.moveToNext()) {
                     String subTask = STC.getString( 0 );
 
-                    if (subTask==null)
-                    {
-                        bundle.putString( "Sub_Tasks",null);
-                    }
-                    else
-                    {
-                        bundle.putString( "Sub_Tasks",subTask );
+                    if (subTask == null) {
+                        bundle.putString( "Sub_Tasks", null );
+                    } else {
+                        bundle.putString( "Sub_Tasks", subTask );
                     }
                 }
-                if (CDC.getCount()== 0 )
-                {}
-                while (CDC.moveToNext())
-                {
-                    bundle.putString( "Task_Created_Date",CDC.getString( 0 )); }
+                if (CDC.getCount() == 0) {
+                }
+                while (CDC.moveToNext()) {
+                    bundle.putString( "Task_Created_Date", CDC.getString( 0 ) );
+                }
 
-                if (NC.getCount()==0)
-                { }
-                while (NC.moveToNext()){
-                    String isNote =NC.getString( 0 );
-                    if (isNote == null)
-                    { bundle.putString( "Task_Note","" );}
-                    else
-                    {bundle.putString( "Task_Note",isNote);}
+                if (NC.getCount() == 0) {
+                }
+                while (NC.moveToNext()) {
+                    String isNote = NC.getString( 0 );
+                    if (isNote == null) {
+                        bundle.putString( "Task_Note", "" );
+                    } else {
+                        bundle.putString( "Task_Note", isNote );
+                    }
 
                 }
-                if (RDC.getCount()== 0)
-                {}
-                while (RDC.moveToNext())
-                {
-                  String isDate = RDC.getString( 0 );
-                  if (isDate == null)
-                  {
-                      bundle.putString( "Reminder_date","");
-                  }
-                  else
-                      {
-                          bundle.putString( "Reminder_date",isDate);
-                      }
+                if (RDC.getCount() == 0) {
                 }
-                if (AC.getCount()==0)
-                {}
-                while (AC.moveToNext())
-                {
+                while (RDC.moveToNext()) {
+                    String isDate = RDC.getString( 0 );
+                    if (isDate == null) {
+                        bundle.putString( "Reminder_date", "" );
+                    } else {
+                        bundle.putString( "Reminder_date", isDate );
+                    }
+                }
+                if (AC.getCount() == 0) {
+                }
+                while (AC.moveToNext()) {
                     String isAttachment = AC.getString( 0 );
-                    if (isAttachment == null)
-                    {
-                        bundle.putString( "Attachment","");
-                    }
-                    else
-                    {
-                        bundle.putString( "Attachment",isAttachment);
+                    if (isAttachment == null) {
+                        bundle.putString( "Attachment", "" );
+                    } else {
+                        bundle.putString( "Attachment", isAttachment );
 
                     }
                 }
 
-                bundle.putString( "Task_Title",myModelList.get( position ).getTask() );
+                bundle.putString( "Task_Title", myModelList.get( position ).getTask() );
                 bundle.putString( "task_position", myModelList.get( position ).getId() );
                 EditTask editTask = EditTask.editTaskInstence();
-                editTask.show( fragmentManager,"editTask BSheet " );
+                editTask.show( fragmentManager, "editTask BSheet " );
                 editTask.setArguments( bundle );
 
             }
@@ -179,7 +169,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
     class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView notes_TextView, date_textView;
-        ImageView deleteItemIv,attachmentsIv,subTasksIv;
+        ImageView deleteItemIv, attachmentsIv, subTasksIv, repeatTaskIv;
         RelativeLayout mainLayout;
         CheckBox checkBox;
         MyItemClickListener mItemClickListener;
@@ -188,12 +178,13 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             super( itemView );
 
             notes_TextView = itemView.findViewById( R.id.noteTextView );
-            date_textView  = itemView.findViewById( R.id.dateTextView );
-            deleteItemIv   = itemView.findViewById( R.id.deleteSingletaskIv );
-            attachmentsIv  = itemView.findViewById( R.id.AttachmentImageView );
-            subTasksIv     = itemView.findViewById( R.id.subtasksImageView );
-            checkBox       = itemView.findViewById( R.id.checkbox );
-            checkBox.setOnClickListener( this);
+            date_textView = itemView.findViewById( R.id.dateTextView );
+            deleteItemIv = itemView.findViewById( R.id.deleteSingletaskIv );
+            attachmentsIv = itemView.findViewById( R.id.AttachmentImageView );
+            subTasksIv = itemView.findViewById( R.id.subtasksImageView );
+            repeatTaskIv = itemView.findViewById( R.id.repeatTaskIv );
+            checkBox = itemView.findViewById( R.id.checkbox );
+            checkBox.setOnClickListener( this );
 
 
             mainLayout = itemView.findViewById( R.id.mainindivduallayout );
@@ -213,7 +204,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
         @Override
         public void onClick(View v) {
-            this.mItemClickListener.onMyClick(v,getLayoutPosition());
+            this.mItemClickListener.onMyClick( v, getLayoutPosition() );
 
         }
     }

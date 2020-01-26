@@ -17,7 +17,7 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getCurrentTimeLongFormat(){
         Calendar calendar = Calendar.getInstance();
-        return new SimpleDateFormat( " dd MMM yyyy h:mm a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")

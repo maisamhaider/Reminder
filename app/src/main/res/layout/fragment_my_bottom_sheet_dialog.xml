@@ -9,7 +9,7 @@
     android:orientation="vertical"
     app:layout_behavior="@string/bottom_sheet_behavior"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.MyBottomSheetDialogFrag">
+    tools:context=".Fragments.CalendarEventAddBottomSheetDialogFrag">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout2"
@@ -171,10 +171,10 @@
                 android:id="@+id/all_time_sb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/event_end_time_tv" />
+                app:layout_constraintTop_toBottomOf="@+id/e_date_Tv" />
 
             <TextView
                 android:id="@+id/alarm_tv"
