@@ -17,16 +17,16 @@ import com.example.reminder.interfaces.EditTextStringListener;
 
 import java.util.List;
 
-public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<BottomShAlarmRVFragDialogAdapter.MyHolder>{
-
+public class CalBottomShRepeatDialogAdapter extends RecyclerView.Adapter<CalBottomShRepeatDialogAdapter.CalBottomShRepeatDialogViewHolder> {
     int isVisible = -1;
 
     Context context;
     List<String> list;
     AlertDialog dialog;
+
     private EditTextStringListener editTextStringListener;
 
-    public BottomShAlarmRVFragDialogAdapter(Context context, List<String> list, AlertDialog dialog) {
+    public CalBottomShRepeatDialogAdapter(Context context, List<String> list, AlertDialog dialog) {
         this.context = context;
         this.list = list;
         this.dialog = dialog;
@@ -34,14 +34,14 @@ public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<Botto
 
     @NonNull
     @Override
-    public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CalBottomShRepeatDialogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.bsh_alarm_list_layout,parent,false );
-        return new MyHolder( view );
+        return new CalBottomShRepeatDialogViewHolder( view );
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final CalBottomShRepeatDialogViewHolder holder, final int position) {
         final String s =list.get( position );
         holder.setData( s );
 
@@ -66,37 +66,37 @@ public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<Botto
                     holder.imageView.setVisibility( View.VISIBLE );
                 }
                 isVisible=position;
-                setAlarmString(s);
+                setString(s);
                 dialog.dismiss();
                 notifyDataSetChanged();
 
             }
         } );
+
     }
 
-
+    public void getRepeatStringListener(EditTextStringListener editTextStringListener)
+    {
+        this.editTextStringListener = editTextStringListener;
+    }
+    void setString(String s)
+    {
+        editTextStringListener.myString( s );
+    }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
 
-    public void getAlarmStringListener(EditTextStringListener editTextStringListener) {
-        this.editTextStringListener = editTextStringListener;
-    }
 
-    public void setAlarmString(String s)
-    {
-        editTextStringListener.myString( s );
-    }
-
-    class MyHolder extends RecyclerView.ViewHolder
+    public  class CalBottomShRepeatDialogViewHolder extends RecyclerView.ViewHolder
     {
 
         TextView textView ;
         ImageView imageView;
         LinearLayout linearLayout;
-        public MyHolder(@NonNull View itemView) {
+        public CalBottomShRepeatDialogViewHolder(@NonNull View itemView) {
             super( itemView );
             textView =itemView.findViewById( R.id.listalarm_tv );
             imageView =itemView.findViewById( R.id.alarm_select_Iv );
@@ -107,7 +107,5 @@ public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<Botto
             textView.setText( s );
         }
     }
-
-
 
 }

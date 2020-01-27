@@ -124,11 +124,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
 
-    public boolean update(String reminder_date, String date_to_place_task, String position) {
+    public boolean update(String reminder_date, String date_to_place_task,String repeat, String position) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put( DataBaseHelper.reminder_date, reminder_date );
         contentValues.put( DataBaseHelper.date_to_place_task, date_to_place_task );
+        contentValues.put( DataBaseHelper.repeat,repeat );
 
         long result = database.update( TABLE_NAME, contentValues, "ID=?", new String[]{position} );
 
@@ -151,20 +152,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean updateRepeatColumn(String position,String repeat,String reminder_date, String date_to_place_task ) {
-        SQLiteDatabase database = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put( DataBaseHelper.repeat, repeat );
-        contentValues.put( DataBaseHelper.reminder_date, reminder_date );
-        contentValues.put( DataBaseHelper.date_to_place_task, date_to_place_task );
-
-        long isUpdate = database.update( TABLE_NAME, contentValues, "ID=?", new String[]{position} );
-
-        if (isUpdate == -1) {
-            return false;
-        }
-        return true;
-    }
+//    public boolean updateRepeatRow(String position, String repeat, String reminder_date, String date_to_place_task ) {
+//        SQLiteDatabase database = getWritableDatabase();
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put( DataBaseHelper.repeat, repeat );
+//        contentValues.put( DataBaseHelper.reminder_date, reminder_date );
+//        contentValues.put( DataBaseHelper.date_to_place_task, date_to_place_task );
+//
+//        long isUpdate = database.update( TABLE_NAME, contentValues, "ID=?", new String[]{position} );
+//
+//        if (isUpdate == -1) {
+//            return false;
+//        }
+//        return true;
+//    }
 
 
     public Cursor getToday() {
@@ -199,14 +200,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         day = database.rawQuery( "SELECT * FROM " + TABLE_NAME + " WHERE DATE_TO_PLACE_TASK LIKE \'" + someday + "\'", null );
         return day;
     }
+    public Cursor getDateToPlaceSingleRowValue(String position)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor singleDateToPlaceRow;
+        singleDateToPlaceRow = database.rawQuery( "SELECT DATE_TO_PLACE_TASK FROM " + TABLE_NAME +" WHERE ID LIKE \'"+ position +"\'", null );
+        return singleDateToPlaceRow;
+    }
 
     public Cursor getRepeatColumnValue()
     {
         SQLiteDatabase database = getWritableDatabase();
-        Cursor repeatColumn;
-        repeatColumn = database.rawQuery( "SELECT * FROM " + TABLE_NAME, null, null );
-        return repeatColumn;
+        Cursor repeatRow;
+        repeatRow = database.rawQuery( "SELECT * FROM " + TABLE_NAME, null, null );
+        return repeatRow;
 
+    }
+    public Cursor getSingleRepeatRowValue(String position)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor singleRepeatColumn;
+        singleRepeatColumn = database.rawQuery( "SELECT REPETITION FROM " + TABLE_NAME +" WHERE ID LIKE \'"+ position +"\'", null );
+        return singleRepeatColumn;
     }
 
 
@@ -277,12 +292,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void deleteCompletedTasks()
     {
         SQLiteDatabase database = getWritableDatabase();
-        int DR = database.delete( TABLE_NAME,"COMPLETED_TASK=?",new String[]{"yes"} );
+        int DCTRs = database.delete( TABLE_NAME,"COMPLETED_TASK=?",new String[]{"yes"} );
     }
     public void deleteEachCompletedTask(String key)
     {
         SQLiteDatabase database = getWritableDatabase();
-        int DR = database.delete( TABLE_NAME,"ID=?",new String[]{key} );
+        int DCTR = database.delete( TABLE_NAME,"ID=?",new String[]{key} );
+    }
+    public void deleteSingleRepeatRow(String key)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        int DSRR = database.delete( TABLE_NAME,"ID=?",new String[]{key} );
     }
 
 }

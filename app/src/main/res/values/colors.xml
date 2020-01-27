@@ -9,6 +9,7 @@
     <color name="colorAliceBlue">#F0F8FF</color>
     <color name="colorBlueGray">#90a4ae</color>
     <color name="colorGray">#424242</color>
+    <color name="colorYellow">#FFEB3B</color>
     <color name="colorTransparentOne">#00000000</color>
     <color name="colorTransparentTwo">#0A000000</color>
     <color name="colorTransparentThree">#33000000</color>

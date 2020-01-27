@@ -2,7 +2,6 @@ package com.example.reminder.Fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -56,16 +56,13 @@ import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.RecyclerCallBack;
 import com.example.reminder.models.AttachmentTaskModel;
 import com.example.reminder.models.MySubTaskModel;
-import com.github.florent37.viewtooltip.ViewTooltip;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.tooltip.Tooltip;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
-
-import static com.github.florent37.viewtooltip.ViewTooltip.ALIGN.CENTER;
-import static com.github.florent37.viewtooltip.ViewTooltip.Position.BOTTOM;
 
 public class EditTask extends BottomSheetDialogFragment {
 
@@ -84,7 +81,7 @@ public class EditTask extends BottomSheetDialogFragment {
     private AttachmentTaskAdapter attachmentTaskAdapter;
 
 
-    private String taskPosition, taskTitle, task_reminderDate, task_placeDate, subTasks, taskNotes, taskCreatedDate, attachments;
+    private String taskPosition, taskTitle, repeatValue, task_reminderDate, task_placeDate, subTasks, taskNotes, taskCreatedDate, attachments;
     private String reminder_date = "", date_to_place_task = "";
     private String checkRepeat = "daily";
     boolean isRepeatllHidden = false;
@@ -118,6 +115,7 @@ public class EditTask extends BottomSheetDialogFragment {
 
     private SimpleDateFormat sformat;
     String notesHolderStg;
+    String whichOnIsClick = "", repeatString = "";
 
 
     @Nullable
@@ -175,8 +173,11 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
 
+                isOneButton = true;
+                mainActivity.setTaskFragDefaultBNBItem();
                 showEditRemindTagsLLAndStuffs();
-                dataBaseHelper.update( "", MyTimeSettingClass.todayPlaceDate(), taskPosition );
+                editSetTimeTv.setText( "" );
+                dataBaseHelper.update( "", MyTimeSettingClass.todayPlaceDate(), "", taskPosition );
             }
         } );
 
@@ -268,7 +269,7 @@ public class EditTask extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 hideEditRemindTagsLLAndStuffs();
                 editSetTimeTv.setText( MyTimeSettingClass.getTomorrowMorning() );
-                dataBaseHelper.update( editSetTimeTv.getText().toString(), MyTimeSettingClass.tomorrowPlaceDate(), taskPosition );
+                dataBaseHelper.update( editSetTimeTv.getText().toString(), MyTimeSettingClass.tomorrowPlaceDate(), "", taskPosition );
 
             }
         } );
@@ -290,68 +291,68 @@ public class EditTask extends BottomSheetDialogFragment {
     }
 
 
-    private DatePickerDialog.OnDateSetListener datePickerDialog1 = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-            calendar.set( Calendar.YEAR, year );
-            calendar.set( Calendar.MONTH, month );
-            calendar.set( Calendar.DAY_OF_MONTH, dayOfMonth );
-
-            Calendar calendar1 = Calendar.getInstance();
-
-            checkYear = calendar.get( Calendar.YEAR );
-            currentYear = calendar1.get( Calendar.YEAR );
-            isTomorrow = calendar.get( Calendar.DAY_OF_MONTH );
-            mTomorrow = calendar1.get( Calendar.DAY_OF_MONTH ) + 1;
-            isToday = calendar.get( Calendar.DAY_OF_MONTH );
-            mToday = calendar1.get( Calendar.DAY_OF_MONTH );
-
-            myTimeSettingClass.setCustomPlaceDate( dayOfMonth, month, year );
-            date_to_place_task = MyTimeSettingClass.getCustomPlaceDate();
-
-
-        }
-    };
-    private TimePickerDialog.OnTimeSetListener timePickerListener1 = new TimePickerDialog.OnTimeSetListener() {
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-            calendar.set( Calendar.HOUR_OF_DAY, hourOfDay );
-            calendar.set( Calendar.MINUTE, minute );
-
-            if (minute == 0 && checkYear > currentYear && isTomorrow != mTomorrow && isToday != mToday) {
-                sformat = new SimpleDateFormat( "dd MMM yyyy, h a" );
-            } else if (minute != 0 && checkYear > currentYear && isTomorrow != mTomorrow && isToday != mToday) {
-                sformat = new SimpleDateFormat( "d MMM yyyy, h:mm a" );
-            }
-
-            if (minute == 0 && checkYear == currentYear && isTomorrow != mTomorrow) {
-                sformat = new SimpleDateFormat( "d MMM, h a" );
-            } else if (minute != 0 && checkYear == currentYear && isTomorrow != mTomorrow) {
-                sformat = new SimpleDateFormat( "d MMM, h:mm a" );
-            }
-
-            if (minute == 0 && isTomorrow == mTomorrow && isToday != mToday) {
-                sformat = new SimpleDateFormat( "EEE, h a " );
-            } else if (minute != 0 && isTomorrow == mTomorrow && isToday != mToday) {
-                sformat = new SimpleDateFormat( "EEE, h:mm a" );
-            }
-
-            if (minute == 0 && isToday == mToday && isTomorrow != mTomorrow) {
-                sformat = new SimpleDateFormat( "h a" );
-            } else if (minute != 0 && isToday == mToday && isTomorrow != mTomorrow) {
-                sformat = new SimpleDateFormat( "h:mm a" );
-            }
-            reminder_date = sformat.format( calendar.getTime() );
-
-            Log.i( "formated date", reminder_date );
-            dataBaseHelper.update( reminder_date, date_to_place_task, taskPosition );
-            editSetTimeTv.setText( reminder_date );
-
-        }
-    };
+//    private DatePickerDialog.OnDateSetListener datePickerDialog1 = new DatePickerDialog.OnDateSetListener() {
+//        @Override
+//        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//
+//            calendar.set( Calendar.YEAR, year );
+//            calendar.set( Calendar.MONTH, month );
+//            calendar.set( Calendar.DAY_OF_MONTH, dayOfMonth );
+//
+//            Calendar calendar1 = Calendar.getInstance();
+//
+//            checkYear = calendar.get( Calendar.YEAR );
+//            currentYear = calendar1.get( Calendar.YEAR );
+//            isTomorrow = calendar.get( Calendar.DAY_OF_MONTH );
+//            mTomorrow = calendar1.get( Calendar.DAY_OF_MONTH ) + 1;
+//            isToday = calendar.get( Calendar.DAY_OF_MONTH );
+//            mToday = calendar1.get( Calendar.DAY_OF_MONTH );
+//
+//            myTimeSettingClass.setCustomPlaceDate( dayOfMonth, month, year );
+//            date_to_place_task = MyTimeSettingClass.getCustomPlaceDate();
+//
+//
+//        }
+//    };
+//    private TimePickerDialog.OnTimeSetListener timePickerListener1 = new TimePickerDialog.OnTimeSetListener() {
+//        @RequiresApi(api = Build.VERSION_CODES.N)
+//        @Override
+//        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//
+//            calendar.set( Calendar.HOUR_OF_DAY, hourOfDay );
+//            calendar.set( Calendar.MINUTE, minute );
+//
+//            if (minute == 0 && checkYear > currentYear && isTomorrow != mTomorrow && isToday != mToday) {
+//                sformat = new SimpleDateFormat( "dd MMM yyyy, h a" );
+//            } else if (minute != 0 && checkYear > currentYear && isTomorrow != mTomorrow && isToday != mToday) {
+//                sformat = new SimpleDateFormat( "d MMM yyyy, h:mm a" );
+//            }
+//
+//            if (minute == 0 && checkYear == currentYear && isTomorrow != mTomorrow) {
+//                sformat = new SimpleDateFormat( "d MMM, h a" );
+//            } else if (minute != 0 && checkYear == currentYear && isTomorrow != mTomorrow) {
+//                sformat = new SimpleDateFormat( "d MMM, h:mm a" );
+//            }
+//
+//            if (minute == 0 && isTomorrow == mTomorrow && isToday != mToday) {
+//                sformat = new SimpleDateFormat( "EEE, h a " );
+//            } else if (minute != 0 && isTomorrow == mTomorrow && isToday != mToday) {
+//                sformat = new SimpleDateFormat( "EEE, h:mm a" );
+//            }
+//
+//            if (minute == 0 && isToday == mToday && isTomorrow != mTomorrow) {
+//                sformat = new SimpleDateFormat( "h a" );
+//            } else if (minute != 0 && isToday == mToday && isTomorrow != mTomorrow) {
+//                sformat = new SimpleDateFormat( "h:mm a" );
+//            }
+//            reminder_date = sformat.format( calendar.getTime() );
+//
+//            Log.i( "formated date", reminder_date );
+//            dataBaseHelper.update( reminder_date, date_to_place_task, taskPosition );
+//            editSetTimeTv.setText( reminder_date );
+//
+//        }
+//    };
 
 
     private void launchNotesDialogFragFun() {
@@ -385,6 +386,7 @@ public class EditTask extends BottomSheetDialogFragment {
 
         taskPosition = getArguments().getString( "task_position" );
         taskTitle = getArguments().getString( "Task_Title" );
+        repeatValue = getArguments().getString( "Repeat_Value" );
         subTasks = getArguments().getString( "Sub_Tasks" );
         reminder_date = getArguments().getString( "Reminder_date" );
         taskNotes = getArguments().getString( "Task_Note" );
@@ -400,7 +402,20 @@ public class EditTask extends BottomSheetDialogFragment {
 
         } else {
             hideEditRemindTagsLLAndStuffs();
-            editSetTimeTv.setText( reminder_date );
+            if (repeatValue.matches( "" )) {
+                editSetTimeTv.setText( reminder_date );
+            } else {
+                if (repeatValue.matches( "daily" )) {
+                    editSetTimeTv.setText( "Once a day " + reminder_date );
+                } else if (repeatValue.matches( "weekly" )) {
+                    editSetTimeTv.setText( "Once a week " + reminder_date );
+                } else if (repeatValue.matches( "monthly" )) {
+                    editSetTimeTv.setText( "Once a month " + reminder_date );
+                } else if (repeatValue.matches( "yearly" )) {
+                    editSetTimeTv.setText( "every year " + reminder_date );
+                }
+            }
+
         }
 
         if (taskNotes.matches( "" )) {
@@ -487,32 +502,36 @@ public class EditTask extends BottomSheetDialogFragment {
 
 
         final AlertDialog.Builder builder = new AlertDialog.Builder( getContext() ).setView( view ).setCancelable( true );
-
+        String s = editSetTimeTv.getText().toString();
         final AlertDialog dialog = builder.create();
         if (isOneButton) {
 
-            isOneButton = true;
-            changeButtonBg( oneTimeBtn, repeatBtn, locationBtn );
-            edit_oneTimeAddReminderSwitch.setChecked( true );
-            edit_task_SetBtn.setEnabled( true );
-            repeatLL.setVisibility( View.GONE );
-            editTagsLL.setVisibility( View.GONE );
-            edit_showReminderTimeCL.setVisibility( View.VISIBLE );
-            edit_remindMeOrNoReminderTv.setText( "Remind Me" );
-            edit_addReminderShowTimeTv.setText( reminder_date );
+            if (editSetTimeTv.length() == 0) {
+                changeButtonBg( oneTimeBtn, repeatBtn, locationBtn );
+                repeatLL.setVisibility( View.GONE );
+                edit_task_SetBtn.setEnabled( false );
+                edit_oneTimeAddReminderSwitch.setChecked( false );
+                editTagsLL.setVisibility( View.VISIBLE );
+                edit_showReminderTimeCL.setVisibility( View.GONE );
+            } else if (s.contains( "Once" )) {
+                repeatLayoutSomeStuffHiding();
+                dialog.show();
 
+            } else if (s.contains( "every" )) {
+                repeatLayoutSomeStuffHiding();
+            } else {
+                changeButtonBg( oneTimeBtn, repeatBtn, locationBtn );
+                repeatLL.setVisibility( View.GONE );
+                edit_task_SetBtn.setEnabled( false );
+                edit_oneTimeAddReminderSwitch.setChecked( false );
+                editTagsLL.setVisibility( View.GONE );
+                edit_remindMeOrNoReminderTv.setText( "Remind Me" );
+                edit_showReminderTimeCL.setVisibility( View.VISIBLE );
+                edit_addReminderShowTimeTv.setText( editSetTimeTv.getText().toString() );
+            }
             dialog.show();
         } else {
-
-            changeButtonBg( repeatBtn, oneTimeBtn, locationBtn );
-            isOneButton = false;
-            repeatBtn.setSelected( true );
-            edit_task_SetBtn.setEnabled( true );
-            repeatLL.setVisibility( View.GONE );
-            editTagsLL.setVisibility( View.GONE );
-            edit_showReminderTimeCL.setVisibility( View.VISIBLE );
-            edit_remindMeOrNoReminderTv.setText( "Remind Me" );
-            edit_addReminderShowTimeTv.setText( editSetTimeTv.getText().toString() );
+            repeatLayoutSomeStuffHiding();
             dialog.show();
         }
 
@@ -548,6 +567,8 @@ public class EditTask extends BottomSheetDialogFragment {
                 date_to_place_task = MyTimeSettingClass.todayPlaceDate();
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
                 edit_addReminderShowTimeTv.setText( reminder_date );
+                onTimeToolTip(edit_task_SetBtn);
+
             }
         } );
 
@@ -563,6 +584,8 @@ public class EditTask extends BottomSheetDialogFragment {
                 date_to_place_task = MyTimeSettingClass.todayPlaceDate();
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
                 edit_addReminderShowTimeTv.setText( reminder_date );
+                onTimeToolTip(edit_task_SetBtn);
+
 
             }
         } );
@@ -578,6 +601,8 @@ public class EditTask extends BottomSheetDialogFragment {
                 date_to_place_task = MyTimeSettingClass.tomorrowPlaceDate();
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
                 edit_addReminderShowTimeTv.setText( reminder_date );
+                onTimeToolTip(edit_task_SetBtn);
+
             }
         } );
         edit_nextWeekLL.setOnClickListener( new View.OnClickListener() {
@@ -591,7 +616,10 @@ public class EditTask extends BottomSheetDialogFragment {
                 reminder_date = MyTimeSettingClass.getNextWeek();
                 date_to_place_task = MyTimeSettingClass.nextWeekPlaceDate();
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
-                edit_addReminderShowTimeTv.setText( reminder_date );
+                onTimeToolTip(edit_task_SetBtn);
+
+
+
             }
         } );
         edit_somedayLL.setOnClickListener( new View.OnClickListener() {
@@ -607,6 +635,8 @@ public class EditTask extends BottomSheetDialogFragment {
                 edit_addReminderDeleteTimeIV.setVisibility( View.GONE );
                 edit_remindMeOrNoReminderTv.setText( "Someday" );
                 edit_addReminderShowTimeTv.setText( "Tap to change" );
+                onTimeToolTip(edit_task_SetBtn);
+
             }
         } );
 
@@ -619,12 +649,6 @@ public class EditTask extends BottomSheetDialogFragment {
                 final int year = calendar.get( Calendar.YEAR );
                 final int month = calendar.get( Calendar.MONTH );
                 final int day = calendar.get( Calendar.DAY_OF_MONTH );
-                final int hour = calendar.get( Calendar.HOUR_OF_DAY );
-                final int minutes = calendar.get( Calendar.MINUTE );
-
-
-                TimePickerDialog tP = new TimePickerDialog( getContext(), timePickerListener, hour, minutes, false );
-                tP.show();
 
                 DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ), datePickerDialog, year, month, day );
                 dP.getDatePicker().setMinDate( System.currentTimeMillis() - 1000 );
@@ -636,16 +660,29 @@ public class EditTask extends BottomSheetDialogFragment {
 
 
         edit_task_SetBtn.setOnClickListener( new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
+
+
+
+
                 if (isOneButton) {
+                    if (repeatValue.matches( "" )) {
+
+                    } else {
+
+
+
+                    }
                     mainActivity.setTaskFragDefaultBNBItem();
                     Toast.makeText( getContext(), "i am Clicked", Toast.LENGTH_SHORT ).show();
                     hideEditRemindTagsLLAndStuffs();
                     edit_addReminderShowTimeTv.setText( reminder_date );
                     editSetTimeTv.setText( reminder_date );
-                    dataBaseHelper.update( reminder_date, date_to_place_task, taskPosition );
+                    dataBaseHelper.update( reminder_date, date_to_place_task, "", taskPosition );
                     dialog.dismiss();
 
                 } else {
@@ -654,42 +691,63 @@ public class EditTask extends BottomSheetDialogFragment {
                         repeatLL.setVisibility( View.GONE );
                         edit_remindMeOrNoReminderTv.setText( "Remind me" );
                         edit_showReminderTimeCL.setVisibility( View.VISIBLE );
+
                         if (checkRepeat.matches( "daily" )) {
                             edit_showReminderTimeCL.setVisibility( View.VISIBLE );
-                            edit_addReminderShowTimeTv.setText( "Once a day " + reminder_date );
-                            editSetTimeTv.setText( "Once a day " + reminder_date );
+                            repeatString = ("Once a day " + reminder_date);
+                            whichOnIsClick = "Once a day ";
 
 
                         } else if (checkRepeat.matches( "weekly" )) {
                             edit_showReminderTimeCL.setVisibility( View.VISIBLE );
-                            edit_addReminderShowTimeTv.setText( "Once a week " + reminder_date );
-                            editSetTimeTv.setText( "Once a week " + reminder_date );
+                            repeatString = ("Once a week " + reminder_date);
+                            whichOnIsClick = "Once a week ";
 
 
                         } else if (checkRepeat.matches( "monthly" )) {
                             edit_showReminderTimeCL.setVisibility( View.VISIBLE );
-                            edit_addReminderShowTimeTv.setText( "Once a month " + reminder_date );
-                            editSetTimeTv.setText( "Once a month " + reminder_date );
+                            repeatString = ("Once a month " + reminder_date);
+                            whichOnIsClick = "Once a month ";
 
 
                         } else if (checkRepeat.matches( "yearly" )) {
                             edit_showReminderTimeCL.setVisibility( View.VISIBLE );
                             repeatLL.setVisibility( View.GONE );
-                            edit_addReminderShowTimeTv.setText( "every year " + reminder_date );
-                            editSetTimeTv.setText( "every year " + reminder_date );
+                            repeatString = ("every year " + reminder_date);
+                            whichOnIsClick = "every year ";
 
                         } else {
                             edit_showReminderTimeCL.setVisibility( View.VISIBLE );
-                            edit_addReminderShowTimeTv.setText( "Once a day " + reminder_date );
-                            editSetTimeTv.setText( "Once a day " + reminder_date );
+                            repeatString = ("Once a day " + reminder_date);
+                            whichOnIsClick = "Once a day ";
+                        }
+                        edit_addReminderShowTimeTv.setText( whichOnIsClick + reminder_date );
+                        if (repeatValue.matches( "" )) {
+                            RepeatToolTip(v);
+                         
+
+                        } else {
                         }
                         edit_task_SetBtn.setText( "save" );
 
                     } else {
+                        if (date_to_place_task.matches( "" )) {
+                            editSetTimeTv.setText( whichOnIsClick + MyTimeSettingClass.getTomorrow() );
+                            edit_addReminderShowTimeTv.setText( whichOnIsClick + MyTimeSettingClass.getTomorrow() );
+                            dataBaseHelper.update( MyTimeSettingClass.getTomorrow(), MyTimeSettingClass.todayPlaceDate(), checkRepeat, taskPosition );
+                        } else {
+                            Cursor cursor = dataBaseHelper.getDateToPlaceSingleRowValue( taskPosition );
+                            if (cursor.getCount() == 0) {
 
+                            }
+                            while (cursor.moveToNext()) {
 
-
-                        dataBaseHelper.updateRepeatColumn( taskPosition, checkRepeat, reminder_date, date_to_place_task );
+                                date_to_place_task = cursor.getString( 0 );
+                            }
+                            editSetTimeTv.setText( whichOnIsClick + reminder_date );
+                            edit_addReminderShowTimeTv.setText( whichOnIsClick + reminder_date );
+                            dataBaseHelper.update( reminder_date, date_to_place_task, checkRepeat, taskPosition );
+                        }
                         mainActivity.setTaskFragDefaultBNBItem();
                         dialog.dismiss();
 
@@ -796,7 +854,7 @@ public class EditTask extends BottomSheetDialogFragment {
         } );
 
         if (reminder_date.matches( "" )) {
-            repeatTimeHolderTv.setText( MyTimeSettingClass.getCurrentTimeLongFormat() );
+            repeatTimeHolderTv.setText( MyTimeSettingClass.getTomorrow() );
         } else {
             repeatTimeHolderTv.setText( reminder_date );
         }
@@ -878,6 +936,39 @@ public class EditTask extends BottomSheetDialogFragment {
 
     }
 
+    public void repeatLayoutSomeStuffHiding() {
+        changeButtonBg( repeatBtn, oneTimeBtn, locationBtn );
+        isOneButton = false;
+        repeatBtn.setSelected( true );
+        edit_task_SetBtn.setEnabled( true );
+        repeatLL.setVisibility( View.GONE );
+        editTagsLL.setVisibility( View.GONE );
+        edit_showReminderTimeCL.setVisibility( View.VISIBLE );
+        edit_remindMeOrNoReminderTv.setText( "Remind Me" );
+        edit_addReminderShowTimeTv.setText( editSetTimeTv.getText().toString() );
+    }
+    public void RepeatToolTip(View v)
+    {
+        Tooltip.Builder builder = new Tooltip.Builder(v, R.style.ToolTipRepeat)
+                .setCancelable(true)
+                .setDismissOnClick(false)
+                .setCornerRadius(20f)
+                .setGravity(Gravity.BOTTOM)
+                .setText("This");
+        builder.show();
+    }
+    public void onTimeToolTip(View v)
+    {
+        Tooltip.Builder builder = new Tooltip.Builder(v, R.style.ToolTipOneTime)
+                .setCancelable(true)
+                .setDismissOnClick(false)
+                .setCornerRadius(20f)
+                .setGravity(Gravity.BOTTOM)
+                .setText("This");
+        builder.show();
+    }
+
+
 
     private DatePickerDialog.OnDateSetListener datePickerDialog = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -943,9 +1034,9 @@ public class EditTask extends BottomSheetDialogFragment {
             if (isOneButton) {
                 reminder_date = sformat.format( calendar.getTime() );
                 edit_task_SetBtn.setEnabled( true );
+                editTagsLL.setVisibility( View.GONE );
                 edit_oneTimeAddReminderSwitch.setChecked( true );
                 edit_addReminderDeleteTimeIV.setVisibility( View.VISIBLE );
-
                 edit_remindMeOrNoReminderTv.setText( "Remind me" );
                 edit_addReminderShowTimeTv.setText( reminder_date );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );

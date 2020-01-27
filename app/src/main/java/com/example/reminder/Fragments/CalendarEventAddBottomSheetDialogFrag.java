@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.reminder.R;
 import com.example.reminder.adapter.BottomShAlarmRVFragDialogAdapter;
+import com.example.reminder.adapter.CalBottomShRepeatDialogAdapter;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -41,8 +42,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 
-public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFragment
-        implements EditTextStringListener {
+public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFragment {
 
     TextView startDateTv, endDateTv, startTimeTv, endTimeTv, addRepeatTv, addAlarmTv1;
     EditText eventTitleEt, addNotesEt;
@@ -304,6 +304,12 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
 
 
         adapter = new BottomShAlarmRVFragDialogAdapter( getContext(), list, dialog );
+        adapter.getAlarmStringListener( new EditTextStringListener() {
+            @Override
+            public void myString(String ss) {
+                addAlarmTv1.setText( ss );
+            }
+        } );
         recyclerView.setAdapter( adapter );
         adapter.notifyDataSetChanged();
 
@@ -320,7 +326,7 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         dialog.show();
 
         RecyclerView recyclerView;
-        BottomShAlarmRVFragDialogAdapter adapter;
+        CalBottomShRepeatDialogAdapter adapter;
 
         recyclerView = view.findViewById( R.id.bsh_repeat_rv );
         recyclerView.setLayoutManager( new LinearLayoutManager( getContext() ) );
@@ -332,23 +338,20 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         list.add(( "Every month" ) );
         list.add(( "Every year" ) );
 
-        adapter = new BottomShAlarmRVFragDialogAdapter( getContext(), list, dialog );
+        adapter = new CalBottomShRepeatDialogAdapter( getContext(), list, dialog );
+        adapter.getRepeatStringListener( new EditTextStringListener() {
+            @Override
+            public void myString(String ss) {
+                addRepeatTv.setText( ss );
+
+            }
+        } );
         recyclerView.setAdapter( adapter );
         adapter.notifyDataSetChanged();
 
     }
 
 
-    @Override
-    public void myString(String ss) {
-        Toast.makeText( getContext(), "Selected " + ss, Toast.LENGTH_SHORT ).show();
-        if
-        (isFirstFieldSelected) {
-            addAlarmTv1.setText( ss );
-        } else {
-            addRepeatTv.setText( ss );
-        }
-    }
 
     @Override
     public void onAttach(Context context) {

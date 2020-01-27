@@ -93,12 +93,29 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
                 String position1 = myModelList.get( position ).getId();
 
+                Cursor SRRC = dataBaseHelper.getSingleRepeatRowValue( position1 );//SRRC = Single Repeat Row// Cursor
                 Cursor STC = dataBaseHelper.getSubTasks( position1 );// STC Sub Task Cursor
                 Cursor CDC = dataBaseHelper.getCreatedDate( position1 );// CDC = Created Date Cursor
                 Cursor NC = dataBaseHelper.getTaskNote( position1 );//NC = Note Cursor
                 Cursor RDC = dataBaseHelper.getReminderDate( position1 );// RDC = reminder date cursor
                 Cursor AC = dataBaseHelper.getAttachment( position1 ); // AC = Attachment Cursor
 
+                if (SRRC.getCount()==0)
+                {
+                }
+                while (SRRC.moveToNext())
+                {
+                    String repeatValue = SRRC.getString( 0 );
+                    if (repeatValue.matches( "" ))
+                    {
+                        bundle.putString( "Repeat_Value","" );
+                    }
+                    else
+                    {
+                        bundle.putString( "Repeat_Value",repeatValue );
+                    }
+
+                }
                 if (STC.getCount() == 0) {
                 }
                 while (STC.moveToNext()) {

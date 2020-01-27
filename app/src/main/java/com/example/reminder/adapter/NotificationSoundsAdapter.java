@@ -28,8 +28,6 @@ public class NotificationSoundsAdapter extends RecyclerView.Adapter<Notification
     private int clickedPosition = -1 ;
     private MediaPlayer mediaPlayer;
 
-    private SharedPreferences sharedPreferences;
-
     private EditTextStringListener editTextStringListener;
 
     public NotificationSoundsAdapter(Context context, ArrayList<String> list, ArrayList<String> hiddenList) {
@@ -95,14 +93,6 @@ public class NotificationSoundsAdapter extends RecyclerView.Adapter<Notification
     void setPath(String s)
     {
         editTextStringListener.myString( s );
-    }
-
-
-
-    void setPash(String s)
-    {
-        String s1 = s;
-
     }
 
 
