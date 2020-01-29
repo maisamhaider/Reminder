@@ -10,18 +10,17 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="center|top"
-        android:orientation="vertical"
+        android:layout_height="120dp"
+        android:layout_above="@+id/linearLayout3"
         android:gravity="bottom"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-       >
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3">
 
         <TextView
-            android:layout_marginTop="5dp"
             android:layout_width="100dp"
             android:layout_height="10dp"
             android:layout_gravity="center|top"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/event_bsh_upper_background" />
 
@@ -39,8 +38,8 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="450dp"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -52,21 +51,30 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="450dp"
                 android:background="@color/colorWhite"
                 android:orientation="vertical">
 
+                <include layout="@layout/everyfisrtedittasklayout" />
 
+                <include layout="@layout/firstedittasklayout" />
+
+                <include layout="@layout/secondedittasklayout" />
+
+                <include layout="@layout/thirdedittasklayout"/>
+                <include layout="@layout/fourthedittasklayout"/>
+                <include layout="@layout/fifthedittasklayout"/>
+                <include layout="@layout/sixthedittasklayout"/>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></LinearLayout>
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/lastedittasklayout"
-        app:layout_constraintTop_toBottomOf="linearLayout3" />
+        <include
+            android:id="@+id/include"
+            layout="@layout/lastedittasklayout"
+            app:layout_constraintTop_toBottomOf="linearLayout3" />
+    </LinearLayout>
+
+
+
 </RelativeLayout>
