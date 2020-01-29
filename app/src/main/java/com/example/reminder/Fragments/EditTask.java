@@ -41,6 +41,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -56,6 +57,7 @@ import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.RecyclerCallBack;
 import com.example.reminder.models.AttachmentTaskModel;
 import com.example.reminder.models.MySubTaskModel;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.tooltip.Tooltip;
 
@@ -118,10 +120,19 @@ public class EditTask extends BottomSheetDialogFragment {
     String whichOnIsClick = "", repeatString = "";
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate( savedInstanceState );
+        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
+
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.edit_task, container, false );
+
 
         mainActivity = (MainActivity) getActivity();
         dataBaseHelper = new DataBaseHelper( getContext() );
@@ -240,7 +251,7 @@ public class EditTask extends BottomSheetDialogFragment {
         intent.setAction( Intent.ACTION_SEND );
         intent.putExtra( Intent.EXTRA_EMAIL, "*/*" );
         intent.putExtra( Intent.EXTRA_TITLE, " Task Title :" + taskTitle );
-        intent.putExtra( Intent.EXTRA_TEXT, "SubTasks : " + subTasks + "\nTask notes :" + taskNotes + "\n Task Reminder Time : " + reminder_date + "\n Task Created date: " + taskCreatedDate );
+        intent.putExtra( Intent.EXTRA_TEXT, "SubTasks : " + subTasks + "\nTask notes :" + taskNotes + "\nTask Reminder Time : " + reminder_date + "\nTask Created date: " + taskCreatedDate );
         intent.putParcelableArrayListExtra( Intent.EXTRA_STREAM, attachment );
         intent.setType( "*/*" );
 
@@ -289,6 +300,8 @@ public class EditTask extends BottomSheetDialogFragment {
 
         } );
     }
+
+
 
 
 //    private DatePickerDialog.OnDateSetListener datePickerDialog1 = new DatePickerDialog.OnDateSetListener() {
@@ -674,8 +687,6 @@ public class EditTask extends BottomSheetDialogFragment {
 
                     } else {
 
-
-
                     }
                     mainActivity.setTaskFragDefaultBNBItem();
                     Toast.makeText( getContext(), "i am Clicked", Toast.LENGTH_SHORT ).show();
@@ -724,7 +735,7 @@ public class EditTask extends BottomSheetDialogFragment {
                         edit_addReminderShowTimeTv.setText( whichOnIsClick + reminder_date );
                         if (repeatValue.matches( "" )) {
                             RepeatToolTip(v);
-                         
+
 
                         } else {
                         }
@@ -949,13 +960,19 @@ public class EditTask extends BottomSheetDialogFragment {
     }
     public void RepeatToolTip(View v)
     {
-        Tooltip.Builder builder = new Tooltip.Builder(v, R.style.ToolTipRepeat)
-                .setCancelable(true)
-                .setDismissOnClick(false)
-                .setCornerRadius(20f)
-                .setGravity(Gravity.BOTTOM)
-                .setText("This");
-        builder.show();
+//        Tooltip.Builder builder = new Tooltip.Builder(v, R.style.ToolTipRepeat)
+//                .setCancelable(true)
+//                .setText( R.string.This_will_override_your_repeat_reminder)
+//                .setDismissOnClick(false)
+//                .setCornerRadius(20f)
+//                .setGravity(Gravity.BOTTOM);
+//        builder.show();
+
+
+
+        Tooltip tooltip = new Tooltip.Builder(v)
+                .setText("Hello tooltip")
+                .show();
     }
     public void onTimeToolTip(View v)
     {
@@ -964,7 +981,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 .setDismissOnClick(false)
                 .setCornerRadius(20f)
                 .setGravity(Gravity.BOTTOM)
-                .setText("This");
+                .setText(R.string.This_will_override_your_onetime_reminder);
         builder.show();
     }
 
@@ -1051,6 +1068,7 @@ public class EditTask extends BottomSheetDialogFragment {
 
         }
     };
+
 
 
     @SuppressLint("ResourceAsColor")

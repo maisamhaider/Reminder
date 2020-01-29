@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    android:paddingTop="16dp"
     android:orientation="vertical"
+    android:id="@+id/fragment_my_bottom_sheet_dialog"
+    android:paddingTop="16dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.CalendarEventAddBottomSheetDialogFrag">
 
-   <include layout="@layout/cal_bottom_sheet_uper_save_btn_layout"/>
-    <include layout="@layout/cal_bottom_sheet_lower_detail_layout"/>
-    </LinearLayout>
+        <include layout="@layout/cal_bottom_sheet_uper_save_btn_layout" />
+        <include layout="@layout/cal_bottom_sheet_lower_detail_layout" />
+
+</LinearLayout>
+
+

@@ -1,41 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_SuperMain_LL"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
     android:orientation="vertical">
 
-
-   <androidx.core.widget.NestedScrollView
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp">
+        android:layout_height="100dp"
+        android:layout_gravity="center|top"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+       >
 
-        <LinearLayout
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="100dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center|top"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/event_bsh_upper_background" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:layout_marginStart="-1dp"
+            android:layout_marginEnd="-1dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/event_bsh_upper_background" />
 
-            <include layout="@layout/everyfisrtedittasklayout" />
 
-            <include layout="@layout/firstedittasklayout" />
+    </LinearLayout>
 
-            <include layout="@layout/secondedittasklayout" />
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-            <include layout="@layout/thirdedittasklayout" />
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp">
 
-            <include layout="@layout/fourthedittasklayout" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="@color/colorWhite"
+                android:orientation="vertical">
 
-            <include layout="@layout/fifthedittasklayout" />
 
-            <include layout="@layout/sixthedittasklayout" />
 
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></LinearLayout>
 
-    <include layout="@layout/lastedittasklayout" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <include
+        android:id="@+id/include"
+        layout="@layout/lastedittasklayout"
+        app:layout_constraintTop_toBottomOf="linearLayout3" />
+</RelativeLayout>

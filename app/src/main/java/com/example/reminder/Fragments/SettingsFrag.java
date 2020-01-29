@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -103,9 +104,9 @@ public class SettingsFrag extends Fragment {
 
         myPreferences = getActivity().getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
 
-        Uri imageUri = Uri.parse( myPreferences.getString( "Profile_Image", "" ) );
+        Uri imageUri = Uri.parse( myPreferences.getString( "Profile_Image", String.valueOf( R.drawable.person_image_foreground ) ) );
         personImageView.setImageURI( imageUri  );
-        personNameTV.setText(myPreferences.getString( "Person_name", "" ));
+        personNameTV.setText(myPreferences.getString( "Person_name", Build.MODEL ));
 
 
 
@@ -159,6 +160,7 @@ public class SettingsFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 galleryWork();
+                dialog.dismiss();
             }
         } );
         profile_openCamera.setOnClickListener( new View.OnClickListener() {
@@ -167,6 +169,7 @@ public class SettingsFrag extends Fragment {
                 if (checkPermission())
                 {
                     openImageCamera();
+                    dialog.dismiss();
                 }
             }
         } );
@@ -297,7 +300,7 @@ public class SettingsFrag extends Fragment {
             if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
                 Uri selectedImageUri = data.getData();
                 String filePath = getPath( getActivity().getApplicationContext(), selectedImageUri );
-                editor.putString( "Profile_Image",filePath ).apply();
+                editor.putString( "Profile_Image",filePath ).commit();
                 mainActivity.setSettingsBNBItem();
 
 
@@ -334,7 +337,7 @@ public class SettingsFrag extends Fragment {
     private void galleryWork() {
 
         Intent photoPickerIntent = new Intent( Intent.ACTION_PICK );
-        photoPickerIntent.setType( "*/*" );
+        photoPickerIntent.setType( "image/*" );
         photoPickerIntent.putExtra( Intent.CATEGORY_APP_GALLERY, new String[]{"image/*"} );
         startActivityForResult( photoPickerIntent, PICK_IMAGE );
     }
