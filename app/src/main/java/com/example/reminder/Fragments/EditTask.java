@@ -39,6 +39,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -59,7 +60,7 @@ import com.example.reminder.models.AttachmentTaskModel;
 import com.example.reminder.models.MySubTaskModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.tooltip.Tooltip;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -580,7 +581,6 @@ public class EditTask extends BottomSheetDialogFragment {
                 date_to_place_task = MyTimeSettingClass.todayPlaceDate();
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
                 edit_addReminderShowTimeTv.setText( reminder_date );
-                onTimeToolTip(edit_task_SetBtn);
 
             }
         } );
@@ -597,7 +597,6 @@ public class EditTask extends BottomSheetDialogFragment {
                 date_to_place_task = MyTimeSettingClass.todayPlaceDate();
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
                 edit_addReminderShowTimeTv.setText( reminder_date );
-                onTimeToolTip(edit_task_SetBtn);
 
 
             }
@@ -614,7 +613,6 @@ public class EditTask extends BottomSheetDialogFragment {
                 date_to_place_task = MyTimeSettingClass.tomorrowPlaceDate();
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
                 edit_addReminderShowTimeTv.setText( reminder_date );
-                onTimeToolTip(edit_task_SetBtn);
 
             }
         } );
@@ -629,7 +627,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 reminder_date = MyTimeSettingClass.getNextWeek();
                 date_to_place_task = MyTimeSettingClass.nextWeekPlaceDate();
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
-                onTimeToolTip(edit_task_SetBtn);
+                edit_addReminderShowTimeTv.setText( reminder_date );
 
 
 
@@ -648,7 +646,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 edit_addReminderDeleteTimeIV.setVisibility( View.GONE );
                 edit_remindMeOrNoReminderTv.setText( "Someday" );
                 edit_addReminderShowTimeTv.setText( "Tap to change" );
-                onTimeToolTip(edit_task_SetBtn);
+
 
             }
         } );
@@ -734,8 +732,7 @@ public class EditTask extends BottomSheetDialogFragment {
                         }
                         edit_addReminderShowTimeTv.setText( whichOnIsClick + reminder_date );
                         if (repeatValue.matches( "" )) {
-                            RepeatToolTip(v);
-
+//                            RepeatToolTip(v);
 
                         } else {
                         }
@@ -958,32 +955,7 @@ public class EditTask extends BottomSheetDialogFragment {
         edit_remindMeOrNoReminderTv.setText( "Remind Me" );
         edit_addReminderShowTimeTv.setText( editSetTimeTv.getText().toString() );
     }
-    public void RepeatToolTip(View v)
-    {
-//        Tooltip.Builder builder = new Tooltip.Builder(v, R.style.ToolTipRepeat)
-//                .setCancelable(true)
-//                .setText( R.string.This_will_override_your_repeat_reminder)
-//                .setDismissOnClick(false)
-//                .setCornerRadius(20f)
-//                .setGravity(Gravity.BOTTOM);
-//        builder.show();
 
-
-
-        Tooltip tooltip = new Tooltip.Builder(v)
-                .setText("Hello tooltip")
-                .show();
-    }
-    public void onTimeToolTip(View v)
-    {
-        Tooltip.Builder builder = new Tooltip.Builder(v, R.style.ToolTipOneTime)
-                .setCancelable(true)
-                .setDismissOnClick(false)
-                .setCornerRadius(20f)
-                .setGravity(Gravity.BOTTOM)
-                .setText(R.string.This_will_override_your_onetime_reminder);
-        builder.show();
-    }
 
 
 
