@@ -61,6 +61,18 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
         holder.subTasksIv.setVisibility( View.GONE );
         holder.repeatTaskIv.setVisibility( View.GONE );
 
+//        Cursor cursor = dataBaseHelper.getCompletedTask();
+//        if (cursor.getCount() == 0)
+//        {
+//        }
+//        while (cursor.moveToNext()) {
+//            String isComplete = cursor.getString( 6 );
+//            if (isComplete.matches( "yes" ))
+//            {
+//
+//            }
+//
+//        }
 
 
 
@@ -79,8 +91,9 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             @Override
             public void onClick(View v) {
                 dataBaseHelper.deleteOneTask( myModelList.get( position ).getId() );
-                dataBaseHelper.deleteSubTask( myModelList.get( position ).getDate() );
+                dataBaseHelper.deleteSubTasks( myModelList.get( position ).getDate() );
                 dataBaseHelper.deleteAllAttachments( myModelList.get( position ).getId() );
+
                 myModelList.remove( position );
                 notifyDataSetChanged();
 

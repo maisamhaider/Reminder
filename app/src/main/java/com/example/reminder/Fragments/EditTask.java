@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,10 +38,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -53,15 +50,16 @@ import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.AttachmentTaskAdapter;
 import com.example.reminder.adapter.SubTaskAdapter;
+import com.example.reminder.classes.AlarmReceiver;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.RecyclerCallBack;
 import com.example.reminder.models.AttachmentTaskModel;
 import com.example.reminder.models.MySubTaskModel;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -119,6 +117,7 @@ public class EditTask extends BottomSheetDialogFragment {
     private SimpleDateFormat sformat;
     String notesHolderStg;
     String whichOnIsClick = "", repeatString = "";
+    private AlarmReceiver alarmReceiver;
 
 
     @Override
@@ -189,7 +188,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 mainActivity.setTaskFragDefaultBNBItem();
                 showEditRemindTagsLLAndStuffs();
                 editSetTimeTv.setText( "" );
-                dataBaseHelper.update( "", MyTimeSettingClass.todayPlaceDate(), "", taskPosition );
+                dataBaseHelper.update( "", MyTimeSettingClass.todayPlaceDate(), "","0", taskPosition );
             }
         } );
 
@@ -217,17 +216,65 @@ public class EditTask extends BottomSheetDialogFragment {
         edit_MarkAsDoneLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isUpdate = dataBaseHelper.upDate( taskPosition, "yes" );
+                boolean isUpdate = dataBaseHelper.upDate( taskPosition, "yes","0" );
                 if (isUpdate) {
+                    alarmReceiver = new AlarmReceiver( getActivity() );
+
                     Toast.makeText( getContext(), "updated", Toast.LENGTH_SHORT ).show();
                 } else {
                     Toast.makeText( getContext(), "not updated", Toast.LENGTH_SHORT ).show();
                 }
             }
         } );
+        edit_deleteTaskLL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder( getContext() )
+                        .setCancelable( true ).setTitle( "Delete Alert" ).setMessage( "Are you sure to delete the task ?" )
+                        .setPositiveButton( "yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Cursor cursor = dataBaseHelper.getAttachment( taskPosition );
+                                if (cursor.getCount()==0)
+                                {}
+                                while (cursor.moveToNext())
+                                {
+                                    String file = cursor.getString( 0 );
+                                    deleteFile( file );
+                                }
+                                dataBaseHelper.deleteOneTask( taskPosition );
+                                dataBaseHelper.deleteAllAttachments( taskPosition );
+                                dataBaseHelper.deleteSubTasks( taskPosition );
+                                dialog.dismiss();
+                            }
+                        } ).setNegativeButton( "Keep Editing", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        } );
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+
+            }
+        } );
+
+
 
 
         return view;
+    }
+
+    private void deleteFile(String inputPath) {
+        try {
+            // delete the original file
+            new File(inputPath).delete();
+        }
+        catch (Exception e) {
+            Log.e("tag", e.getMessage());
+        }
     }
 
     private void shareTaskDataFun() {
@@ -281,7 +328,7 @@ public class EditTask extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 hideEditRemindTagsLLAndStuffs();
                 editSetTimeTv.setText( MyTimeSettingClass.getTomorrowMorning() );
-                dataBaseHelper.update( editSetTimeTv.getText().toString(), MyTimeSettingClass.tomorrowPlaceDate(), "", taskPosition );
+                dataBaseHelper.update( editSetTimeTv.getText().toString(), MyTimeSettingClass.tomorrowPlaceDate(), "","1", taskPosition );
 
             }
         } );
@@ -691,7 +738,8 @@ public class EditTask extends BottomSheetDialogFragment {
                     hideEditRemindTagsLLAndStuffs();
                     edit_addReminderShowTimeTv.setText( reminder_date );
                     editSetTimeTv.setText( reminder_date );
-                    dataBaseHelper.update( reminder_date, date_to_place_task, "", taskPosition );
+                    dataBaseHelper.update( reminder_date, date_to_place_task, "","1", taskPosition );
+                    alarmReceiver = new AlarmReceiver( getActivity() );
                     dialog.dismiss();
 
                 } else {
@@ -742,7 +790,10 @@ public class EditTask extends BottomSheetDialogFragment {
                         if (date_to_place_task.matches( "" )) {
                             editSetTimeTv.setText( whichOnIsClick + MyTimeSettingClass.getTomorrow() );
                             edit_addReminderShowTimeTv.setText( whichOnIsClick + MyTimeSettingClass.getTomorrow() );
-                            dataBaseHelper.update( MyTimeSettingClass.getTomorrow(), MyTimeSettingClass.todayPlaceDate(), checkRepeat, taskPosition );
+                            dataBaseHelper.update( MyTimeSettingClass.getTomorrow(), MyTimeSettingClass.todayPlaceDate(),
+                                    checkRepeat,"1", taskPosition );
+                            alarmReceiver = new AlarmReceiver( getActivity() );
+
                         } else {
                             Cursor cursor = dataBaseHelper.getDateToPlaceSingleRowValue( taskPosition );
                             if (cursor.getCount() == 0) {
@@ -754,7 +805,9 @@ public class EditTask extends BottomSheetDialogFragment {
                             }
                             editSetTimeTv.setText( whichOnIsClick + reminder_date );
                             edit_addReminderShowTimeTv.setText( whichOnIsClick + reminder_date );
-                            dataBaseHelper.update( reminder_date, date_to_place_task, checkRepeat, taskPosition );
+                            dataBaseHelper.update( reminder_date, date_to_place_task, checkRepeat,"1", taskPosition );
+                            alarmReceiver = new AlarmReceiver( getActivity() );
+
                         }
                         mainActivity.setTaskFragDefaultBNBItem();
                         dialog.dismiss();

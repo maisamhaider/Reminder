@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.adapter.AllTasksAdapter;
+import com.example.reminder.classes.AlarmReceiver;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.R;
@@ -56,6 +57,7 @@ import static com.example.reminder.classes.MyTimeSettingClass.nextWeekPlaceDate;
 public class AllTasksFrag extends Fragment {
     private MainActivity mainActivity;
     private MyTimeSettingClass myTimeSettingClass;
+    private AlarmReceiver alarmReceiver;
 
     private LinearLayout linearLayoutTags;
     private RelativeLayout relativeLayoutAddEt;
@@ -207,6 +209,7 @@ public class AllTasksFrag extends Fragment {
                     mainAddbtn.setVisibility( View.VISIBLE );
                     mainActivity.showBottomNView();
                     setDataInRecyclerView();
+                    alarmReceiver = new AlarmReceiver( getActivity() );
                     add_task_edittext.setText( "" );
 
                 }
@@ -483,13 +486,9 @@ public class AllTasksFrag extends Fragment {
                 final int year = calendar.get( Calendar.YEAR );
                 final int month = calendar.get( Calendar.MONTH );
                 final int day = calendar.get( Calendar.DAY_OF_MONTH );
-                final int hour = calendar.get( Calendar.HOUR_OF_DAY );
-                final int minutes = calendar.get( Calendar.MINUTE );
+
 
                 Date newDate = calendar.getTime();
-
-                TimePickerDialog tP = new TimePickerDialog( getContext(), timePickerListener, hour, minutes, false );
-                tP.show();
 
 
                 DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ), datePickerDialog, year, month, day );
@@ -533,9 +532,11 @@ public class AllTasksFrag extends Fragment {
 
         } else {
             boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
             if (isInsert) {
+
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+
             } else {
                 Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
             }
@@ -550,7 +551,7 @@ public class AllTasksFrag extends Fragment {
             //do nothing
         } else {
             boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1");
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -566,7 +567,8 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
+            boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -583,7 +585,8 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
 
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, tomorrow, taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
+            boolean isInsert = dataBaseHelper.insert( text, reminder_date, tomorrow,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -600,7 +603,8 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, upcoming, taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
+            boolean isInsert = dataBaseHelper.insert( text, reminder_date, upcoming,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1");
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
@@ -619,9 +623,11 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, "", someday, taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
+            boolean isInsert = dataBaseHelper.insert( text, "", someday,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"", "1" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+
             } else {
                 Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
             }
@@ -635,9 +641,11 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, date_to_place_task, taskCreatedDateSF.format( taskCreatedDate.getTime() ),"" );
+            boolean isInsert = dataBaseHelper.insert( text, reminder_date, date_to_place_task,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
             if (isInsert) {
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+
             } else {
                 Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
             }
@@ -661,9 +669,15 @@ public class AllTasksFrag extends Fragment {
             mtomorrow = calendar1.get( Calendar.DAY_OF_MONTH ) + 1;
             isToday = calendar.get( Calendar.DAY_OF_MONTH );
             mtoday = calendar1.get( Calendar.DAY_OF_MONTH );
+            final int hour = calendar.get( Calendar.HOUR_OF_DAY );
+            final int minutes = calendar.get( Calendar.MINUTE );
 
             myTimeSettingClass.setCustomPlaceDate( dayOfMonth, month, year );
             date_to_place_task = MyTimeSettingClass.getCustomPlaceDate();
+
+            TimePickerDialog tP = new TimePickerDialog( getContext(), timePickerListener, hour, minutes, false );
+            tP.show();
+
 
 
         }
@@ -674,30 +688,7 @@ public class AllTasksFrag extends Fragment {
 
             calendar.set( Calendar.HOUR_OF_DAY, hourOfDay );
             calendar.set( Calendar.MINUTE, minute );
-
-            if (minute == 0 && checkYear > currentYear && istomorrow != mtomorrow && isToday != mtoday) {
-                sformat = new SimpleDateFormat( "dd MMM yyyy, h a" );
-            } else if (minute != 0 && checkYear > currentYear && istomorrow != mtomorrow && isToday != mtoday) {
-                sformat = new SimpleDateFormat( "d MMM yyyy, h:mm a" );
-            }
-
-            if (minute == 0 && checkYear == currentYear && istomorrow != mtomorrow) {
-                sformat = new SimpleDateFormat( "d MMM, h a" );
-            } else if (minute != 0 && checkYear == currentYear && istomorrow != mtomorrow) {
-                sformat = new SimpleDateFormat( "d MMM, h:mm a" );
-            }
-
-            if (minute == 0 && istomorrow == mtomorrow && isToday != mtoday) {
-                sformat = new SimpleDateFormat( "EEE, h a " );
-            } else if (minute != 0 && istomorrow == mtomorrow && isToday != mtoday) {
-                sformat = new SimpleDateFormat( "EEE, h:mm a" );
-            }
-
-            if (minute == 0 && isToday == mtoday && istomorrow != mtomorrow) {
-                sformat = new SimpleDateFormat( "h a" );
-            } else if (minute != 0 && isToday == mtoday && istomorrow != mtomorrow) {
-                sformat = new SimpleDateFormat( "h:mm a" );
-            }
+            sformat = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
             reminder_date = sformat.format( calendar.getTime() );
             Log.i( "formated date", reminder_date );
 
@@ -745,7 +736,9 @@ public class AllTasksFrag extends Fragment {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            String date =cursor.getString( 2 );
+            String formattedDate = date.substring( date.length()-8 );
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), formattedDate) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_today.setAdapter( allTasksAdapter );
@@ -774,7 +767,9 @@ public class AllTasksFrag extends Fragment {
             Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
         }
         while (cursor.moveToNext()) {
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            String date =cursor.getString( 2 );
+            String formattedDate = date.substring( date.length()-13 );
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ),formattedDate ) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_tomorrow.setAdapter( allTasksAdapter );

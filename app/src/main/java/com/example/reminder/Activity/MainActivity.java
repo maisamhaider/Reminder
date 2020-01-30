@@ -12,14 +12,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.reminder.Fragments.CalendarFrag;
 import com.example.reminder.Fragments.SettingsFrag;
 import com.example.reminder.Fragments.AllTasksFrag;
 import com.example.reminder.R;
+import com.example.reminder.classes.AlarmReceiver;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,18 +26,21 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity implements EditTextStringListener{
 
 
-    ScrollView scrollView;
-    LinearLayout bottomsheetLLO;
+
+    AlarmReceiver alarmReceiver;
     BottomNavigationView bottomNavigationView;
     EditTextStringListener mEditTextStringListener;
     Fragment mFragment;
     private static final int REQUEST_PERMISSION =1;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
+
+        alarmReceiver = new AlarmReceiver( this );
 
 
         //Layouts

@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.InputTaskListAdapter;
+import com.example.reminder.classes.AlarmReceiver;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.EditTextStringListener;
@@ -78,6 +79,7 @@ public class InputListFrag extends Fragment {
     SimpleDateFormat sformat;
     private  Calendar taskCreatedDate = Calendar.getInstance();
     private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy" );
+    private AlarmReceiver alarmReceiver;
 
 
     @Override
@@ -169,6 +171,7 @@ public class InputListFrag extends Fragment {
                     InputMethodManager imgr = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
                     imgr.hideSoftInputFromWindow(input_ET.getWindowToken(), 0);
                     onDoneButtonClick();
+                    alarmReceiver = new AlarmReceiver( getActivity() );
 
                 }
                 return false;
@@ -253,6 +256,7 @@ public class InputListFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 onDoneButtonClick();
+                alarmReceiver = new AlarmReceiver( getActivity() );
             }
         } );
 
@@ -273,10 +277,12 @@ public class InputListFrag extends Fragment {
         {
             if (dateToPlaceTask.matches( "" ))
             {
-                    boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"" );
+                    boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                            MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
 
                     if (isInsert)
                     {
+
                         Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
                     }
                     else
@@ -286,7 +292,8 @@ public class InputListFrag extends Fragment {
             else
             if (alamTime.matches( "" ))
             {
-               boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()),"" );
+               boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                       dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
                 if (isInsert)
                 {
                     Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
@@ -297,7 +304,8 @@ public class InputListFrag extends Fragment {
             }
             else if (alamTime.matches( "" ) && dateToPlaceTask.matches( "" ))
             {
-                boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"" );
+                boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                        MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
 
                         if (isInsert)
                         {
@@ -308,7 +316,8 @@ public class InputListFrag extends Fragment {
             }
             else
             {
-              boolean isInsert =   dataBaseHelper.insert( input_ET.getText().toString(),alamTime,dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()),"" );
+              boolean isInsert =   dataBaseHelper.insert( input_ET.getText().toString(),alamTime,dateToPlaceTask,
+                      taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
                 if (isInsert)
                 {
                     Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
@@ -358,44 +367,7 @@ public class InputListFrag extends Fragment {
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE,minute );
 
-            if (minute == 0 && checkYear>currentYear && istomorrow!=mtomorrow && isToday!=mtoday )
-            {
-                sformat = new SimpleDateFormat( "dd MMM yyyy, h a" );
-            }
-            else
-            if (minute != 0 && checkYear>currentYear && istomorrow!=mtomorrow && isToday!=mtoday)
-            {
-                sformat = new SimpleDateFormat( "d MMM yyyy, h:mm a" );
-            }
-
-            if (minute == 0 && checkYear == currentYear  && istomorrow!= mtomorrow )
-            {
-                sformat = new SimpleDateFormat( "d MMM, h a" );
-            }
-            else
-            if (minute != 0 && checkYear == currentYear && istomorrow!=mtomorrow  )
-            {
-                sformat = new SimpleDateFormat( "d MMM, h:mm a" );
-            }
-
-            if(minute == 0 && istomorrow==mtomorrow && isToday!=mtoday  ) {
-                sformat = new SimpleDateFormat( "EEE, h a " );
-            }
-            else
-            if(minute != 0 && istomorrow==mtomorrow && isToday!=mtoday )
-            {
-                sformat = new SimpleDateFormat( "EEE, h:mm a" );
-            }
-
-            if (minute == 0 && isToday==mtoday && istomorrow!=mtomorrow)
-            {
-                sformat = new SimpleDateFormat( "h a" );
-            }
-            else
-            if (minute!=0 && isToday==mtoday && istomorrow!=mtomorrow)
-            {
-                sformat =new SimpleDateFormat( "h:mm a" );
-            }
+                sformat =new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
 
             alamTime = sformat.format( calendar.getTime() );
 
@@ -528,6 +500,7 @@ public class InputListFrag extends Fragment {
                       TimePickerDialog tP = new TimePickerDialog( getContext(),timePickerListener,hour,minutes,false );
                       tP.show();
                       DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ),datePickerDialog,year,month,day );
+                      dP.getDatePicker().setMinDate( System.currentTimeMillis() - 1000 );
                       dP.show();
                   }
               } );

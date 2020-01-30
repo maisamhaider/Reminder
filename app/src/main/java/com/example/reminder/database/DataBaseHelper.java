@@ -24,6 +24,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String task_created_date = "CREATED_DATE";
     private static final String completed_tasks = "COMPLETED_TASK";
     private static final String repeat = "REPETITION";
+    private static final String isAlarmOn = "IS_ALARM_ON";
 
 
 
@@ -50,7 +51,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL( " create table " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT ,REMINDER_TEXT TEXT,REMINDER_DATE TEXT" +
-                ",DATE_TO_PLACE_TASK TEXT,TASK_NOTES TEXT,CREATED_DATE TEXT,COMPLETED_TASK TEXT,REPETITION TEXT)" );
+                ",DATE_TO_PLACE_TASK TEXT,TASK_NOTES TEXT,CREATED_DATE TEXT,COMPLETED_TASK TEXT,REPETITION TEXT,IS_ALARM_ON TEXT)" );
         db.execSQL( "create table " + SUB_TASK_TABLE + "(P_ID INTEGER PRIMARY KEY AUTOINCREMENT,SUB_TASKS TEXT,F_ID TEXT)" );
         db.execSQL( "create table " + IMAGE_TABLE + "(IMAGE_P_KEY INTEGER PRIMARY KEY AUTOINCREMENT,IMAGE_F_KEY TEXT,IMAGE TEXT,FILE_CREATED_DATE TEXT)" );
 
@@ -62,7 +63,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         onCreate( db );
     }
 
-    public boolean insert(String text, String reminder_date, String date_to_place_task, String createdDate,String repeat) {
+    public boolean insert(String text, String reminder_date, String date_to_place_task, String createdDate,String repeat,String isAlarmOn) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put( reminderText, text );
@@ -70,6 +71,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put( DataBaseHelper.date_to_place_task, date_to_place_task );
         contentValues.put( task_created_date, createdDate );
         contentValues.put( DataBaseHelper.repeat,repeat );
+        contentValues.put( DataBaseHelper.isAlarmOn,isAlarmOn );
 
         long result = database.insert( TABLE_NAME, null, contentValues );
 
@@ -78,10 +80,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else
             return true;
     }
-    public boolean upDate(String key,String isCompleted) {
+    public boolean upDate(String key,String isCompleted,String isAlarmOn) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put( completed_tasks,isCompleted );
+        contentValues.put( DataBaseHelper.isAlarmOn,isAlarmOn );
         long result = database.update( TABLE_NAME, contentValues, "ID=?",new String[]{key} );
 
         if (result == -1)
@@ -124,12 +127,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
 
-    public boolean update(String reminder_date, String date_to_place_task,String repeat, String position) {
+    public boolean update(String reminder_date, String date_to_place_task,String repeat,String isAlarmOn, String position) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put( DataBaseHelper.reminder_date, reminder_date );
         contentValues.put( DataBaseHelper.date_to_place_task, date_to_place_task );
         contentValues.put( DataBaseHelper.repeat,repeat );
+        contentValues.put( DataBaseHelper.isAlarmOn,isAlarmOn );
 
         long result = database.update( TABLE_NAME, contentValues, "ID=?", new String[]{position} );
 
@@ -167,6 +171,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //        return true;
 //    }
 
+    public Cursor getAllTasks() {
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor allTasks;
+        allTasks = database.rawQuery( "SELECT * FROM " + TABLE_NAME, null, null );
+        return allTasks;
+
+    }
 
     public Cursor getToday() {
         SQLiteDatabase database = getWritableDatabase();
@@ -270,7 +281,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void deleteSubTask(String fKey) {
+    public void deleteSubTasks(String fKey) {
         SQLiteDatabase database = getWritableDatabase();
         int DST = database.delete(  SUB_TASK_TABLE, " F_ID=?", new String[]{String.valueOf( fKey )} );
     }

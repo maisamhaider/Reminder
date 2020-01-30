@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.example.reminder.Fragments.CalendarFrag;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,7 +18,7 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getCurrentTimeLongFormat(){
         Calendar calendar = Calendar.getInstance();
-        return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -26,7 +27,7 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.HOUR_OF_DAY, 9 );
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -35,7 +36,7 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.HOUR_OF_DAY, 15 );
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -44,7 +45,7 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.HOUR_OF_DAY, 18 );
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
 
@@ -52,7 +53,7 @@ public class MyTimeSettingClass {
     public static String getLaterToday() {
         Calendar cal = Calendar.getInstance();
         cal.add( Calendar.HOUR, 2 );
-        return new SimpleDateFormat( "h:mm a" ).format( cal.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
     }
 
 
@@ -70,7 +71,7 @@ public class MyTimeSettingClass {
         cal.set( Calendar.MINUTE, 0 );
         cal.set( Calendar.SECOND, 0 );
         cal.set( Calendar.DATE, 1 );
-        return new SimpleDateFormat( "EEE,h a" ).format( cal.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
 
     }
 
@@ -81,7 +82,7 @@ public class MyTimeSettingClass {
         cal.set( Calendar.MINUTE, 0 );
         cal.set( Calendar.SECOND, 0 );
         cal.set( Calendar.DATE, 1 );
-        return new SimpleDateFormat( "EEE,h a" ).format( cal.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
 
     }
 
@@ -92,7 +93,7 @@ public class MyTimeSettingClass {
         cal.set( Calendar.MINUTE, 0 );
         cal.set( Calendar.SECOND, 0 );
         cal.set( Calendar.DATE, 1 );
-        return new SimpleDateFormat( "EEE,h a" ).format( cal.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
 
     }
 
@@ -100,7 +101,7 @@ public class MyTimeSettingClass {
     public static String getTomorrow() {
         Calendar cal = new GregorianCalendar();
         cal.set( Calendar.DATE, 1 );
-        return new SimpleDateFormat( "EEE,h a" ).format( cal.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -118,7 +119,7 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.HOUR_OF_DAY, 9 );
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "EEE,h a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a").format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -128,7 +129,7 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.HOUR_OF_DAY, 15 );
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "EEE,h a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -138,7 +139,7 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.HOUR_OF_DAY, 18 );
         calendar.set(Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "EEE,h a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -147,7 +148,7 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.DATE,6);
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "EEE,h a" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeekWithYear() {
@@ -155,7 +156,7 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.DATE,6);
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "dd MMM yyy" ).format( calendar.getTime() );
+        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -223,7 +224,18 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.HOUR_OF_DAY,hour );
         calendar.set( Calendar.MINUTE,month );
 
-        return new SimpleDateFormat("EEE,h a").format( calendar.getTime() );
+        return new SimpleDateFormat("dd MMM yyyy EEE, h:mm a").format( calendar.getTime() );
+    }
+
+    public long getMilliFromDate(String dateFormat) {
+        Date date = new Date();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy EEE, h:mm a");
+        try {
+            date = formatter.parse(dateFormat);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date.getTime();
     }
 
 
