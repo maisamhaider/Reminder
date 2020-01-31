@@ -35,9 +35,7 @@ public class AlarmSettingClass extends ContextWrapper {
     Intent myIntent;
     Intent doneIntent;
 
-    PendingIntent snoozePendingIntent;
     PendingIntent pendingIntent;
-    PendingIntent donePendingIntent;
 
     AlarmManager alarmManager;
 
@@ -60,16 +58,6 @@ public class AlarmSettingClass extends ContextWrapper {
         alarmManager = (AlarmManager) getSystemService( ALARM_SERVICE );
         dataBaseHelper = new DataBaseHelper( this );
         myTimeSettingClass = new MyTimeSettingClass();
-
-        snoozeIntent = new Intent( this, NotificationReceiver.class );
-        snoozeIntent.setAction( ACTION_SNOOZE );
-
-        doneIntent = new Intent( this, NotificationReceiver.class );
-        doneIntent.setAction( ACTION_DONE );
-
-        snoozePendingIntent = PendingIntent.getBroadcast( this,12345, snoozeIntent ,0 );
-        donePendingIntent = PendingIntent.getBroadcast( this,123456,doneIntent,0 );
-
 
 
     }
@@ -131,8 +119,6 @@ public class AlarmSettingClass extends ContextWrapper {
                     .setOnlyAlertOnce(true)
                     .setContentIntent(PendingIntent.getActivity(context, 0,intent, 0))
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setAutoCancel(true).addAction( R.drawable.ic_launcher_foreground,ACTION_SNOOZE,snoozePendingIntent )
-                    .addAction( R.drawable.task_foreground,ACTION_DONE,donePendingIntent )
                     .setAutoCancel( true );
             mNotificationManager.notify(notifyID, mBuilder.build());
         } else {
@@ -145,8 +131,6 @@ public class AlarmSettingClass extends ContextWrapper {
                             .setOnlyAlertOnce(true)
                             .setContentIntent(PendingIntent.getActivity(context, 0, intent, 0))
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .addAction(R.drawable.ic_launcher_foreground, ACTION_SNOOZE, snoozePendingIntent)
-                            .addAction( R.drawable.task_foreground,ACTION_DONE,donePendingIntent )
                             .setAutoCancel(true);
             // Gets an instance of the NotificationManager service//
             assert mNotificationManager != null;

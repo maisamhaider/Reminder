@@ -32,44 +32,44 @@ public class NotificationReceiver extends BroadcastReceiver {
             dataBaseHelper = new DataBaseHelper( context );
             String title = intent.getStringExtra( "Title" );
             String  position = intent.getStringExtra( "Position");
-            Calendar calendar = Calendar.getInstance();
-            String currentTimeString = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
-            long snoozedTime = myTimeSettingClass.getMilliFromDate( currentTimeString )+ 5*60000;
+//            Calendar calendar = Calendar.getInstance();
+//            String currentTimeString = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
+//            long snoozedTime = myTimeSettingClass.getMilliFromDate( currentTimeString )+ 5*60000;
             alarmSettingClass = new AlarmSettingClass(context );
             alarmSettingClass.getNotification( context,title,position );
-            String action = intent.getAction();
-
-            if (action!=null && action.equals( "SNOOZE" ))
-            {
-
-               String formattedTimeString = MyTimeSettingClass.getFormattedDateFromMilliseconds( snoozedTime );
-               boolean isUpdated = dataBaseHelper.updateReminderTime( position,formattedTimeString );
-               if (isUpdated)
-               {
-                   alarmSettingClass.setAllAlarm();
-                   Toast.makeText( context, "update", Toast.LENGTH_SHORT ).show();
-               }
-               else
-                   {
-                       Toast.makeText( context, "not update", Toast.LENGTH_SHORT ).show();
-                   }
-
-
-            }
-            else
-            if (action!=null && action.equals( "DONE" ))
-            {
-                dataBaseHelper.upDate(position,"yes","0");
-                alarmSettingClass.setAllAlarm();
-
-
-            }
-            else
-            {
-                dataBaseHelper.upDate( position,"yes","0" );
-                alarmSettingClass.setAllAlarm();
-
-            }
+//            String action = intent.getAction();
+//
+//            if (action!=null && action.equals( "SNOOZE" ))
+//            {
+//
+//               String formattedTimeString = MyTimeSettingClass.getFormattedDateFromMilliseconds( snoozedTime );
+//               boolean isUpdated = dataBaseHelper.updateReminderTime( position,formattedTimeString );
+//               if (isUpdated)
+//               {
+//                   alarmSettingClass.setAllAlarm();
+//                   Toast.makeText( context, "update", Toast.LENGTH_SHORT ).show();
+//               }
+//               else
+//                   {
+//                       Toast.makeText( context, "not update", Toast.LENGTH_SHORT ).show();
+//                   }
+//
+//
+//            }
+//            else
+//            if (action!=null && action.equals( "DONE" ))
+//            {
+//                dataBaseHelper.upDate(position,"yes","0");
+//                alarmSettingClass.setAllAlarm();
+//
+//
+//            }
+//            else
+//            {
+//                dataBaseHelper.upDate( position,"yes","0" );
+//                alarmSettingClass.setAllAlarm();
+//
+//            }
 
             Toast.makeText( context, "broadcast", Toast.LENGTH_SHORT ).show();
             Log.i( TAG, "onReceive: Alarm" );

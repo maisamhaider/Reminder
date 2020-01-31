@@ -9,6 +9,14 @@
 
     </style>
 
+    <style name="LauncherAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorDodgerBlue</item>
+        <item name="colorPrimaryDark">@color/colorDodgerBlue</item>
+        <item name="colorAccent">@color/colorDodgerBlue</item>
+
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
