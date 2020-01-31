@@ -36,7 +36,7 @@ import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.adapter.AllTasksAdapter;
-import com.example.reminder.classes.AlarmReceiver;
+import com.example.reminder.classes.AlarmSettingClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.R;
@@ -57,7 +57,7 @@ import static com.example.reminder.classes.MyTimeSettingClass.nextWeekPlaceDate;
 public class AllTasksFrag extends Fragment {
     private MainActivity mainActivity;
     private MyTimeSettingClass myTimeSettingClass;
-    private AlarmReceiver alarmReceiver;
+    private AlarmSettingClass alarmSettingClass;
 
     private LinearLayout linearLayoutTags;
     private RelativeLayout relativeLayoutAddEt;
@@ -108,6 +108,7 @@ public class AllTasksFrag extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate( R.layout.fragment_tasks, container, false );
+        alarmSettingClass = new AlarmSettingClass( getActivity() );
 
         mainActivity = (MainActivity) getActivity();
         myTimeSettingClass = new MyTimeSettingClass();
@@ -209,7 +210,8 @@ public class AllTasksFrag extends Fragment {
                     mainAddbtn.setVisibility( View.VISIBLE );
                     mainActivity.showBottomNView();
                     setDataInRecyclerView();
-                    alarmReceiver = new AlarmReceiver( getActivity() );
+                    alarmSettingClass.setAllAlarm();
+
                     add_task_edittext.setText( "" );
 
                 }

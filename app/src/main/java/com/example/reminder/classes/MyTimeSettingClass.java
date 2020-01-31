@@ -237,7 +237,17 @@ public class MyTimeSettingClass {
         }
         return date.getTime();
     }
+    public static String getFormattedDateFromMilliseconds(long milliSeconds)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy EEE, h:mm a");
 
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
+
+}
 
 
 

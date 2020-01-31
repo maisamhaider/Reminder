@@ -31,7 +31,7 @@ import android.widget.Toast;
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.InputTaskListAdapter;
-import com.example.reminder.classes.AlarmReceiver;
+import com.example.reminder.classes.AlarmSettingClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.EditTextStringListener;
@@ -79,7 +79,7 @@ public class InputListFrag extends Fragment {
     SimpleDateFormat sformat;
     private  Calendar taskCreatedDate = Calendar.getInstance();
     private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy" );
-    private AlarmReceiver alarmReceiver;
+    private AlarmSettingClass alarmSettingClass;
 
 
     @Override
@@ -97,7 +97,7 @@ public class InputListFrag extends Fragment {
         mainActivity = (MainActivity) getActivity();
         myTimeSettingClass = new MyTimeSettingClass();
         dataBaseHelper = new DataBaseHelper( getContext() );
-
+        alarmSettingClass = new AlarmSettingClass( getActivity() );
 
         recyclerView = view.findViewById( R.id.inputRemiderRV );
 
@@ -171,7 +171,7 @@ public class InputListFrag extends Fragment {
                     InputMethodManager imgr = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
                     imgr.hideSoftInputFromWindow(input_ET.getWindowToken(), 0);
                     onDoneButtonClick();
-                    alarmReceiver = new AlarmReceiver( getActivity() );
+                    alarmSettingClass.setAllAlarm();
 
                 }
                 return false;
@@ -256,7 +256,7 @@ public class InputListFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 onDoneButtonClick();
-                alarmReceiver = new AlarmReceiver( getActivity() );
+                alarmSettingClass.setAllAlarm();
             }
         } );
 

@@ -1,5 +1,6 @@
 package com.example.reminder.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,6 +24,10 @@ import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.MyItemClickListener;
 import com.example.reminder.models.AllTasksModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHolder> {
@@ -71,6 +76,33 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 //            {
 //
 //            }
+//
+//        }
+
+//
+//                Cursor cursor = dataBaseHelper.getAllTasks();
+//        if (cursor.getCount() == 0)
+//        {
+//        }
+//        while (cursor.moveToNext()) {
+//            Calendar calendar = Calendar.getInstance();
+//
+//            String stringCurrentTime = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
+//            long longCurrentTime = getMilliFromDate( stringCurrentTime );;
+//
+//            String reminderDateString = cursor.getString( 2 );
+//            long longReminderDate = getMilliFromDate( reminderDateString );
+//
+//            if (longCurrentTime>longReminderDate)
+//            {
+//                holder.checkBox.setSelected( true );
+//            }
+//            else
+//            {
+//
+//            }
+//
+//
 //
 //        }
 
@@ -194,6 +226,16 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
     public int getItemCount() {
         return myModelList.size();
 
+    }
+    public long getMilliFromDate(String dateFormat) {
+        Date date = new Date();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy EEE, h:mm a");
+        try {
+            date = formatter.parse(dateFormat);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date.getTime();
     }
 
 

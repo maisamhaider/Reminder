@@ -92,6 +92,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else
             return true;
     }
+    public boolean updateReminderTime(String key,String reminderTime) {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( reminder_date,reminderTime );
+        long result = database.update( TABLE_NAME, contentValues, "ID=?",new String[]{key} );
+
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+
 
 
 

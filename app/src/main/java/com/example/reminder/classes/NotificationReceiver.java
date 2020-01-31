@@ -1,42 +1,26 @@
 package com.example.reminder.classes;
 
-import android.app.LauncherActivity;
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
-
-import com.example.reminder.Activity.LauncherActivityOnNotification;
-import com.example.reminder.Activity.MainActivity;
-import com.example.reminder.R;
 import com.example.reminder.database.DataBaseHelper;
 
-import java.util.Date;
-
-import static android.app.Notification.EXTRA_NOTIFICATION_ID;
-import static androidx.constraintlayout.widget.Constraints.TAG;
+import java.util.Calendar;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
+        private DataBaseHelper dataBaseHelper;
         private final CharSequence name = "My Channel";// The user-visible name of the channel.
         private NotificationManager mNotificationManager;
+        MyTimeSettingClass myTimeSettingClass;
         public static final String TAG="alarm";
         Context mContext;
-        private  AlarmReceiver alarmReceiver;
+        private AlarmSettingClass alarmSettingClass;
 
 
 //    SharedPreferences  myPreferences = mContext.getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
@@ -44,17 +28,51 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
         public void onReceive(Context context, Intent intent) {
             mContext = context;
+            myTimeSettingClass = new MyTimeSettingClass();
+            dataBaseHelper = new DataBaseHelper( context );
             String title = intent.getStringExtra( "Title" );
             String  position = intent.getStringExtra( "Position");
-            alarmReceiver = new AlarmReceiver(context );
-            alarmReceiver.getNotification( mContext,title,position );
-            if (intent.getAction().matches( "snooze" ))
+            Calendar calendar = Calendar.getInstance();
+            String currentTimeString = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
+            long snoozedTime = myTimeSettingClass.getMilliFromDate( currentTimeString )+ 5*60000;
+            alarmSettingClass = new AlarmSettingClass(context );
+            alarmSettingClass.getNotification( context,title,position );
+            String action = intent.getAction();
+
+            if (action!=null && action.equals( "SNOOZE" ))
             {
-                alarmReceiver.getNotification( mContext,title,position );
+
+               String formattedTimeString = MyTimeSettingClass.getFormattedDateFromMilliseconds( snoozedTime );
+               boolean isUpdated = dataBaseHelper.updateReminderTime( position,formattedTimeString );
+               if (isUpdated)
+               {
+                   alarmSettingClass.setAllAlarm();
+                   Toast.makeText( context, "update", Toast.LENGTH_SHORT ).show();
+               }
+               else
+                   {
+                       Toast.makeText( context, "not update", Toast.LENGTH_SHORT ).show();
+                   }
+
+
+            }
+            else
+            if (action!=null && action.equals( "DONE" ))
+            {
+                dataBaseHelper.upDate(position,"yes","0");
+                alarmSettingClass.setAllAlarm();
+
+
+            }
+            else
+            {
+                dataBaseHelper.upDate( position,"yes","0" );
+                alarmSettingClass.setAllAlarm();
+
             }
 
             Toast.makeText( context, "broadcast", Toast.LENGTH_SHORT ).show();
-            Log.i( TAG, "onReceive: Alaram" );
+            Log.i( TAG, "onReceive: Alarm" );
 
 
         }

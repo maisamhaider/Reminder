@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.LauncherActivityOnNotification"></activity>
+        <activity android:name=".Activity.LauncherActivityOnNotification"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activity.AboutActivity" />
         <activity android:name=".Activity.CompletedTasksActivity" />
 

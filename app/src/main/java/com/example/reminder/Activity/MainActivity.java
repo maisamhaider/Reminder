@@ -18,7 +18,7 @@ import com.example.reminder.Fragments.CalendarFrag;
 import com.example.reminder.Fragments.SettingsFrag;
 import com.example.reminder.Fragments.AllTasksFrag;
 import com.example.reminder.R;
-import com.example.reminder.classes.AlarmReceiver;
+import com.example.reminder.classes.AlarmSettingClass;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
 
 
 
-    AlarmReceiver alarmReceiver;
+    AlarmSettingClass alarmSettingClass;
     BottomNavigationView bottomNavigationView;
     EditTextStringListener mEditTextStringListener;
     Fragment mFragment;
@@ -40,7 +40,9 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
-        alarmReceiver = new AlarmReceiver( this );
+        alarmSettingClass = new AlarmSettingClass( this );
+        alarmSettingClass.setAllAlarm();
+
 
 
         //Layouts

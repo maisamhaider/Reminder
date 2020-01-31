@@ -50,7 +50,7 @@ import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.AttachmentTaskAdapter;
 import com.example.reminder.adapter.SubTaskAdapter;
-import com.example.reminder.classes.AlarmReceiver;
+import com.example.reminder.classes.AlarmSettingClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.RecyclerCallBack;
@@ -117,7 +117,7 @@ public class EditTask extends BottomSheetDialogFragment {
     private SimpleDateFormat sformat;
     String notesHolderStg;
     String whichOnIsClick = "", repeatString = "";
-    private AlarmReceiver alarmReceiver;
+    private AlarmSettingClass alarmSettingClass;
 
 
     @Override
@@ -132,6 +132,8 @@ public class EditTask extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.edit_task, container, false );
+        alarmSettingClass = new AlarmSettingClass( getActivity() );
+
 
 
         mainActivity = (MainActivity) getActivity();
@@ -218,7 +220,7 @@ public class EditTask extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 boolean isUpdate = dataBaseHelper.upDate( taskPosition, "yes","0" );
                 if (isUpdate) {
-                    alarmReceiver = new AlarmReceiver( getActivity() );
+                    alarmSettingClass.setAllAlarm();
 
                     Toast.makeText( getContext(), "updated", Toast.LENGTH_SHORT ).show();
                 } else {
@@ -739,7 +741,7 @@ public class EditTask extends BottomSheetDialogFragment {
                     edit_addReminderShowTimeTv.setText( reminder_date );
                     editSetTimeTv.setText( reminder_date );
                     dataBaseHelper.update( reminder_date, date_to_place_task, "","1", taskPosition );
-                    alarmReceiver = new AlarmReceiver( getActivity() );
+                    alarmSettingClass.setAllAlarm();
                     dialog.dismiss();
 
                 } else {
@@ -792,7 +794,8 @@ public class EditTask extends BottomSheetDialogFragment {
                             edit_addReminderShowTimeTv.setText( whichOnIsClick + MyTimeSettingClass.getTomorrow() );
                             dataBaseHelper.update( MyTimeSettingClass.getTomorrow(), MyTimeSettingClass.todayPlaceDate(),
                                     checkRepeat,"1", taskPosition );
-                            alarmReceiver = new AlarmReceiver( getActivity() );
+                            alarmSettingClass.setAllAlarm();
+
 
                         } else {
                             Cursor cursor = dataBaseHelper.getDateToPlaceSingleRowValue( taskPosition );
@@ -806,7 +809,7 @@ public class EditTask extends BottomSheetDialogFragment {
                             editSetTimeTv.setText( whichOnIsClick + reminder_date );
                             edit_addReminderShowTimeTv.setText( whichOnIsClick + reminder_date );
                             dataBaseHelper.update( reminder_date, date_to_place_task, checkRepeat,"1", taskPosition );
-                            alarmReceiver = new AlarmReceiver( getActivity() );
+                            alarmSettingClass.setAllAlarm();
 
                         }
                         mainActivity.setTaskFragDefaultBNBItem();

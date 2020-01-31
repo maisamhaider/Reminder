@@ -1,6 +1,7 @@
 package com.example.reminder.classes;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
+import android.icu.text.SimpleDateFormat;
 
 import androidx.core.app.NotificationCompat;
 
@@ -20,104 +22,104 @@ import java.util.Date;
 
 import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 
-public class AlarmReceiver extends ContextWrapper {
+public class AlarmSettingClass extends ContextWrapper {
 
     private static final String ACTION_SNOOZE = "SNOOZE" ;
+    private static final String ACTION_DONE = "DONE" ;
     final CharSequence name = "My Channel";// The user-visible name of the channel.
     NotificationManager mNotificationManager;
     final String TAG="alarm";
-    PendingIntent pendingIntent;
+
+
+    Intent snoozeIntent;
+    Intent myIntent;
+    Intent doneIntent;
+
     PendingIntent snoozePendingIntent;
+    PendingIntent pendingIntent;
+    PendingIntent donePendingIntent;
+
+    AlarmManager alarmManager;
+
+    long reminderTime;
+
+    DataBaseHelper dataBaseHelper;
+    MyTimeSettingClass myTimeSettingClass;
+    String taskPosition, taskTitle;
 
 
+    String isAlarm;
 
-    public AlarmReceiver(Context base) {
+
+    public AlarmSettingClass(Context base) {
         super( base );
 
 
 
-        DataBaseHelper dataBaseHelper;
-        MyTimeSettingClass myTimeSettingClass;
-        String taskPosition, taskTitle;
-        long reminderTime;
-
-
-        Intent myIntent;
-        Intent snoozeIntent;
-        AlarmManager alarmManager;
-        String isAlarm;
-
-
         myIntent = new Intent( this, NotificationReceiver.class );
-        snoozeIntent = new Intent( this,NotificationReceiver.class  );
         alarmManager = (AlarmManager) getSystemService( ALARM_SERVICE );
-            snoozeIntent.setAction( ACTION_SNOOZE );
         dataBaseHelper = new DataBaseHelper( this );
         myTimeSettingClass = new MyTimeSettingClass();
 
+        snoozeIntent = new Intent( this, NotificationReceiver.class );
+        snoozeIntent.setAction( ACTION_SNOOZE );
 
-        Cursor cursor = dataBaseHelper.getAllTasks();
+        doneIntent = new Intent( this, NotificationReceiver.class );
+        doneIntent.setAction( ACTION_DONE );
+
+        snoozePendingIntent = PendingIntent.getBroadcast( this,12345, snoozeIntent ,0 );
+        donePendingIntent = PendingIntent.getBroadcast( this,123456,doneIntent,0 );
+
+
+
+    }
+
+
+    public void setAllAlarm()
+    {
+
+    Cursor cursor = dataBaseHelper.getAllTasks();
         if (cursor.getCount() == 0) {
-        }
+    }
         while (cursor.moveToNext()) {
             isAlarm = cursor.getString( 8 );
             taskPosition = cursor.getString( 0 );
             taskTitle = cursor.getString( 1 );
             reminderTime = myTimeSettingClass.getMilliFromDate( cursor.getString( 2 ) );
 
+            Calendar calendar = Calendar.getInstance();
+            String stringCurrentTime = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
+            long longCurrentTime = myTimeSettingClass.getMilliFromDate( stringCurrentTime );
+            ;
 
-            if (isAlarm.matches( "1" )) {
+            if ((longCurrentTime <=reminderTime) && isAlarm.matches( "1" )) {
                 myIntent.putExtra( "Title", taskTitle );
                 myIntent.putExtra( "Position", taskPosition );
-                snoozeIntent.putExtra(taskPosition, 0);
+                myIntent.putExtra( "reminder_time", reminderTime );
 
                 pendingIntent = PendingIntent.getBroadcast( this, 0, myIntent, 0 );
 
-                if (alarmManager!=null)
-                {
-                    alarmManager.setInexactRepeating( AlarmManager.RTC_WAKEUP, reminderTime, AlarmManager.INTERVAL_DAY, pendingIntent );
-
-
-                }
-                else
+                if (alarmManager != null) {
                     alarmManager.cancel( pendingIntent );
-
-
+                    alarmManager.setInexactRepeating( AlarmManager.RTC_WAKEUP, reminderTime, AlarmManager.INTERVAL_DAY, pendingIntent );
+                } else
+                    alarmManager.cancel( pendingIntent );
             }
 
-
         }
-
-
-//        Toast.makeText(getApplicationContext(), "App reminder is On", Toast.LENGTH_SHORT).show();
-
-
-//        calendar = Calendar.getInstance();
-//            calendar.setTimeInMillis(System.currentTimeMillis());
-//            calendar.set(Calendar.MINUTE, minut);
-//            calendar.set(Calendar.HOUR, hr);
-//            calendar.set(Calendar.SECOND, 0);
-//            if (AM_PM.equals("AM"))
-//                calendar.set( AM_PM,Calendar.AM );
-//            else
-//                calendar.set( AM_PM,Calendar.AM );
-//            if (isAlarmOn) {
-//        if (alarmManager != null)
-//            alarmManager.cancel(pendingIntent);
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-//        } else {
-//            alarmManager.cancel(pendingIntent);
-
-
     }
 
     public void getNotification(Context context, String title,String taskPosition) {
         int notifyID = Integer.parseInt( taskPosition );
+           Intent intent = new Intent(context, LauncherActivityOnNotification.class);
+
+           intent.putExtra( "task_title_frm_notification",title );
+           intent.putExtra( "task_position_fr_notification",taskPosition );
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String CHANNEL_ID = "my_channel_01";// The id of the channel.
             int importance = NotificationManager.IMPORTANCE_HIGH;
 //                Uri soundUri = Uri.parse( myPreferences.getString( "NotificationSoundPath","" ) );
-
             NotificationChannel mChannel = new NotificationChannel( CHANNEL_ID, name, importance);
             mChannel.setSound( mChannel.getSound(), null);
             mNotificationManager = ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE));
@@ -127,10 +129,11 @@ public class AlarmReceiver extends ContextWrapper {
                     .setContentTitle(title)
                     .setContentText("Reminder")
                     .setOnlyAlertOnce(true)
-                    .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context,
-                            LauncherActivityOnNotification.class), 0))
+                    .setContentIntent(PendingIntent.getActivity(context, 0,intent, 0))
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setAutoCancel(false).addAction( R.drawable.ic_launcher_foreground,"snooze",snoozePendingIntent );
+                    .setAutoCancel(true).addAction( R.drawable.ic_launcher_foreground,ACTION_SNOOZE,snoozePendingIntent )
+                    .addAction( R.drawable.task_foreground,ACTION_DONE,donePendingIntent )
+                    .setAutoCancel( true );
             mNotificationManager.notify(notifyID, mBuilder.build());
         } else {
 //Get an instance of NotificationManager//
@@ -140,11 +143,11 @@ public class AlarmReceiver extends ContextWrapper {
                             .setContentTitle(title)
                             .setContentText("Reminder")
                             .setOnlyAlertOnce(true)
-                            .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context,
-                                    LauncherActivityOnNotification.class), 0))
+                            .setContentIntent(PendingIntent.getActivity(context, 0, intent, 0))
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .addAction(R.drawable.ic_launcher_foreground, "snooze", snoozePendingIntent)
-                            .setAutoCancel(false);
+                                .addAction(R.drawable.ic_launcher_foreground, ACTION_SNOOZE, snoozePendingIntent)
+                            .addAction( R.drawable.task_foreground,ACTION_DONE,donePendingIntent )
+                            .setAutoCancel(true);
             // Gets an instance of the NotificationManager service//
             assert mNotificationManager != null;
             mNotificationManager.notify(notifyID, mBuilder.build());
