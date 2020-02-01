@@ -78,7 +78,7 @@ public class InputListFrag extends Fragment {
     private int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
     SimpleDateFormat sformat;
     private  Calendar taskCreatedDate = Calendar.getInstance();
-    private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy" );
+    private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
     private AlarmSettingClass alarmSettingClass;
 
 
@@ -171,7 +171,6 @@ public class InputListFrag extends Fragment {
                     InputMethodManager imgr = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
                     imgr.hideSoftInputFromWindow(input_ET.getWindowToken(), 0);
                     onDoneButtonClick();
-                    alarmSettingClass.setAllAlarm();
 
                 }
                 return false;
@@ -256,7 +255,6 @@ public class InputListFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 onDoneButtonClick();
-                alarmSettingClass.setAllAlarm();
             }
         } );
 
@@ -277,53 +275,57 @@ public class InputListFrag extends Fragment {
         {
             if (dateToPlaceTask.matches( "" ))
             {
-                    boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                            MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
+                    int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                            MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
 
-                    if (isInsert)
+                    if (isInsert==0)
                     {
-
+                        Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                    }
+                    else {
                         Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
                     }
-                    else
-                        Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
 
             }
             else
             if (alamTime.matches( "" ))
             {
-               boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                       dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
-                if (isInsert)
+               int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                       dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
+                if (isInsert==0)
                 {
+                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                }
+                else {
                     Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
                 }
-                else
-                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
 
             }
             else if (alamTime.matches( "" ) && dateToPlaceTask.matches( "" ))
             {
-                boolean isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
                         MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
 
-                        if (isInsert)
+                        if (isInsert==0)
                         {
+                            Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                        }
+                        else {
                             Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
                         }
-                        else
-                            Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
             }
             else
             {
-              boolean isInsert =   dataBaseHelper.insert( input_ET.getText().toString(),alamTime,dateToPlaceTask,
+              int isInsert =   dataBaseHelper.insert( input_ET.getText().toString(),alamTime,dateToPlaceTask,
                       taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
-                if (isInsert)
+                if (isInsert==0)
                 {
+                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                }
+                else {
+                    alarmSettingClass.setOneAlarm( input_ET.getText().toString(),myTimeSettingClass.getMilliFromDate( alamTime ),isInsert );
                     Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
                 }
-                else
-                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
             }
 
 

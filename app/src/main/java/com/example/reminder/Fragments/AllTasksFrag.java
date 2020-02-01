@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.adapter.AllTasksAdapter;
 import com.example.reminder.classes.AlarmSettingClass;
@@ -66,9 +67,10 @@ public class AllTasksFrag extends Fragment {
 
 
     private EditText add_task_edittext;
-    private Button addtodayBtn, addtomorrowbtn, addupcomingbtn, addsomedaybtn, mainAddbtn, addUpbtn;
+    private Button addtodayBtn, addtomorrowbtn, addupcomingbtn, addsomedaybtn ;
     private String text = "", reminder_date = "", date_to_place_task = "";
     private SimpleDateFormat sformat;
+    private LottieAnimationView addUpLottieAnimationView, mainAddLottieAnimationView;
 
     private boolean thisMorning = false,
             laterToday = false,
@@ -85,7 +87,7 @@ public class AllTasksFrag extends Fragment {
 
     private Calendar calendar = Calendar.getInstance();
     private Calendar taskCreatedDate = Calendar.getInstance();
-    private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy" );
+    private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm:ss a" );
     private int checkYear, currentYear, istomorrow, mtomorrow, isToday, mtoday;
 
     private DataBaseHelper dataBaseHelper;
@@ -140,15 +142,15 @@ public class AllTasksFrag extends Fragment {
         addtomorrowbtn = view.findViewById( R.id.tomorrowtaskaddbutton );
         addupcomingbtn = view.findViewById( R.id.upcomingtaskaddbutton );
         addsomedaybtn = view.findViewById( R.id.somedaytaskaddbutton );
-        mainAddbtn = view.findViewById( R.id.mainAddButton );
-        addUpbtn = view.findViewById( R.id.AddUpButton );
+        mainAddLottieAnimationView = view.findViewById( R.id.mainAddLottieAnimationView );
+        addUpLottieAnimationView = view.findViewById( R.id.AddUpLottieAnimationView );
 
         linearLayoutTags = view.findViewById( R.id.tagsLlayout );
         relativeLayoutAddEt = view.findViewById( R.id.addETRelativeLayout );
 
 
         dataBaseHelper = new DataBaseHelper( getContext() );
-        addUpbtn.setVisibility( View.GONE );
+        addUpLottieAnimationView.setVisibility( View.GONE );
 
 
         hidelinearLayoutTags();
@@ -166,8 +168,8 @@ public class AllTasksFrag extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    addUpbtn.setVisibility( View.VISIBLE );
-                    mainAddbtn.setVisibility( View.GONE );
+                    addUpLottieAnimationView.setVisibility( View.VISIBLE );
+                    mainAddLottieAnimationView.setVisibility( View.GONE );
                     mainActivity.hideBottomNView();
 
                     add_task_edittext.post( new Runnable() {
@@ -189,12 +191,11 @@ public class AllTasksFrag extends Fragment {
         } );
 
 
-        addUpbtn.setOnClickListener( new View.OnClickListener() {
+        addUpLottieAnimationView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDataInRecyclerView();
                 add_task_edittext.setText( "" );
-
 
             }
         } );
@@ -206,12 +207,10 @@ public class AllTasksFrag extends Fragment {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
 
                     linearLayoutTags.setVisibility( View.GONE );
-                    addUpbtn.setVisibility( View.GONE );
-                    mainAddbtn.setVisibility( View.VISIBLE );
+                    addUpLottieAnimationView.setVisibility( View.GONE );
+                    mainAddLottieAnimationView.setVisibility( View.VISIBLE );
                     mainActivity.showBottomNView();
                     setDataInRecyclerView();
-                    alarmSettingClass.setAllAlarm();
-
                     add_task_edittext.setText( "" );
 
                 }
@@ -235,8 +234,8 @@ public class AllTasksFrag extends Fragment {
                 if (event.getKeyCode() == MotionEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
 
                     hidelinearLayoutTags();
-                    addUpbtn.setVisibility( View.GONE );
-                    mainAddbtn.setVisibility( View.VISIBLE );
+                    addUpLottieAnimationView.setVisibility( View.GONE );
+                    mainAddLottieAnimationView.setVisibility( View.VISIBLE );
                     mainActivity.showBottomNView();
                     return  true;
                 }
@@ -296,7 +295,7 @@ public class AllTasksFrag extends Fragment {
                 setfrag();
             }
         } );
-        mainAddbtn.setOnClickListener( new View.OnClickListener() {
+        mainAddLottieAnimationView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setfrag();
@@ -533,14 +532,15 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
 
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
+            int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
                     taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
-            if (isInsert) {
+            if (isInsert==0) {
 
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
 
             } else {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -552,12 +552,14 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
+            int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
                     taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1");
-            if (isInsert) {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-            } else {
+            if (isInsert==0) {
                 Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+
+            } else {
+                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -569,9 +571,10 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
+            int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
                     taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
-            if (isInsert) {
+            if (isInsert==0) {
+                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
                 Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
@@ -587,9 +590,10 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
 
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, tomorrow,
+            int isInsert = dataBaseHelper.insert( text, reminder_date, tomorrow,
                     taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
-            if (isInsert) {
+            if (isInsert==0) {
+                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
                 Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             } else {
                 Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
@@ -605,12 +609,14 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, upcoming,
+            int isInsert = dataBaseHelper.insert( text, reminder_date, upcoming,
                     taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1");
-            if (isInsert) {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-            } else {
+            if (isInsert==0) {
                 Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+
+            } else {
+                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -625,13 +631,13 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, "", someday,
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"", "1" );
-            if (isInsert) {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            int isInsert = dataBaseHelper.insert( text, "", someday,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"", "0" );
+            if (isInsert==0) {
+                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
 
             } else {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -643,13 +649,13 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            boolean isInsert = dataBaseHelper.insert( text, reminder_date, date_to_place_task,
+            int isInsert = dataBaseHelper.insert( text, reminder_date, date_to_place_task,
                     taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
-            if (isInsert) {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-
-            } else {
+            if (isInsert==0) {
                 Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            } else {
+                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -739,7 +745,7 @@ public class AllTasksFrag extends Fragment {
         }
         while (cursor.moveToNext()) {
             String date =cursor.getString( 2 );
-            String formattedDate = date.substring( date.length()-8 );
+            String formattedDate = date.substring( date.length()-7 );
             model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), formattedDate) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );

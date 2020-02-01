@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -19,30 +22,37 @@ import com.example.reminder.Fragments.SettingsFrag;
 import com.example.reminder.Fragments.AllTasksFrag;
 import com.example.reminder.R;
 import com.example.reminder.classes.AlarmSettingClass;
+import com.example.reminder.classes.NotificationSounds;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements EditTextStringListener{
 
 
 
-    AlarmSettingClass alarmSettingClass;
     BottomNavigationView bottomNavigationView;
     EditTextStringListener mEditTextStringListener;
     Fragment mFragment;
     private static final int REQUEST_PERMISSION =1;
 
-
+    private SharedPreferences myPreferences;
+    private NotificationSounds notificationSounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
-        alarmSettingClass = new AlarmSettingClass( this );
-        alarmSettingClass.setAllAlarm();
+//        myPreferences = this.getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
+//        notificationSounds = new NotificationSounds( this );
 
+//        ArrayList<String> soundPaths = notificationSounds.getNotificationSoundsPath();
+//        String stringSoundPath = soundPaths.get( 0 );
+//        SharedPreferences.Editor editor = myPreferences.edit();
+//          editor.putString( "NotificationSoundPath",stringSoundPath ).commit();
 
 
         //Layouts

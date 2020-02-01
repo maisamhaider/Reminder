@@ -63,22 +63,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         onCreate( db );
     }
 
-    public boolean insert(String text, String reminder_date, String date_to_place_task, String createdDate,String repeat,String isAlarmOn) {
+    public int insert(String text, String reminder_date, String date_to_place_task, String createdDate,String repeat,String isAlarmOn) {
         SQLiteDatabase database = getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
         contentValues.put( reminderText, text );
         contentValues.put( DataBaseHelper.reminder_date, reminder_date );
         contentValues.put( DataBaseHelper.date_to_place_task, date_to_place_task );
         contentValues.put( task_created_date, createdDate );
-        contentValues.put( DataBaseHelper.repeat,repeat );
-        contentValues.put( DataBaseHelper.isAlarmOn,isAlarmOn );
+        contentValues.put( DataBaseHelper.repeat, repeat );
+        contentValues.put( DataBaseHelper.isAlarmOn, isAlarmOn );
+        int position;
 
         long result = database.insert( TABLE_NAME, null, contentValues );
+        Cursor cursor = getRowWhere( createdDate );
+        if (cursor != null && cursor.getCount()!=0) {
 
-        if (result == -1)
-            return false;
-        else
-            return true;
+            while (cursor.moveToNext())
+            {
+                position = cursor.getInt( 0 );
+                return position;
+
+            }
+        }
+        return  0;
     }
     public boolean upDate(String key,String isCompleted,String isAlarmOn) {
         SQLiteDatabase database = getWritableDatabase();
@@ -257,6 +265,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Cursor getTaskNote(String position) {
         SQLiteDatabase database = getWritableDatabase();
         return database.rawQuery( "SELECT TASK_NOTES FROM " + TABLE_NAME + " WHERE ID LIKE \'" + position + "\'", null );
+    }
+    public Cursor getRowWhere(String date) {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.rawQuery( "SELECT ID FROM " + TABLE_NAME + " WHERE CREATED_DATE LIKE \'" + date + "\'", null );
     }
 
 

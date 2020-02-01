@@ -2,24 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:orientation="vertical">
 
-        <ImageView
-            android:src="@drawable/record_audio_foreground"
-            android:id="@+id/audio_StartStop_IV"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/audio_StartLottieAnimationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="playone.json"
+            app:lottie_loop="true" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/audio_StopLottieAnimationView"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_fileName="listenstate.json"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             />
 
-    </LinearLayout>
+    </RelativeLayout>
     <TextView
         android:id="@+id/audioTV"
         android:layout_marginTop="10dp"

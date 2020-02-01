@@ -42,6 +42,7 @@ import com.example.reminder.Activity.CompletedTasksActivity;
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.NotificationSoundsAdapter;
+import com.example.reminder.classes.NotificationSounds;
 import com.example.reminder.interfaces.EditTextStringListener;
 
 import java.io.File;
@@ -60,6 +61,7 @@ public class SettingsFrag extends Fragment {
 
     private MainActivity mainActivity;
     private LinearLayout settingsCompletedTasks_LL,settingsAbout_LL,settingsNotification_LL;
+    private NotificationSounds notificationSounds;
 
     //profile Views
     private static final int CAMERA_REQ = 1;
@@ -92,6 +94,7 @@ public class SettingsFrag extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         mainActivity = (MainActivity)getActivity();
+        notificationSounds = new NotificationSounds( getActivity() );
 
         personImageView = view.findViewById( R.id.Profile_CircleImage );
         personNameTV = view.findViewById( R.id.person_name_tv );
@@ -358,41 +361,7 @@ public class SettingsFrag extends Fragment {
     }
 
 
-    private ArrayList<String> getNotificationSoundsName() {
-        RingtoneManager manager = new RingtoneManager(getContext());
-        manager.setType(RingtoneManager.TYPE_NOTIFICATION);
-        Cursor cursor = manager.getCursor();
 
-        ArrayList<String> listOFNames = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            String title = cursor.getString( RingtoneManager.TITLE_COLUMN_INDEX );
-            String id = cursor.getString(RingtoneManager.ID_COLUMN_INDEX);
-            String uri = cursor.getString(RingtoneManager.URI_COLUMN_INDEX);
-
-            String combinedString = uri + "/" + id+"/"+title;
-            String finalSoundName = combinedString.substring( combinedString.lastIndexOf( "/" )+1 );
-            listOFNames.add(finalSoundName);
-        }
-
-        return listOFNames;
-    }
-    private  ArrayList<String> getNotificationSoundsPath()
-    {
-
-        RingtoneManager ringtoneManager = new RingtoneManager( getContext() );
-        ringtoneManager.setType( RingtoneManager.TYPE_NOTIFICATION );
-        Cursor cursor = ringtoneManager.getCursor();
-
-        ArrayList<String>listOfPaths = new ArrayList<>(  );
-        while (cursor.moveToNext())
-        {
-            String id = cursor.getString( RingtoneManager.ID_COLUMN_INDEX );
-            String uri = cursor.getString( RingtoneManager.URI_COLUMN_INDEX );
-
-            listOfPaths.add( uri +"/"+id );
-        }
-        return listOfPaths;
-    }
 
     private void notificationSoundsFun()
     {
@@ -425,7 +394,7 @@ public class SettingsFrag extends Fragment {
         notificationSoundRecyclerView.setLayoutManager( linearLayoutManager );
         NotificationSoundsAdapter notificationSoundsAdapter;
 
-        notificationSoundsAdapter = new NotificationSoundsAdapter(getContext(), getNotificationSoundsName(),getNotificationSoundsPath());
+        notificationSoundsAdapter = new NotificationSoundsAdapter(getContext(), notificationSounds.getNotificationSoundsName(),notificationSounds.getNotificationSoundsPath());
         notificationSoundRecyclerView.setAdapter( notificationSoundsAdapter );
         notificationSoundsAdapter.notifyDataSetChanged();
         notificationSoundsAdapter.getPathListener( new EditTextStringListener() {

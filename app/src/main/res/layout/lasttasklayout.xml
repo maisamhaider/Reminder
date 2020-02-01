@@ -195,38 +195,42 @@
     <RelativeLayout
         android:id="@+id/addETRelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="bottom"
         android:background="@color/colorAliceBlue"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/addtaskedittext"
-            android:layout_width="300dp"
+            android:layout_width="320dp"
             android:layout_height="50dp"
             android:paddingRight="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/mainAddButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="310dp"
-            android:background="@drawable/ic_add_circle_black_24dp"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/mainAddLottieAnimationView"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/addtaskedittext"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="add.json" />
 
-        <Button
-            android:id="@+id/AddUpButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="310dp"
-            android:background="@drawable/updone_foreground"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/AddUpLottieAnimationView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/addtaskedittext"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="donetwo.json" />
     </RelativeLayout>
 
 

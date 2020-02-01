@@ -33,6 +33,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.reminder.R;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.RecyclerCallBack;
@@ -77,9 +78,10 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     private int counter;
     private CountDownTimer countDownTimer;
     private long totalSeconds = 3600, intervalSeconds = 1;
-    private ImageView audio_Record_StartStopIV;
     TextView audioTv;
     private Button audioCancelBtn, audioAddBtn;
+
+    LottieAnimationView  audio_StartLottieAnimationView,audio_StopLottieAnimationView;
 
     String taskPosition;
 
@@ -329,22 +331,22 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         dialog.show();
 
 
-        audio_Record_StartStopIV = view.findViewById( R.id.audio_StartStop_IV );
+        audio_StartLottieAnimationView = view.findViewById( R.id.audio_StartLottieAnimationView );
+        audio_StopLottieAnimationView = view.findViewById( R.id.audio_StopLottieAnimationView );
         audioTv = view.findViewById( R.id.audioTV );
         audioCancelBtn = view.findViewById( R.id.audio_CancelBtn );
         audioAddBtn = view.findViewById( R.id.audio_AddBtn );
         audioAddBtn.setEnabled( false );
-
-        audio_Record_StartStopIV.setOnClickListener( new View.OnClickListener() {
+        audio_StopLottieAnimationView.setVisibility( View.GONE );
+        audio_StartLottieAnimationView.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
-
-                    if (!startAudio) {
                         //  on audio stared
                         startAudio = true;
-                        audio_Record_StartStopIV.setImageResource( R.drawable.stop_audio_foreground );
+                audio_StopLottieAnimationView.setVisibility( View.VISIBLE );
+                audio_StartLottieAnimationView.setVisibility( View.GONE );
                         String audioName = "Audio" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".mp3";
                         File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/.Reminder/" );
                         if (!dir.exists()) {
@@ -375,22 +377,30 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                                 mediaRecorder.stop();
                                 audioTv.setText( " Time Reached " );
                                 audioAddBtn.setEnabled( true );
-                                audio_Record_StartStopIV.setImageResource( R.drawable.record_audio_foreground );
+                                audio_StartLottieAnimationView.setVisibility( View.VISIBLE );
+                                audio_StopLottieAnimationView.setVisibility( View.GONE );
                             }
                         };
                         countDownTimer.start();
                     }
-                    // on audio stopped
-                    else {
-                        startAudio = false;
-                        audioAddBtn.setEnabled( true );
-                        audioTv.setText( " Press to Record" );
-                        mediaRecorder.stop();
-                        countDownTimer.cancel();
 
-                }
+
+        } );
+// on audio stopped
+        audio_StopLottieAnimationView.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAudio = false;
+                audioAddBtn.setEnabled( true );
+                audioTv.setText( " Press to Record" );
+                mediaRecorder.stop();
+                countDownTimer.cancel();
+                audio_StopLottieAnimationView.setVisibility( View.GONE );
+                audio_StartLottieAnimationView.setVisibility( View.VISIBLE );
+
             }
         } );
+
 
         audioAddBtn.setOnClickListener( new View.OnClickListener() {
             @Override

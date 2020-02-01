@@ -1,124 +1,93 @@
 package com.example.reminder.classes;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
+
+import com.example.reminder.Activity.LauncherActivityOnNotification;
+import com.example.reminder.R;
 import com.example.reminder.database.DataBaseHelper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
-        private DataBaseHelper dataBaseHelper;
         private final CharSequence name = "My Channel";// The user-visible name of the channel.
         private NotificationManager mNotificationManager;
-        MyTimeSettingClass myTimeSettingClass;
+        private SharedPreferences myPreferences;
+        private NotificationSounds notificationSounds;
+
         public static final String TAG="alarm";
         Context mContext;
-        private AlarmSettingClass alarmSettingClass;
 
 
-//    SharedPreferences  myPreferences = mContext.getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
 
     @Override
         public void onReceive(Context context, Intent intent) {
-            mContext = context;
-            myTimeSettingClass = new MyTimeSettingClass();
-            dataBaseHelper = new DataBaseHelper( context );
-            String title = intent.getStringExtra( "Title" );
-            String  position = intent.getStringExtra( "Position");
-//            Calendar calendar = Calendar.getInstance();
-//            String currentTimeString = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
-//            long snoozedTime = myTimeSettingClass.getMilliFromDate( currentTimeString )+ 5*60000;
-            alarmSettingClass = new AlarmSettingClass(context );
-            alarmSettingClass.getNotification( context,title,position );
-//            String action = intent.getAction();
-//
-//            if (action!=null && action.equals( "SNOOZE" ))
-//            {
-//
-//               String formattedTimeString = MyTimeSettingClass.getFormattedDateFromMilliseconds( snoozedTime );
-//               boolean isUpdated = dataBaseHelper.updateReminderTime( position,formattedTimeString );
-//               if (isUpdated)
-//               {
-//                   alarmSettingClass.setAllAlarm();
-//                   Toast.makeText( context, "update", Toast.LENGTH_SHORT ).show();
-//               }
-//               else
-//                   {
-//                       Toast.makeText( context, "not update", Toast.LENGTH_SHORT ).show();
-//                   }
-//
-//
-//            }
-//            else
-//            if (action!=null && action.equals( "DONE" ))
-//            {
-//                dataBaseHelper.upDate(position,"yes","0");
-//                alarmSettingClass.setAllAlarm();
-//
-//
-//            }
-//            else
-//            {
-//                dataBaseHelper.upDate( position,"yes","0" );
-//                alarmSettingClass.setAllAlarm();
-//
-//            }
+        mContext = context;
+        mNotificationManager = ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE));
+        myPreferences = context.getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
+        notificationSounds = new NotificationSounds( context );
 
-            Toast.makeText( context, "broadcast", Toast.LENGTH_SHORT ).show();
-            Log.i( TAG, "onReceive: Alarm" );
+        ArrayList<String> soundPaths = notificationSounds.getNotificationSoundsPath();
+        String stringSoundPath = soundPaths.get( 0 );
+        Uri soundUri = Uri.parse(  myPreferences.getString( "NotificationSoundPath",stringSoundPath ) );
+        String title = intent.getStringExtra( "Task_Title" );
+        int position = intent.getIntExtra( "Position", 0 );
 
+        getNotification(context,title,position,soundUri);
+    }
 
+    public void getNotification(Context context, String title,int taskPosition,Uri soundUri) {
+        int notifyID = taskPosition ;
+        Intent intent = new Intent(context, LauncherActivityOnNotification.class);
+
+        intent.putExtra( "task_title_frm_notification",title );
+        intent.putExtra( "task_position_fr_notification",taskPosition );
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            String CHANNEL_ID = "my_channel_01";// The id of the channel.
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+//                Uri soundUri = Uri.parse( myPreferences.getString( "NotificationSoundPath","" ) );
+            NotificationChannel mChannel = new NotificationChannel( CHANNEL_ID, name, importance);
+            mChannel.setSound( mChannel.getSound(), null);
+            mNotificationManager.createNotificationChannel(mChannel);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon( R.mipmap.ic_launcher)
+                    .setContentTitle(title)
+                    .setContentText("Reminder")
+                    .setOnlyAlertOnce(true)
+                    .setSound( soundUri )
+                    .setContentIntent( PendingIntent.getActivity(context, notifyID,intent, 0))
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setAutoCancel( true );
+            mNotificationManager.notify(notifyID, mBuilder.build());
+        } else {
+//Get an instance of NotificationManager//
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(context)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle(title)
+                            .setContentText("Reminder")
+                            .setOnlyAlertOnce(true)
+                            .setSound( soundUri )
+                            .setContentIntent(PendingIntent.getActivity(context, notifyID, intent, 0))
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setAutoCancel(true);
+            assert mNotificationManager != null;
+            mNotificationManager.notify(notifyID, mBuilder.build());
         }
+    }
 
-//
-//        private void getNotification(String title,String taskPosition) {
-//            int notifyID = Integer.parseInt( taskPosition );
-//
-//
-//
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//                String CHANNEL_ID = "my_channel_01";// The id of the channel.
-//                int importance = NotificationManager.IMPORTANCE_HIGH;
-////                Uri soundUri = Uri.parse( myPreferences.getString( "NotificationSoundPath","" ) );
-//
-//                NotificationChannel mChannel = new NotificationChannel( CHANNEL_ID, name, importance);
-//                mChannel.setSound( mChannel.getSound(), null);
-//
-//                assert mNotificationManager != null;
-//                mNotificationManager.createNotificationChannel(mChannel);
-//                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-//                        .setSmallIcon(R.mipmap.ic_launcher)
-//                        .setContentTitle(title)
-//                        .setContentText("Reminder")
-//                        .setOnlyAlertOnce(true)
-//                        .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext,
-//                                LauncherActivityOnNotification.class), 0))
-//                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                        .setAutoCancel(false);
-//                mNotificationManager.notify(notifyID, mBuilder.build());
-//            } else {
-////Get an instance of NotificationManager//
-//                NotificationCompat.Builder mBuilder =
-//                        new NotificationCompat.Builder(mContext)
-//                                .setSmallIcon(R.mipmap.ic_launcher)
-//                                .setContentTitle(title)
-//                                .setContentText("Reminder")
-//                                .setOnlyAlertOnce(true)
-//                                .setContentIntent(PendingIntent.getActivity(mContext, 0, new Intent(mContext,
-//                                        LauncherActivityOnNotification.class), 0))
-//                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-////                                .addAction(R.drawable.ic_launcher_foreground, mContext.getString(R.string.app_name), snoozePendingIntent)
-//                                .setAutoCancel(false);
-//                // Gets an instance of the NotificationManager service//
-//                assert mNotificationManager != null;
-//                mNotificationManager.notify(notifyID, mBuilder.build());
-//            }
-//        }
 }
