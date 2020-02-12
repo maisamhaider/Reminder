@@ -33,9 +33,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.BottomShAlarmRVFragDialogAdapter;
 import com.example.reminder.adapter.CalBottomShRepeatDialogAdapter;
+import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -49,7 +51,7 @@ import java.util.TimeZone;
 
 public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFragment {
 
-    TextView startDateTv, endDateTv, startTimeTv, endTimeTv, addRepeatTv, addAlarmTv1;
+    TextView startDateTv, endDateTv, addRepeatTv, addAlarmTv1;
     EditText eventTitleEt, addNotesEt;
     Button saveBtn;
     String formattedDate, formattedTime;
@@ -58,9 +60,12 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
     LinearLayout fragment_my_bottom_sheet_dialog;
 
     boolean isFirstFieldSelected = false;
-    private boolean isStartDate = false;
+    private boolean isStartDate = true;
     private boolean isStartTime = false;
     private boolean isAllTime;
+
+    long startDate, endDate;
+
 
     public static CalendarEventAddBottomSheetDialogFrag newInstance() {
 
@@ -81,18 +86,29 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         View view = inflater.inflate( R.layout.fragment_my_bottom_sheet_dialog, container, false );
 
 
+        Calendar ccc = Calendar.getInstance();
+        ccc.add( Calendar.HOUR_OF_DAY,1 );
+        SimpleDateFormat ff = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
+        Calendar cccc = Calendar.getInstance();
+        cccc.add( Calendar.HOUR_OF_DAY,2 );
+
+
+
 
         saveBtn = view.findViewById( R.id.event_save_btn );
         startDateTv = view.findViewById( R.id.s_date_Tv );
         endDateTv = view.findViewById( R.id.e_date_Tv );
-        startTimeTv = view.findViewById( R.id.event_start_time_tv );
-        endTimeTv = view.findViewById( R.id.event_end_time_tv );
+
         addAlarmTv1 = view.findViewById( R.id.add_alarm_tv1 );
         allTimeSwitch = view.findViewById( R.id.all_time_sb );
 
         addRepeatTv = view.findViewById( R.id.add_repeat_tv );
         eventTitleEt = view.findViewById( R.id.event_title_Et );
         addNotesEt = view.findViewById( R.id.add_notes_Et );
+
+
+        startDateTv.setText( ff.format( ccc.getTime() ) );
+        endDateTv.setText( ff.format( cccc.getTime() ) );
 
         eventAddingFun();
 
@@ -114,21 +130,26 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             Calendar c = Calendar.getInstance();
+
             c.set( year, monthOfYear, dayOfMonth );
+            final int hour = c.get( Calendar.HOUR_OF_DAY );
+            final int minutes = c.get( Calendar.MINUTE );
 
 
-            SimpleDateFormat sdf = new SimpleDateFormat( "EEE, d MMM yyyy" );
+            SimpleDateFormat sdf = new SimpleDateFormat( "dd MMM yyyy EEE, " );
             formattedDate = sdf.format( c.getTime() );
             if (isStartDate) {
-
-                sDate = c.getTimeInMillis();
-                Toast.makeText( getContext(), sDate.toString(), Toast.LENGTH_SHORT ).show();
-                startDateTv.setText( formattedDate );
+                sDate = MyTimeSettingClass.getMilliFromDate( formattedDate );
+                TimePickerDialog dpd = new TimePickerDialog( getContext(), (timeSetListener), hour, minutes, false );
+                dpd.show();
             } else if (!isStartDate) {
-                eDate = c.getTimeInMillis();
-                endDateTv.setText( formattedDate );
+                eDate =MyTimeSettingClass.getMilliFromDate( formattedDate );
+                TimePickerDialog dpd = new TimePickerDialog( getContext(), (timeSetListener), hour, minutes, false );
+                dpd.show();
             }
+
         }
+
     };
 
     TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -141,15 +162,22 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
             calendar.set( Calendar.MINUTE, minute );
             SimpleDateFormat sformat = new SimpleDateFormat( "h:mm a" );
 
+
             formattedTime = sformat.format( calendar.getTime() );
 
-            if (isStartTime) {
-                sTime = calendar.getTimeInMillis();
-                startTimeTv.setText( formattedTime );
-            } else if (!isStartTime) {
-                eTime = calendar.getTimeInMillis();
-                endTimeTv.setText( formattedTime );
+
+            if (isStartDate) {
+
+                long sTimeMS = calendar.getTimeInMillis();
+                startDateTv.setText( formattedDate + formattedTime );
+                startDate = MyTimeSettingClass.getMilliFromDate(  formattedDate + formattedTime );
+
+            } else if (!isStartDate) {
+                long eTimeMS = calendar.getTimeInMillis();
+                endDateTv.setText( formattedDate + formattedTime );
+                endDate = MyTimeSettingClass.getMilliFromDate(  formattedDate + formattedTime );
             }
+
         }
     };
 
@@ -182,41 +210,15 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
             }
         } );
 
-
-        startTimeTv.setOnClickListener( new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
-                isStartTime = true;
-                TimePickerDialog dpd = new TimePickerDialog( getContext(), (timeSetListener), hour, minutes, false );
-                dpd.show();
-
-            }
-        } );
-
-        endTimeTv.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isStartTime = false;
-                TimePickerDialog dpd = new TimePickerDialog( getContext(), (timeSetListener), hour, minutes, false );
-                dpd.show();
-
-            }
-        } );
-
         allTimeSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     isAllTime = true;
-                    startTimeTv.setVisibility( View.GONE );
-                    endDateTv.setVisibility( View.GONE );
                 } else {
                     isAllTime = false;
-                    startTimeTv.setVisibility( View.VISIBLE );
-                    endDateTv.setVisibility( View.VISIBLE );
-                }
 
+                }
             }
         } );
 
@@ -227,7 +229,6 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
                 isFirstFieldSelected = true;
             }
         } );
-
 
         addRepeatTv.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -250,31 +251,19 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
 
         ContentResolver contentResolver = Objects.requireNonNull( getContext() ).getContentResolver();
         ContentValues values = new ContentValues();
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat( "EEE, d MMM yyyy" ),
-                timeFormat = new SimpleDateFormat( "h:mm a" );
-
 
         String eventTitle, alarm, repeat, notes;
-        long startDate, endDate;
 
         TimeZone timeZone = TimeZone.getDefault();
 
         if (eventTitleEt.length() == 0) {
             eventTitleEt.setText( "Untitled" );
         }
-        if (startDateTv.length() == 0) {
-            final int setDay = calendar.get( Calendar.DAY_OF_MONTH ) + 1;
-            final int setMonth = calendar.get( Calendar.MONTH );
-            final int setYear = calendar.get( Calendar.YEAR );
-
-            String s = String.format( "%d/%d/%d", setDay, setMonth, setYear );
-        }
-
-
         eventTitle = eventTitleEt.getText().toString();
-        startDate = sDate;
-        endDate = eDate;
+
+            startDate = MyTimeSettingClass.getMilliFromDate(startDateTv.getText().toString());
+
+            endDate = MyTimeSettingClass.getMilliFromDate(endDateTv.getText().toString());
 
         alarm = addAlarmTv1.getText().toString();
         int hasAlarm = 0;
@@ -324,6 +313,8 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         values.put( CalendarContract.Events.ALL_DAY, this.isAllTime );
 
         contentResolver.insert( CalendarContract.Events.CONTENT_URI, values );
+        MainActivity mainActivity = (MainActivity)getActivity();
+        mainActivity.setCalendarBNBItem();
     }
 
     public void showBShAlarmRcDialog() {

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Fragments.SettingsFrag">
+
     <include layout="@layout/profile_layout"/>
 
 
@@ -16,6 +17,7 @@
         <TextView
             android:layout_gravity="start|center"
             android:text="Completed tasks"
+            android:textColor="@color/colorBlackType"
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -28,6 +30,7 @@
         <TextView
             android:layout_gravity="start|center"
             android:text="notification sounds"
+            android:textColor="@color/colorBlackType"
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -40,11 +43,13 @@
         <TextView
             android:layout_gravity="start|center"
             android:text="More applications"
+            android:textColor="@color/colorBlackType"
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
     <LinearLayout
+        android:orientation="vertical"
         android:background="?android:attr/selectableItemBackground"
         android:id="@+id/settingsNoAds_LL"
         android:layout_width="match_parent"
@@ -52,7 +57,14 @@
         <TextView
             android:layout_gravity="start|center"
             android:text="No ads"
+            android:textColor="@color/colorBlackType"
             android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textColor="@color/colorMud"
+            android:layout_marginStart="10dp"
+            android:text="one payment to remove ads forever"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -64,6 +76,7 @@
         <TextView
             android:layout_gravity="start|center"
             android:text="Rate us"
+            android:textColor="@color/colorBlackType"
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -76,6 +89,7 @@
         <TextView
             android:layout_gravity="start|center"
             android:text="About"
+            android:textColor="@color/colorBlackType"
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

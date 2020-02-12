@@ -4,23 +4,26 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_marginBottom="60dp"
+    android:background="@color/colorPurple"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <HorizontalScrollView
+        android:visibility="gone"
         android:layout_above="@+id/addETRelativeLayout"
         android:layout_width="wrap_content"
         android:layout_gravity="bottom"
         android:scrollbars="none"
+        android:id="@+id/tagsLlayout"
+        android:background="@color/colorTransparentOne"
         android:layout_height="35dp">
 
         <LinearLayout
             android:orientation="horizontal"
-            android:id="@+id/tagsLlayout"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:background="@color/colorAliceBlue">
+            android:background="@color/colorTransparentOne">
 
             <LinearLayout
                 android:layout_margin="5dp"
@@ -36,6 +39,7 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
+                    android:textColor="@color/colorBlackType"
                     android:padding="2dp"
                     android:paddingEnd="5dp"
                     android:id="@+id/thisMorningtagTv"
@@ -48,6 +52,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:textColor="@color/colorBlackType"
                 android:layout_margin="5dp"
                 android:background="@drawable/tagsbackgroundbeforeclick"
                 android:id="@+id/laterTodaytagLL"
@@ -61,6 +66,7 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
+                    android:textColor="@color/colorBlackType"
                     android:padding="2dp"
                     android:paddingEnd="5dp"
                     android:id="@+id/laterTodaytagTv"
@@ -85,6 +91,7 @@
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:textColor="@color/colorBlackType"
                     android:padding="2dp"
                     android:paddingEnd="5dp"
                     android:backgroundTint="@android:color/transparent"
@@ -109,6 +116,7 @@
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:textColor="@color/colorBlackType"
                     android:padding="2dp"
                     android:paddingEnd="5dp"
                     android:backgroundTint="@android:color/transparent"
@@ -132,6 +140,7 @@
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:textColor="@color/colorBlackType"
                     android:padding="2dp"
                     android:paddingEnd="5dp"
                     android:backgroundTint="@android:color/transparent"
@@ -155,6 +164,7 @@
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:textColor="@color/colorBlackType"
                     android:backgroundTint="@android:color/transparent"
                     android:padding="2dp"
                     android:paddingEnd="5dp"
@@ -179,6 +189,7 @@
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:textColor="@color/colorBlackType"
                     android:padding="2dp"
                     android:paddingEnd="5dp"
                     android:background="@android:color/transparent"
@@ -195,16 +206,20 @@
     <RelativeLayout
         android:id="@+id/addETRelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="52dp"
         android:layout_gravity="bottom"
-        android:background="@color/colorAliceBlue"
+        android:background="@color/colorTransparentTwo"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/addtaskedittext"
             android:layout_width="320dp"
             android:layout_height="50dp"
-            android:paddingRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="10dp"
+            android:background="@drawable/foursidescurvedwhitebg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

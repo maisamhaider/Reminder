@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Vibrate"
-            android:textColor="@color/colorDodgerBlue" />
+            android:textColor="@color/colorBlackType"
+            />
     </LinearLayout>
 
     <LinearLayout

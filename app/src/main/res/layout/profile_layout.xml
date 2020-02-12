@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/colorTransparentTwo"
+    android:background="@color/colorPurple"
     >
 
 
@@ -45,7 +45,7 @@
                 android:text="person123"
                 android:maxLines="1"
                 android:maxLength="30"
-                android:textColor="@color/colorDodgerBlue"
+                android:textColor="@color/colorBlackType"
                 app:layout_anchorGravity="bottom|center" />
 
         <ImageView

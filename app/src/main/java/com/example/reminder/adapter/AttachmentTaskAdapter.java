@@ -120,6 +120,8 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
                 } else if (path.contains( ".mp3" )) {
                     {
 
+                        holder.attaImageView.setImageResource( R.drawable.play_audio_foreground );
+
                         File file = new File( path );
                         if (mediaPlayer != null)
                         {

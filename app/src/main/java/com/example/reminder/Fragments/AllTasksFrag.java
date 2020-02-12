@@ -9,6 +9,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,6 +28,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -60,7 +63,12 @@ public class AllTasksFrag extends Fragment {
     private MyTimeSettingClass myTimeSettingClass;
     private AlarmSettingClass alarmSettingClass;
 
-    private LinearLayout linearLayoutTags;
+
+    //actionbar
+    ImageView tasksMenuImageView;
+
+   //
+    private HorizontalScrollView horizontalScrollViewTags;
     private RelativeLayout relativeLayoutAddEt;
 
     private RecyclerView recyclerView_today, recyclerView_tomorrow, recyclerView_upcoming, recyclerView_someday;
@@ -112,9 +120,13 @@ public class AllTasksFrag extends Fragment {
         View view = inflater.inflate( R.layout.fragment_tasks, container, false );
         alarmSettingClass = new AlarmSettingClass( getActivity() );
 
+
         mainActivity = (MainActivity) getActivity();
         myTimeSettingClass = new MyTimeSettingClass();
         fragmentManager = getActivity().getSupportFragmentManager();
+        //actionbar
+        tasksMenuImageView = view.findViewById( R.id.tasksMenuImageView );
+
         recyclerView_today = view.findViewById( R.id.todaytasksRecyclerView );
         recyclerView_tomorrow = view.findViewById( R.id.TomorrowtasksRecyclerView );
         recyclerView_upcoming = view.findViewById( R.id.upcomingtasksRecyclerView );
@@ -145,16 +157,14 @@ public class AllTasksFrag extends Fragment {
         mainAddLottieAnimationView = view.findViewById( R.id.mainAddLottieAnimationView );
         addUpLottieAnimationView = view.findViewById( R.id.AddUpLottieAnimationView );
 
-        linearLayoutTags = view.findViewById( R.id.tagsLlayout );
-        relativeLayoutAddEt = view.findViewById( R.id.addETRelativeLayout );
+        horizontalScrollViewTags = view.findViewById( R.id.tagsLlayout );
 
 
         dataBaseHelper = new DataBaseHelper( getContext() );
         addUpLottieAnimationView.setVisibility( View.GONE );
 
-
         hidelinearLayoutTags();
-
+        actionBarFun();
         readTodayfromDb();
         readTomorrowFromDb();
         readUpcomingfromDb();
@@ -171,6 +181,7 @@ public class AllTasksFrag extends Fragment {
                     addUpLottieAnimationView.setVisibility( View.VISIBLE );
                     mainAddLottieAnimationView.setVisibility( View.GONE );
                     mainActivity.hideBottomNView();
+
 
                     add_task_edittext.post( new Runnable() {
                         @Override
@@ -195,6 +206,7 @@ public class AllTasksFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 setDataInRecyclerView();
+                mainActivity.showBottomNView();
                 add_task_edittext.setText( "" );
 
             }
@@ -206,7 +218,7 @@ public class AllTasksFrag extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
 
-                    linearLayoutTags.setVisibility( View.GONE );
+                    horizontalScrollViewTags.setVisibility( View.GONE );
                     addUpLottieAnimationView.setVisibility( View.GONE );
                     mainAddLottieAnimationView.setVisibility( View.VISIBLE );
                     mainActivity.showBottomNView();
@@ -221,6 +233,33 @@ public class AllTasksFrag extends Fragment {
 
         return view;
     }
+    //actionbar
+    private void actionBarFun()
+    {
+        tasksMenuImageView.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final PopupMenu popupMenu = new PopupMenu( getContext(),tasksMenuImageView );
+                popupMenu.getMenuInflater().inflate( R.menu.taskactionmenu,popupMenu.getMenu() );
+                popupMenu.setOnMenuItemClickListener( new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        if (item.getItemId() == R.id.clearCompletedTasks) {
+                            dataBaseHelper.deleteCompletedTasks();
+                            mainActivity.setTaskFragDefaultBNBItem();
+                            popupMenu.dismiss();
+                        }
+                        return true;
+                    }
+                } );
+                popupMenu.show();
+
+            }
+        } );
+    }
+
 
 
     @Override
@@ -314,23 +353,14 @@ public class AllTasksFrag extends Fragment {
         fragmentTransaction.commit();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.throwmenu:
-        }
-        return false;
-    }
-
 
     private void hidelinearLayoutTags() {
-        linearLayoutTags.setVisibility( View.GONE );
+        horizontalScrollViewTags.setVisibility( View.GONE );
 
     }
 
     private void showlinearLayoutTags() {
-        linearLayoutTags.setVisibility( View.VISIBLE );
+        horizontalScrollViewTags.setVisibility( View.VISIBLE );
     }
 
 
@@ -501,7 +531,6 @@ public class AllTasksFrag extends Fragment {
             }
         } );
     }
-
 
     private void setTagsBackground(View enAbleView, ImageView enAbleImageView, View disAbleView1,
                                    View disAbleView2, View disAbleView3, View disAbleView4, View disAbleView5, View disAbleView6, ImageView disAbleImageView1,
@@ -745,8 +774,7 @@ public class AllTasksFrag extends Fragment {
         }
         while (cursor.moveToNext()) {
             String date =cursor.getString( 2 );
-            String formattedDate = date.substring( date.length()-7 );
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), formattedDate) );
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), date) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_today.setAdapter( allTasksAdapter );

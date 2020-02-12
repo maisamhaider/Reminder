@@ -76,7 +76,7 @@ public class EditTask extends BottomSheetDialogFragment {
     private TextView edittaskTitle, createdTextView, notesHolderTv, editSetTimeTv, editDeleteUpperTv, edit_uploadTv;
     private EditText addSubTasksET;
     private LinearLayout editSetTimeLL, addNewSubTaskLL, tabToAddAttachmentsLL, edit_MarkAsDoneLL, edit_deleteTaskLL;
-    private Switch editReminderOnOffSwitch;
+//    private Switch editReminderOnOffSwitch;
     private RecyclerView subTaskRecyclerView, attachmentRecyclerView;
     private SubTaskAdapter subTaskAdapter;
     private AttachmentTaskAdapter attachmentTaskAdapter;
@@ -107,7 +107,7 @@ public class EditTask extends BottomSheetDialogFragment {
     private ImageView edit_addReminderDeleteTimeIV;
     private Button edit_task_SetBtn, edit_task_cancelBtn;
     ConstraintLayout edit_showReminderTimeCL;
-    private Switch edit_oneTimeAddReminderSwitch;
+//    private Switch edit_oneTimeAddReminderSwitch;
 
     private boolean isOneButton = true;
 
@@ -150,7 +150,7 @@ public class EditTask extends BottomSheetDialogFragment {
         edittaskTitle = view.findViewById( R.id.taskTitle_tv );
         createdTextView = view.findViewById( R.id.createdDateTv );
         editSetTimeTv = view.findViewById( R.id.editSetTimeTv );
-        editReminderOnOffSwitch = view.findViewById( R.id.editReminderOnOffSwitch );
+//        editReminderOnOffSwitch = view.findViewById( R.id.editReminderOnOffSwitch );
         editDeleteUpperTv = view.findViewById( R.id.editDeleteUpperTv );
 
         addNewSubTaskLL = view.findViewById( R.id.addNewSubTaskLL );
@@ -195,15 +195,15 @@ public class EditTask extends BottomSheetDialogFragment {
         } );
 
 
-        editReminderOnOffSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                } else {
-
-                }
-            }
-        } );
+//        editReminderOnOffSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked) {
+//                } else {
+//
+//                }
+//            }
+//        } );
 
         LinearLayoutManager linearLayoutManager;
         linearLayoutManager = new LinearLayoutManager( getContext() ) {
@@ -246,6 +246,8 @@ public class EditTask extends BottomSheetDialogFragment {
                                 dataBaseHelper.deleteOneTask( taskPosition );
                                 dataBaseHelper.deleteAllAttachments( taskPosition );
                                 dataBaseHelper.deleteSubTasks( taskPosition );
+                                mainActivity.setTaskFragDefaultBNBItem();
+
                                 dialog.dismiss();
                             }
                         } ).setNegativeButton( "Keep Editing", new DialogInterface.OnClickListener() {
@@ -433,7 +435,7 @@ public class EditTask extends BottomSheetDialogFragment {
         editSetTimeLL.setVisibility( View.VISIBLE );
         editRemindTagsLL.setVisibility( View.GONE );
         editDeleteUpperTv.setVisibility( View.VISIBLE );
-        editReminderOnOffSwitch.setChecked( true );
+//        editReminderOnOffSwitch.setChecked( true );
 
     }
 
@@ -441,7 +443,7 @@ public class EditTask extends BottomSheetDialogFragment {
         editSetTimeLL.setVisibility( View.GONE );
         editRemindTagsLL.setVisibility( View.VISIBLE );
         editDeleteUpperTv.setVisibility( View.GONE );
-        editReminderOnOffSwitch.setChecked( false );
+//        editReminderOnOffSwitch.setChecked( false );
     }
 
     private void getDataInBSHDF() {
@@ -520,8 +522,8 @@ public class EditTask extends BottomSheetDialogFragment {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate( R.layout.editaddreminderdialogfrag, null );
 
-        edit_oneTimeAddReminderSwitch = view.findViewById( R.id.edit_oneTimeAddReminderSwitch );
-        edit_oneTimeAddReminderSwitch.setChecked( false );
+//        edit_oneTimeAddReminderSwitch = view.findViewById( R.id.edit_oneTimeAddReminderSwitch );
+//        edit_oneTimeAddReminderSwitch.setChecked( false );
 
         edit_task_SetBtn = view.findViewById( R.id.edit_task_SetBtn );
         edit_task_SetBtn.setEnabled( false );
@@ -572,7 +574,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 changeButtonBg( oneTimeBtn, repeatBtn, locationBtn );
                 repeatLL.setVisibility( View.GONE );
                 edit_task_SetBtn.setEnabled( false );
-                edit_oneTimeAddReminderSwitch.setChecked( false );
+//                edit_oneTimeAddReminderSwitch.setChecked( false );
                 editTagsLL.setVisibility( View.VISIBLE );
                 edit_showReminderTimeCL.setVisibility( View.GONE );
             } else if (s.contains( "Once" )) {
@@ -585,7 +587,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 changeButtonBg( oneTimeBtn, repeatBtn, locationBtn );
                 repeatLL.setVisibility( View.GONE );
                 edit_task_SetBtn.setEnabled( false );
-                edit_oneTimeAddReminderSwitch.setChecked( false );
+//                edit_oneTimeAddReminderSwitch.setChecked( false );
                 editTagsLL.setVisibility( View.GONE );
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
@@ -607,21 +609,21 @@ public class EditTask extends BottomSheetDialogFragment {
         editLocationLL.setVisibility( View.GONE );
 
 
-        edit_oneTimeAddReminderSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                } else {
-                }
-            }
-        } );
+//        edit_oneTimeAddReminderSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked) {
+//                } else {
+//                }
+//            }
+//        } );
 
 
         edit_later_todayLL.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                edit_oneTimeAddReminderSwitch.setChecked( true );
+//                edit_oneTimeAddReminderSwitch.setChecked( true );
                 edit_task_SetBtn.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
@@ -637,7 +639,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                edit_oneTimeAddReminderSwitch.setChecked( true );
+//                edit_oneTimeAddReminderSwitch.setChecked( true );
                 edit_task_SetBtn.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
@@ -653,7 +655,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                edit_oneTimeAddReminderSwitch.setChecked( true );
+//                edit_oneTimeAddReminderSwitch.setChecked( true );
                 edit_task_SetBtn.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
@@ -668,7 +670,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                edit_oneTimeAddReminderSwitch.setChecked( true );
+//                edit_oneTimeAddReminderSwitch.setChecked( true );
                 edit_task_SetBtn.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
@@ -685,7 +687,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                edit_oneTimeAddReminderSwitch.setChecked( true );
+//                edit_oneTimeAddReminderSwitch.setChecked( true );
                 edit_task_SetBtn.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
@@ -834,7 +836,7 @@ public class EditTask extends BottomSheetDialogFragment {
             public void onClick(View v) {
 
                 edit_task_SetBtn.setEnabled( false );
-                edit_oneTimeAddReminderSwitch.setChecked( false );
+//                edit_oneTimeAddReminderSwitch.setChecked( false );
                 edit_remindMeOrNoReminderTv.setText( "No reminder set" );
                 edit_addReminderShowTimeTv.setText( "Tap To add" );
             }
@@ -1081,7 +1083,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 reminder_date = sformat.format( calendar.getTime() );
                 edit_task_SetBtn.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
-                edit_oneTimeAddReminderSwitch.setChecked( true );
+//                edit_oneTimeAddReminderSwitch.setChecked( true );
                 edit_addReminderDeleteTimeIV.setVisibility( View.VISIBLE );
                 edit_remindMeOrNoReminderTv.setText( "Remind me" );
                 edit_addReminderShowTimeTv.setText( reminder_date );

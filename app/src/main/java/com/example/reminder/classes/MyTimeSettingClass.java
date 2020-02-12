@@ -70,7 +70,7 @@ public class MyTimeSettingClass {
         cal.set( Calendar.HOUR_OF_DAY, 9 );
         cal.set( Calendar.MINUTE, 0 );
         cal.set( Calendar.SECOND, 0 );
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
 
     }
@@ -81,7 +81,7 @@ public class MyTimeSettingClass {
         cal.set( Calendar.HOUR_OF_DAY, 15 );
         cal.set( Calendar.MINUTE, 0 );
         cal.set( Calendar.SECOND, 0 );
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
 
     }
@@ -92,7 +92,7 @@ public class MyTimeSettingClass {
         cal.set( Calendar.HOUR_OF_DAY, 18 );
         cal.set( Calendar.MINUTE, 0 );
         cal.set( Calendar.SECOND, 0 );
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
 
     }
@@ -100,7 +100,7 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getTomorrow() {
         Calendar cal = new GregorianCalendar();
-        cal.set( Calendar.DATE, 1 );
+        cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
     }
 
@@ -115,7 +115,7 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek9am() {
         Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE, 6 );
+        calendar.add( Calendar.DATE, 6 );
         calendar.set( Calendar.HOUR_OF_DAY, 9 );
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
@@ -125,7 +125,7 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek3pm() {
         Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE, 6 );
+        calendar.add( Calendar.DATE, 6 );
         calendar.set( Calendar.HOUR_OF_DAY, 15 );
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
@@ -135,7 +135,7 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek6pm() {
         Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE, 6 );
+        calendar.add( Calendar.DATE, 6 );
         calendar.set( Calendar.HOUR_OF_DAY, 18 );
         calendar.set(Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
@@ -145,7 +145,7 @@ public class MyTimeSettingClass {
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek() {
         Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE,6);
+        calendar.add( Calendar.DATE,6);
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
@@ -227,7 +227,7 @@ public class MyTimeSettingClass {
         return new SimpleDateFormat("dd MMM yyyy EEE, h:mm a").format( calendar.getTime() );
     }
 
-    public long getMilliFromDate(String dateFormat) {
+    public static long getMilliFromDate(String dateFormat) {
         Date date = new Date();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy EEE, h:mm a");
         try {
@@ -248,6 +248,18 @@ public class MyTimeSettingClass {
         return formatter.format(calendar.getTime());
 
 }
+    public static String getCalDateFormat(long milliSeconds,String format)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
+
+    }
+
 
 
 

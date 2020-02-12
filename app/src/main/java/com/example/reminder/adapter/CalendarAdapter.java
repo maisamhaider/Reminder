@@ -1,125 +1,126 @@
 package com.example.reminder.adapter;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.R;
-import com.example.reminder.classes.ItemType;
-import com.example.reminder.models.CalendarModel;
-import com.kodmap.library.kmrecyclerviewstickyheader.KmStickyListener;
 
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
-public class CalendarAdapter extends ListAdapter<CalendarModel, RecyclerView.ViewHolder> implements KmStickyListener {
+public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventViewHolder> {
 
+    Context context;
+    ArrayList<String> eventTitleList;
+    ArrayList<String> eventDateList;
+    ArrayList<String> eventLocationList;
+    ArrayList<String> eventDescriptionList;
+    ArrayList<String> eventCalendarId;
 
-    public CalendarAdapter() {
-        super( CalendarModelDiffUtilCallback );
+    public CalendarAdapter(Context context, ArrayList<String> eventTitleList,
+                           ArrayList<String> eventDateList,    ArrayList<String> eventLocationList,
+                           ArrayList<String> eventDescriptionList,ArrayList<String> eventCalendarId) {
+        this.context = context;
+        this.eventTitleList = eventTitleList;
+        this.eventDateList = eventDateList;
+        this.eventLocationList = eventLocationList;
+        this.eventDescriptionList = eventDescriptionList;
+        this.eventCalendarId = eventCalendarId;
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View itemView;
-        if (viewType == ItemType.EVENT_DATE) {
-            itemView = LayoutInflater.from( parent.getContext() ).inflate( R.layout.list_header, parent, false );
-            return new HeaderViewHolder( itemView );
-        } else{
-            itemView = LayoutInflater.from( parent.getContext() ).inflate( R.layout.list_item, parent, false );
-            return new ChildViewHolder( itemView );
-        }
+    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.cal_event_list_item, parent, false );
+        return new EventViewHolder( view );
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EventViewHolder holder, final int position) {
+        holder.eventNameTv.setText( eventTitleList.get( position ) );
+        holder.event_date.setText( eventDateList.get( position ) );
+        holder.event_descriptionTv.setText( eventDescriptionList.get( position ) );
+        holder.event_locationTv.setText( eventLocationList.get( position ) );
+        holder.event_calendarIdTv.setText( eventCalendarId.get( position ) );
 
-        if (getItemViewType( position ) == ItemType.EVENT_DATE) {
-            ((HeaderViewHolder) holder).bind( getItem( position ) );
-        } else
-            if (getItemViewType( position )==ItemType.EVENT){
-            ((ChildViewHolder) holder).bind( getItem( position ) );
-        }
-    }
+        holder.itemView.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    @Override
-    public Integer getHeaderPositionForItem(Integer itemPosition) {
-        Integer headerPosition = 0;
-        for (Integer i = itemPosition; i > 0; i--) {
-            if (isHeader( i )) {
-                headerPosition = i;
-                return headerPosition;
+                Uri eventsUri;
+                int osVersion = android.os.Build.VERSION.SDK_INT;
+                if (osVersion <= 7) { //up-to Android 2.1
+                    eventsUri = Uri.parse("content://calendar/events");
+                } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
+                    eventsUri = Uri.parse("content://com.android.calendar/events");
+                }
+                ContentResolver resolver = context.getContentResolver();
+                deleteEvent(resolver, eventsUri, Integer.parseInt( eventCalendarId.get( position ) ) );
+             eventTitleList.remove( position );
+             eventDateList.remove( position );
+             eventLocationList.remove( position );
+             eventDescriptionList.remove( position );
+             eventCalendarId.remove( position );
+             notifyDataSetChanged();
             }
-        }
-        return headerPosition;
+        } );
     }
 
     @Override
-    public Integer getHeaderLayout(Integer headerPosition) {
-        return R.layout.list_header;
+    public int getItemCount() {
+        return eventDateList.size();
     }
 
-    @Override
-    public void bindHeaderData(View header, Integer headerPosition) {
 
-        TextView myHeader = header.findViewById( R.id.headerTv );
-        myHeader.setText( getItem( headerPosition ).haeder_or_child );
-    }
+    public class EventViewHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public Boolean isHeader(Integer itemPosition) {
-        return getItem( itemPosition ).type.equals( ItemType.EVENT_DATE );
-    }
+        TextView eventNameTv;
+        TextView event_date;
+        TextView event_descriptionTv;
+        TextView event_locationTv;
+        TextView event_calendarIdTv;
+        CheckBox eventCheckBox;
+        ImageView deleteEventIV;
 
-    class HeaderViewHolder extends RecyclerView.ViewHolder {
-        TextView header_tv;
-
-        public HeaderViewHolder(@NonNull View itemView) {
+        public EventViewHolder(@NonNull View itemView) {
             super( itemView );
-            header_tv = itemView.findViewById( R.id.headerTv );
-        }
+            eventNameTv = itemView.findViewById( R.id.eventNameTv );
+            event_date = itemView.findViewById( R.id.event_date );
+            event_descriptionTv = itemView.findViewById( R.id.event_descriptionTv );
+            event_locationTv = itemView.findViewById( R.id.event_locationTv );
+            deleteEventIV = itemView.findViewById( R.id.deleteEventIV );
+            event_calendarIdTv = itemView.findViewById( R.id.event_calendarIdTv );
+//            eventCheckBox = itemView.findViewById( R.id.eventCheckBox );
 
-        public void bind(CalendarModel calendarModel) {
-            header_tv.setText( calendarModel.getHaeder_or_child() );
-        }
+
     }
 
-    class ChildViewHolder extends RecyclerView.ViewHolder {
-        TextView child_tv;
-
-        public ChildViewHolder(@NonNull View itemView) {
-            super( itemView );
-            child_tv = itemView.findViewById( R.id.child_tv );
-
+    }
+    private void deleteEvent(ContentResolver resolver, Uri eventsUri, int calendarId) {
+        Cursor cursor;
+        if (android.os.Build.VERSION.SDK_INT <= 7) { //up-to Android 2.1
+            cursor = resolver.query( eventsUri, new String[]{"_id"}, "Calendars._id=" + calendarId, null, null );
+        } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
+            cursor = resolver.query( eventsUri, new String[]{"_id"}, "calendar_id=" + calendarId, null, null );
         }
-
-        public void bind(CalendarModel calendarModel) {
-            child_tv.setText( calendarModel.haeder_or_child );
+        while (cursor.moveToNext()) {
+            long eventId = cursor.getLong( cursor.getColumnIndex( "_id" ) );
+            resolver.delete( ContentUris.withAppendedId( eventsUri, eventId ), null, null );
         }
+        cursor.close();
+
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return getItem( position ).type;
-    }
-
-    public static final DiffUtil.ItemCallback<CalendarModel> CalendarModelDiffUtilCallback =
-            new DiffUtil.ItemCallback<CalendarModel>() {
-                @Override
-                public boolean areItemsTheSame(@NonNull CalendarModel model, @NonNull CalendarModel t1) {
-                    return model.haeder_or_child.equals( t1.haeder_or_child );
-                }
-
-                @Override
-                public boolean areContentsTheSame(@NonNull CalendarModel model, @NonNull CalendarModel t1) {
-                    return model.haeder_or_child.equals( t1 );
-                }
-            };
 }

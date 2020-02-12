@@ -14,16 +14,16 @@
         android:id="@+id/fragcontainer"
         android:name="com.example.reminder.Fragments.mainfrag"
         android:layout_width="match_parent"
-        android:layout_gravity="bottom"
+        android:layout_gravity="center"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+      />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNV"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="@color/colorWhite"
+            android:background="@color/colorPurple"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             app:layout_scrollFlags="scroll|enterAlways"
             app:menu="@menu/bottomnavigationbar" />

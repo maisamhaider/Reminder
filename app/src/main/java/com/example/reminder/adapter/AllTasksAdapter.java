@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -105,6 +106,19 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 //
 //
 //        }
+        holder.checkBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    dataBaseHelper.upDate( myModelList.get( position ).getId(),"yes","0" );
+
+                }
+                else
+                    dataBaseHelper.upDate( myModelList.get( position ).getId(),"no","1" );
+
+            }
+        } );
 
 
 
@@ -131,7 +145,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
             }
         } );
-        holder.itemView.setOnClickListener( new View.OnClickListener() {
+        holder.mainLayout.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -257,16 +271,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             repeatTaskIv = itemView.findViewById( R.id.repeatTaskIv );
             checkBox = itemView.findViewById( R.id.checkbox );
             checkBox.setOnClickListener( this );
-
-
             mainLayout = itemView.findViewById( R.id.mainindivduallayout );
-            mainLayout.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText( itemView.getContext(), "Position:" + Integer.toString( getPosition() ), Toast.LENGTH_SHORT ).show();
-                }
-            } );
-
         }
 
         public void setItemClickListener(MyItemClickListener mItemClickListener) {

@@ -28,5 +28,6 @@
     <string name="copy_rights_reserved_by_sky_rider_apps">Copy Rights Reserved by Sky Rider Apps</string>
     <string name="This_will_override_your_repeat_reminder">This will override your repeat reminder</string>
     <string name="This_will_override_your_onetime_reminder">This will override your oneTime reminder</string>
+    <string name="set_a_notification_sound">set a notification sound</string>
 
 </resources>

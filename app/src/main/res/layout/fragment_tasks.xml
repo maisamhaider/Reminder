@@ -7,29 +7,38 @@
     android:orientation="vertical"
     tools:context=".Fragments.AllTasksFrag">
 
+    <include layout="@layout/alltasksfragmentactionbar"/>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedscrollView"
+    <LinearLayout
+        android:id="@+id/containerAbc"
         android:layout_width="match_parent"
-        android:layout_marginBottom="87dp"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="60dp"
+        android:layout_height="510dp">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedscrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <include layout="@layout/todaytasklayout" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <include layout="@layout/tomorrowtasklayout" />
+                <include layout="@layout/todaytasklayout" />
 
-            <include layout="@layout/upcomingtasklayout" />
+                <include layout="@layout/tomorrowtasklayout" />
 
-            <include layout="@layout/somedaytasklayout" />
-        </LinearLayout>
+                <include layout="@layout/upcomingtasklayout" />
 
-    </androidx.core.widget.NestedScrollView>
+                <include layout="@layout/somedaytasklayout" />
+            </LinearLayout>
 
-    <include layout="@layout/lasttasklayout" />
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+        <include layout="@layout/lasttasklayout" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
