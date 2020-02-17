@@ -19,7 +19,7 @@
         android:gravity="start|center" />
 
     <ImageView
-        android:src="@drawable/clear_foreground"
+        android:src="@drawable/trash"
         android:id="@+id/audio_closeIv"
         android:layout_width="60dp"
         android:layout_height="60dp"

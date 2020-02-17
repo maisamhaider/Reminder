@@ -16,7 +16,6 @@
     <string name="event_title">EVENT TITLE</string>
     <string name="untitled_event">Untitled Event</string>
     <string name="add_another_alarm">Add another Alarm</string>
-    <string name="_30_minutes_before">30 minutes before</string>
     <string name="alarm">ALARM</string>
     <string name="mon_9_dec_2019">Mon, 9 Dec 2019</string>
     <string name="never">Never</string>
@@ -29,5 +28,8 @@
     <string name="This_will_override_your_repeat_reminder">This will override your repeat reminder</string>
     <string name="This_will_override_your_onetime_reminder">This will override your oneTime reminder</string>
     <string name="set_a_notification_sound">set a notification sound</string>
+    <string name="press_to_record">Press to Record</string>
+    <string name="one_payment_to_remove_ads_forever">one payment to remove ads forever</string>
+    <string name="go_to_playstore">Go to Playstore</string>
 
 </resources>

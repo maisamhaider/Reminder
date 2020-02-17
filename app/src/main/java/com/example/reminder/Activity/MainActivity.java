@@ -13,26 +13,32 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.reminder.Fragments.CalendarFrag;
 import com.example.reminder.Fragments.SettingsFrag;
 import com.example.reminder.Fragments.AllTasksFrag;
+import com.example.reminder.Fragments.mainfrag;
 import com.example.reminder.R;
 import com.example.reminder.classes.AlarmSettingClass;
+import com.example.reminder.classes.NotificationReceiver;
 import com.example.reminder.classes.NotificationSounds;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements EditTextStringListener{
 
 
-
+    NotificationReceiver notificationReceiver;
     BottomNavigationView bottomNavigationView;
     EditTextStringListener mEditTextStringListener;
     Fragment mFragment;
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
+
 
 //        myPreferences = this.getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
 //        notificationSounds = new NotificationSounds( this );
@@ -155,12 +162,14 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
         fragmentTransaction.replace(R.id.fragcontainer, fragment);
         fragmentTransaction.commit();
     }
-
     @Override
     public void onBackPressed() {
 
+
         MainActivity.this.finish();
         super.onBackPressed();
+
+
     }
 
     @Override
@@ -189,6 +198,10 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
         }
     }
 
+    @Override
+    public void myItemPosition(int pos) {
+
+    }
 
 
 }

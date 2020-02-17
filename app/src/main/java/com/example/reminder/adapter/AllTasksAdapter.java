@@ -1,7 +1,10 @@
 package com.example.reminder.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,12 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.Fragments.EditTask;
 import com.example.reminder.R;
+import com.example.reminder.classes.AlarmSettingClass;
+import com.example.reminder.classes.NotificationReceiver;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.MyItemClickListener;
 import com.example.reminder.models.AllTasksModel;
@@ -31,19 +37,24 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.Context.ALARM_SERVICE;
+
 public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHolder> {
 
     MainActivity mainActivity;
+    AlarmSettingClass alarmSettingClass;
     private final Context context;
     private List<AllTasksModel> myModelList;
     DataBaseHelper dataBaseHelper;
     FragmentManager fragmentManager;
+    int checkPosition ;
 
     public AllTasksAdapter(Context context, List<AllTasksModel> myModelList, DataBaseHelper dataBaseHelper, FragmentManager fragmentManager) {
         this.context = context;
         this.myModelList = myModelList;
         this.dataBaseHelper = dataBaseHelper;
         this.fragmentManager = fragmentManager;
+        alarmSettingClass = new AlarmSettingClass( context );
     }
 
     @NonNull
@@ -62,19 +73,27 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
         holder.notes_TextView.setText( myModelList.get( position ).getTask() );
         holder.date_textView.setText( myModelList.get( position ).getDate() );
 
-        holder.deleteItemIv.setVisibility( View.GONE );
+        holder.deleteItemIv.setVisibility( View.INVISIBLE );
         holder.attachmentsIv.setVisibility( View.GONE );
         holder.subTasksIv.setVisibility( View.GONE );
         holder.repeatTaskIv.setVisibility( View.GONE );
-
-//        Cursor cursor = dataBaseHelper.getCompletedTask();
+//
+//        Cursor cursor = dataBaseHelper.getAllTasks();
 //        if (cursor.getCount() == 0)
 //        {
 //        }
 //        while (cursor.moveToNext()) {
 //            String isComplete = cursor.getString( 6 );
+//            String pppp = cursor.getString( 0 );
+//
 //            if (isComplete.matches( "yes" ))
 //            {
+//                holder.deleteItemIv.setVisibility( View.VISIBLE );
+//
+//            }
+//            else
+//            {
+//                holder.deleteItemIv.setVisibility( View.GONE );
 //
 //            }
 //
@@ -119,6 +138,16 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
             }
         } );
+        if (holder.checkBox.isChecked())
+        {
+            holder.deleteItemIv.setVisibility( View.VISIBLE );
+
+        }
+        else
+        {
+            holder.deleteItemIv.setVisibility( View.INVISIBLE );
+
+        }
 
 
 
@@ -130,7 +159,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
                 if (checkBox.isChecked()) {
                     holder.deleteItemIv.setVisibility( View.VISIBLE );
                 } else
-                    holder.deleteItemIv.setVisibility( View.GONE );
+                    holder.deleteItemIv.setVisibility( View.INVISIBLE );
             }
         } );
         holder.deleteItemIv.setOnClickListener( new View.OnClickListener() {
@@ -139,7 +168,8 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
                 dataBaseHelper.deleteOneTask( myModelList.get( position ).getId() );
                 dataBaseHelper.deleteSubTasks( myModelList.get( position ).getDate() );
                 dataBaseHelper.deleteAllAttachments( myModelList.get( position ).getId() );
-
+                int pp = Integer.parseInt( myModelList.get( position ).getId() );
+                alarmSettingClass.deleteRepeatAlarm(pp); //cancel completed tasks' alarm
                 myModelList.remove( position );
                 notifyDataSetChanged();
 

@@ -6,16 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp">
-
-    <ImageView
-        android:id="@+id/deleteEventIV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="368dp"
-        android:src="@drawable/ic_remove_circle_black_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/event_date"
         android:layout_width="match_parent"
@@ -37,26 +27,33 @@
         <!--            android:layout_height="wrap_content"-->
         <!--            android:layout_gravity="center" />-->
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
+        android:elevation="5dp"
+        app:cardElevation="10dp"
+        android:background="@color/colorMainYellowOne"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_date"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/event_date">
+
         <TextView
             android:id="@+id/eventNameTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="@color/colorPurple"
-            android:gravity="center"
-            android:padding="16dp"
+            android:gravity="start|top"
+            android:paddingLeft="10dp"
+            android:background="@android:color/transparent"
             android:textColor="@color/colorWhite"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/event_date" />
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/event_locationTv"
             android:layout_width="match_parent"
@@ -68,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
+
         <TextView
             android:id="@+id/event_calendarIdTv"
             android:layout_width="match_parent"
@@ -80,7 +78,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
 

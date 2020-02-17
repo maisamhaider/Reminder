@@ -1,83 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainindivduallayout"
-    android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_marginTop="10dp"
+    android:layout_height="65dp"
+>
 
-    <CheckBox
-        android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="10dp" />
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="10dp"
+        android:elevation="5dp"
+        app:cardElevation="7dp">
 
-    <TextView
-        android:maxWidth="150dp"
-        android:id="@+id/noteTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="1dp"
-        android:layout_toEndOf="@+id/checkbox"
-        android:hint="check" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
 
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="22dp"
-        android:layout_toEndOf="@+id/noteTextView"
-        android:textSize="10sp"
-        android:gravity="center" />
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="13dp" />
 
-    <ImageView
-        android:id="@+id/subtasksImageView"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="22dp"
-        android:layout_toEndOf="@+id/AttachmentImageView"
-        android:gravity="center"
-        android:src="@mipmap/subtasks_foreground" />
+            <TextView
+                android:id="@+id/noteTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@+id/checkbox"
+                android:hint="check"
+                android:maxWidth="150dp"
+                android:textSize="15sp" />
 
-    <ImageView
-        android:id="@+id/AttachmentImageView"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="22dp"
-        android:layout_toEndOf="@+id/dateTextView"
-        android:gravity="center"
-        android:src="@drawable/ic_attach_file_black_24dp" />
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/noteTextView"
+                android:layout_alignStart="@+id/noteTextView"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:textSize="10sp" />
 
-    <ImageView
-        android:id="@+id/repeatTaskIv"
-        android:layout_width="15sp"
-        android:layout_height="20dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="18dp"
-        android:layout_toEndOf="@+id/subtasksImageView"
-        android:src="@drawable/repeat_icon" />
+            <ImageView
 
-    <ImageView
-        android:id="@+id/deleteSingletaskIv"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="18dp"
-        android:src="@drawable/clear_foreground" />
+                android:id="@+id/subtasksImageView"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="29dp"
+                android:layout_marginBottom="16dp"
+                android:layout_toEndOf="@+id/AttachmentImageView"
+                android:gravity="center"
+                android:src="@drawable/subtask" />
+
+            <ImageView
+
+                android:id="@+id/AttachmentImageView"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
+                android:layout_toEndOf="@+id/dateTextView"
+                android:gravity="center"
+                android:src="@drawable/attachment" />
+
+            <ImageView
+                android:id="@+id/repeatTaskIv"
+                android:layout_width="15sp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="18dp"
+                android:layout_toEndOf="@+id/subtasksImageView"
+                android:src="@drawable/repeat" />
+
+            <ImageView
+                android:id="@+id/deleteSingletaskIv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/trash" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 
 </RelativeLayout>

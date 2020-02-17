@@ -59,11 +59,10 @@
         android:id="@+id/remindLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_below="@+id/layout2"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
         android:background="?android:attr/selectableItemBackground"
         android:gravity="start|center"
         android:orientation="horizontal">
@@ -81,10 +80,9 @@
         android:id="@+id/dayslayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/layout2"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
@@ -183,10 +181,9 @@
         android:id="@+id/time_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/layout2"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 

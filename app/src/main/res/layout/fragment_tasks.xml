@@ -10,10 +10,12 @@
     <include layout="@layout/alltasksfragmentactionbar"/>
 
     <LinearLayout
+        android:layout_gravity="bottom"
         android:id="@+id/containerAbc"
         android:layout_width="match_parent"
         android:layout_marginTop="60dp"
-        android:layout_height="510dp">
+        android:layout_marginBottom="52dp"
+        android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedscrollView"

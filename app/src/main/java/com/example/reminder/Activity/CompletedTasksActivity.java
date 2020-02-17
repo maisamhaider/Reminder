@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.example.reminder.R;
 import com.example.reminder.adapter.CompletedTaskAdapter;
+import com.example.reminder.classes.AlarmSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.models.CompletedTasksModel;
 
@@ -28,7 +29,7 @@ public class CompletedTasksActivity extends AppCompatActivity {
     String id;
 
     LinearLayout completedTaskDeleteLL;
-
+    private AlarmSettingClass alarmSettingClass;
 
 
     @Override
@@ -50,6 +51,21 @@ public class CompletedTasksActivity extends AppCompatActivity {
         completedTaskDeleteLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Cursor cursor = dataBaseHelper.getAllTasks();
+                if (cursor.getCount()==0)
+                {}
+                while (cursor.moveToNext())
+                {
+                    String position = cursor.getString( 0 );
+                    String isCompleted = cursor.getString( 6 );
+                    if (isCompleted.matches( "yes" ))
+                    {
+                        alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( position ) );
+                    }
+                    else
+                    {}
+
+                }
                 dataBaseHelper.deleteCompletedTasks();
                 dataFromDb();
             }
@@ -60,7 +76,7 @@ public class CompletedTasksActivity extends AppCompatActivity {
     public void dataFromDb()
     {
         ArrayList<CompletedTasksModel>list =new ArrayList<>(  );
-        Cursor cursor = dataBaseHelper.getCompletedTask();
+        Cursor cursor = dataBaseHelper.getAllTasks();
         if (cursor.getCount()==0)
         {
 
@@ -71,6 +87,8 @@ public class CompletedTasksActivity extends AppCompatActivity {
             title = cursor.getString( 1 );
             date  = cursor.getString( 2 );
             id = cursor.getString( 0 );
+
+
 
 
             if (date.matches( "" ))
@@ -85,6 +103,7 @@ public class CompletedTasksActivity extends AppCompatActivity {
             if (checkCompleted.matches( "yes" ))
             {
                 list.add( new CompletedTasksModel( title,date,id ) );
+
             }
             else
             {

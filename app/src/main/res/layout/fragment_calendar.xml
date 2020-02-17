@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,44 +9,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.CalendarFrag">
 
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <include layout="@layout/calendaractionbar"/>
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/calendarbar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <devs.mulham.horizontalcalendar.HorizontalCalendarView
-            android:id="@+id/myHorizontalCalendar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorWhite"
-            app:textColorSelected="@color/colorDodgerBlue" />
-    </com.google.android.material.appbar.AppBarLayout>
+        <include layout="@layout/calendaractionbar" />
+
+        <include layout="@layout/horizontalcalendar" />
+    </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
-
+        android:layout_marginTop="110dp"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
-      />
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.nightonke.boommenu.BoomMenuButton
         android:id="@+id/bmb"
+        android:layout_marginEnd="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="60dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

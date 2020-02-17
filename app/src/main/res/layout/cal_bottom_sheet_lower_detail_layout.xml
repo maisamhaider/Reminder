@@ -127,7 +127,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="@string/_30_minutes_before"
+                android:text="@string/never"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp"
                 android:textStyle="bold"

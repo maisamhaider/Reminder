@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -172,7 +173,7 @@ public class AllTasksFrag extends Fragment {
         loadedfragonbtnclick();
         witchTagLayoutIsTouched();
 
-
+       getActivity().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         add_task_edittext.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -180,8 +181,6 @@ public class AllTasksFrag extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     addUpLottieAnimationView.setVisibility( View.VISIBLE );
                     mainAddLottieAnimationView.setVisibility( View.GONE );
-                    mainActivity.hideBottomNView();
-
 
                     add_task_edittext.post( new Runnable() {
                         @Override
@@ -206,7 +205,6 @@ public class AllTasksFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 setDataInRecyclerView();
-                mainActivity.showBottomNView();
                 add_task_edittext.setText( "" );
 
             }
@@ -221,7 +219,6 @@ public class AllTasksFrag extends Fragment {
                     horizontalScrollViewTags.setVisibility( View.GONE );
                     addUpLottieAnimationView.setVisibility( View.GONE );
                     mainAddLottieAnimationView.setVisibility( View.VISIBLE );
-                    mainActivity.showBottomNView();
                     setDataInRecyclerView();
                     add_task_edittext.setText( "" );
 
@@ -239,7 +236,7 @@ public class AllTasksFrag extends Fragment {
         tasksMenuImageView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                tasksMenuImageView.setImageResource( R.drawable.option );
                 final PopupMenu popupMenu = new PopupMenu( getContext(),tasksMenuImageView );
                 popupMenu.getMenuInflater().inflate( R.menu.taskactionmenu,popupMenu.getMenu() );
                 popupMenu.setOnMenuItemClickListener( new PopupMenu.OnMenuItemClickListener() {
@@ -247,14 +244,44 @@ public class AllTasksFrag extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
 
                         if (item.getItemId() == R.id.clearCompletedTasks) {
-                            dataBaseHelper.deleteCompletedTasks();
-                            mainActivity.setTaskFragDefaultBNBItem();
+                            try {
+                                Cursor cursor = dataBaseHelper.getAllTasks();
+                                if (cursor.getCount()==0)
+                                {}
+                                while (cursor.moveToNext())
+                                {
+                                    String position = cursor.getString( 0 );
+                                    String isCompleted = cursor.getString( 6 );
+                                    if (isCompleted.matches( "yes" ))
+                                    {
+                                        alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( position ) );
+                                    }
+                                    else
+                                    {}
+
+                                }
+                                dataBaseHelper.deleteCompletedTasks();
+
+                                mainActivity.setTaskFragDefaultBNBItem();
+                            }
+                            catch (Exception e)
+                            {
+                                //error
+                            }
+
+                            tasksMenuImageView.setImageResource( R.drawable.menu );
                             popupMenu.dismiss();
                         }
                         return true;
                     }
                 } );
                 popupMenu.show();
+                popupMenu.setOnDismissListener( new PopupMenu.OnDismissListener() {
+                    @Override
+                    public void onDismiss(PopupMenu menu) {
+                        tasksMenuImageView.setImageResource( R.drawable.menu );
+                    }
+                } );
 
             }
         } );
@@ -275,7 +302,7 @@ public class AllTasksFrag extends Fragment {
                     hidelinearLayoutTags();
                     addUpLottieAnimationView.setVisibility( View.GONE );
                     mainAddLottieAnimationView.setVisibility( View.VISIBLE );
-                    mainActivity.showBottomNView();
+                    mainActivity.setTaskFragDefaultBNBItem();
                     return  true;
                 }
                 return false;
@@ -309,47 +336,44 @@ public class AllTasksFrag extends Fragment {
         addtodayBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bundle.putBoolean( "today_Clicked", true );
-                setfrag();
+                setfrag("today_Clicked");
             }
         } );
         addtomorrowbtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bundle.putBoolean( "tomorrow_Clicked", true );
-                setfrag();
+                 setfrag("tomorrow_Clicked");
             }
         } );
         addupcomingbtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bundle.putBoolean( "upcoming_Clicked", true );
-                setfrag();
+                 setfrag("upcoming_Clicked");
             }
         } );
         addsomedaybtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bundle.putBoolean( "someday_Clicked", true );
-                setfrag();
+                setfrag("someday_Clicked");
             }
         } );
         mainAddLottieAnimationView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setfrag();
+                setfrag("main_Clicked");
             }
         } );
 
     }
 
-    private void setfrag() {
+    private void setfrag(String whichBTn) {
         Fragment fragment = new InputListFrag();
         FragmentManager fragmentManager = getFragmentManager();
         assert fragmentManager != null;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        bundle.putString( "get_btn",whichBTn );
+        fragment.setArguments( bundle );
         fragmentTransaction.replace( R.id.fragcontainer, fragment );
-        inputListFrag.setArguments( bundle );
         fragmentTransaction.commit();
     }
 
@@ -736,10 +760,10 @@ public class AllTasksFrag extends Fragment {
         Calendar calendar = Calendar.getInstance();
         int timeOfDay = calendar.get( Calendar.HOUR_OF_DAY );
 
-        if (timeOfDay > 0 && timeOfDay > 9) {
-            thisMorningTagLL.setVisibility( View.GONE );
-        } else {
+        if (timeOfDay > 0 && timeOfDay < 9) {
             thisMorningTagLL.setVisibility( View.VISIBLE );
+        } else {
+            thisMorningTagLL.setVisibility( View.GONE );
         }
         if (timeOfDay > 14) {
             latertodaytagLL.setVisibility( View.GONE );
@@ -747,9 +771,9 @@ public class AllTasksFrag extends Fragment {
             latertodaytagLL.setVisibility( View.VISIBLE );
         }
         if (timeOfDay > 0 && timeOfDay < 18) {
-            thisEveningTagLL.setVisibility( View.GONE );
-        } else {
             thisEveningTagLL.setVisibility( View.VISIBLE );
+        } else {
+            thisEveningTagLL.setVisibility( View.GONE );
         }
 
     }
@@ -804,8 +828,7 @@ public class AllTasksFrag extends Fragment {
         }
         while (cursor.moveToNext()) {
             String date =cursor.getString( 2 );
-            String formattedDate = date.substring( date.length()-13 );
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ),formattedDate ) );
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ),date ) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_tomorrow.setAdapter( allTasksAdapter );
@@ -879,6 +902,8 @@ public class AllTasksFrag extends Fragment {
 
 
     }
+
+
 
 
 

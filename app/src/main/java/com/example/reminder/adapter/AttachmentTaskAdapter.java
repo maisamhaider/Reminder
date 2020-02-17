@@ -80,15 +80,15 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
             {
                 holder.attaImageView.setImageResource( R.drawable.stop_audio_foreground );
             }
+            else
+                {
+                    holder.attaImageView.setImageResource( R.drawable.play_audio_foreground );
+
+                }
+
 
         }
-        else
-        {
-            if (title.contains( "mp3" ))
-            {
-                holder.attaImageView.setImageResource( R.drawable.play_audio_foreground );
-            }
-        }
+
 
 
         holder.itemView.setOnClickListener( new View.OnClickListener() {
@@ -120,7 +120,6 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
                 } else if (path.contains( ".mp3" )) {
                     {
 
-                        holder.attaImageView.setImageResource( R.drawable.play_audio_foreground );
 
                         File file = new File( path );
                         if (mediaPlayer != null)
@@ -128,16 +127,19 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
 
                             if (mediaPlayer.isPlaying())
                             {
-                                holder.attaImageView.setImageResource( R.drawable.play_audio_foreground );
                                 mediaPlayer.pause();
-                            }
-                            else
 
-                                play=position;
-                                holder.attaImageView.setImageResource( R.drawable.stop_audio_foreground );
-                                mediaPlayer = MediaPlayer.create(context, Uri.fromFile( file ));
+
+                            }
+                            else {
+
+                                play = position;
+                                mediaPlayer = MediaPlayer.create( context, Uri.fromFile( file ) );
                                 mediaPlayer.start();
-                                mediaPlayer.setLooping(true);
+                                mediaPlayer.setLooping( true );
+
+                            }
+
                         }
                         notifyDataSetChanged();
 
@@ -203,6 +205,14 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
             }
         } );
 
+    }
+
+    public void stopAudioOnBackPres()
+    {
+        if (mediaPlayer.isPlaying())
+        {
+            mediaPlayer.stop();
+        }
     }
     private void deleteFile(String inputPath) {
         try {

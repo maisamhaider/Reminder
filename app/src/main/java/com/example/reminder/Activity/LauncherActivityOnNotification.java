@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,7 +33,8 @@ public class LauncherActivityOnNotification extends AppCompatActivity {
      private MainActivity mainActivity;
      int position;
      String taskTitle;
-     long snoozedTime;
+     boolean isRepeating;
+     long snoozedTime,reminderTime,intervalTime;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -57,37 +59,57 @@ public class LauncherActivityOnNotification extends AppCompatActivity {
 
         position = intent.getIntExtra( "task_position_fr_notification",0 );
         taskTitle = intent.getStringExtra("task_title_frm_notification");
+        isRepeating = intent.getBooleanExtra( "isTask_repeating", false);
+        reminderTime = intent.getLongExtra( "Task_Reminder_Time",0 );
+        intervalTime = intent.getLongExtra( "Task_Interval_Time",0 );
+
         whatToDoWithTv.setText( "What to with "+taskTitle+"?" );
 
-        snoozeButton.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            snoozeButton.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                Intent snoozeIntent = new Intent(getApplicationContext(), NotificationReceiver.class );
-                snoozeIntent.putExtra( "Title",taskTitle );
-                snoozeIntent.putExtra( "Position",taskTitle );
-                PendingIntent snoozePendingIntent = PendingIntent.getBroadcast( getApplicationContext(),position,snoozeIntent,0 ) ;
-                AlarmManager alarmManager = (AlarmManager) getSystemService( ALARM_SERVICE );
+                    Intent snoozeIntent = new Intent(getApplicationContext(), NotificationReceiver.class );
+                    snoozeIntent.putExtra( "Title",taskTitle );
+                    snoozeIntent.putExtra( "Position",taskTitle );
+                    PendingIntent snoozePendingIntent = PendingIntent.getBroadcast( getApplicationContext(),position,snoozeIntent,0 ) ;
+                    AlarmManager alarmManager = (AlarmManager) getSystemService( ALARM_SERVICE );
 
-                if (alarmManager != null) {
-                    alarmManager.cancel( snoozePendingIntent );
-                    alarmManager.setExact( AlarmManager.RTC_WAKEUP, snoozedTime, snoozePendingIntent );
-                } else
-                {
-                    alarmManager.cancel( snoozePendingIntent );
+                    if (alarmManager != null) {
+                        alarmManager.cancel( snoozePendingIntent );
+                        alarmManager.setExact( AlarmManager.RTC_WAKEUP, snoozedTime, snoozePendingIntent );
+                    } else
+                    {
+                        alarmManager.cancel( snoozePendingIntent );
 
+                    }
+                    finish();
                 }
-                finish();
-            }
 
 
-        } );
+            } );
+
+
 
         doneButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataBaseHelper.upDate( String.valueOf( position ),"yes","0");
-                finish();
+                if (!isRepeating)
+                {
+                    dataBaseHelper.upDate( String.valueOf( position ),"yes","0");
+                    finish();
+                }
+                else
+                {
+
+                    dataBaseHelper.update( MyTimeSettingClass.getFormattedDateFromMilliseconds(reminderTime),
+                            String.valueOf( position ) );
+
+                    finish();
+
+
+                }
+
             }
         } );
 

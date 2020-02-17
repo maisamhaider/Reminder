@@ -35,7 +35,6 @@ import com.example.reminder.classes.AlarmSettingClass;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.EditTextStringListener;
-import com.example.reminder.interfaces.VisibilityListener;
 import com.example.reminder.models.InputRemiderModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -60,7 +59,7 @@ public class InputListFrag extends Fragment {
     private EditText input_ET;
     private Button doneBtn, close_btn;
 
-    private String input_from_inputRV,dateToPlaceTask = "",alamTime="";
+    private String input_from_inputRV,dateToPlaceTask = "", alarmTime ="";
     private EditTextStringListener editTextStringListener;
 
     private MainActivity mainActivity;
@@ -80,7 +79,7 @@ public class InputListFrag extends Fragment {
     private  Calendar taskCreatedDate = Calendar.getInstance();
     private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
     private AlarmSettingClass alarmSettingClass;
-
+    private String getBundleData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +124,8 @@ public class InputListFrag extends Fragment {
         remindTvLo.setVisibility( View.GONE );
         dayslLo.setVisibility( View.GONE );
         timeLo.setVisibility( View.GONE );
+        getBundleData = getArguments().getString("get_btn");
+
 
 
         if (timeOfDay>0 && timeOfDay>9) {
@@ -151,6 +152,14 @@ public class InputListFrag extends Fragment {
         }
 
         setDateTimeOfTask();
+
+        input_ET.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                remindTvLo.setVisibility( View.VISIBLE );
+
+            }
+        } );
 
         input_ET.post( new Runnable() {
             @Override
@@ -206,17 +215,23 @@ public class InputListFrag extends Fragment {
             public void myString(String ss) {
                 input_ET.setText( ss + " " );
                 input_ET.setSelection( input_ET.getText().length() );
+
+            }
+
+            @Override
+            public void myItemPosition(int pos) {
+
             }
         } );
 
-        inputTaskListAdapter.addVisiblelistener(new VisibilityListener() {
+    /*    inputTaskListAdapter.addVisiblelistener(new VisibilityListener() {
             @Override
             public void veiwVisibility() {
                  remindTvLo.setVisibility( View.VISIBLE );
 
             }
         });
-
+*/
         //on done button data should go to task fragment.
 
         //search
@@ -269,65 +284,42 @@ public class InputListFrag extends Fragment {
         if (input_ET.length()==0)
         {
             mainActivity.setTaskFragDefaultBNBItem();
-            mainActivity.showBottomNView();
+//            mainActivity.showBottomNView();
         }
         if (input_ET.length() != 0)
         {
             if (dateToPlaceTask.matches( "" ))
             {
-                    int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                            MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
-
-                    if (isInsert==0)
-                    {
-                        Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-                    }
-                    else {
-                        Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-                    }
-
+                whatIsThisFun();
             }
-            else
-            if (alamTime.matches( "" ))
-            {
-               int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                       dateToPlaceTask, taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
-                if (isInsert==0)
+                else
                 {
-                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                    //nothing
                 }
-                else {
-                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-                }
-
             }
-            else if (alamTime.matches( "" ) && dateToPlaceTask.matches( "" ))
+            else
+            if (alarmTime.matches( "" ))
             {
-                int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                        MyTimeSettingClass.todayPlaceDate(),taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
+                whatIsThisFun();
+            }
+            else if (alarmTime.matches( "" ) && dateToPlaceTask.matches( "" ))
+            {
+                whatIsThisFun();
 
-                        if (isInsert==0)
-                        {
-                            Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-                        }
-                        else {
-                            Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-                        }
             }
             else
             {
-              int isInsert =   dataBaseHelper.insert( input_ET.getText().toString(),alamTime,dateToPlaceTask,
+              int isInsert =   dataBaseHelper.insert( input_ET.getText().toString(), alarmTime,dateToPlaceTask,
                       taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
                 if (isInsert==0)
                 {
                     Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
                 }
                 else {
-                    alarmSettingClass.setOneAlarm( input_ET.getText().toString(),myTimeSettingClass.getMilliFromDate( alamTime ),isInsert );
+                    alarmSettingClass.setOneAlarm( input_ET.getText().toString(),myTimeSettingClass.getMilliFromDate( alarmTime ),isInsert );
                     Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
                 }
             }
-
 
             mainActivity.setTaskFragDefaultBNBItem();
             mainActivity.showBottomNView();
@@ -335,7 +327,72 @@ public class InputListFrag extends Fragment {
         }
 
 
-    }
+    public void whatIsThisFun()
+    {
+        if (getBundleData.matches( "today_Clicked" ))
+        {
+            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                    MyTimeSettingClass.todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
+            if (isInsert==0)
+            {
+                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            }
+            else {
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            }
+
+        }
+        else if( getBundleData.matches( "tomorrow_Clicked"))
+        {
+
+            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                    MyTimeSettingClass.tomorrowPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
+            if (isInsert==0)
+            {
+                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            }
+            else {
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            }
+
+        } else if (getBundleData.matches( "upcoming_Clicked"))
+        {
+
+            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                    MyTimeSettingClass.nextWeekPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
+            if (isInsert==0)
+            {
+                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            }
+            else {
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            }
+
+        } else if (getBundleData.matches( "someday_Clicked"))
+        {
+
+            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
+                    "", taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
+            if (isInsert==0)
+            {
+                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            }
+            else {
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            }
+
+        } else if (getBundleData.matches( "main_Clicked")) {
+
+            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(), "",
+                    MyTimeSettingClass.todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "0" );
+            if (isInsert == 0) {
+                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            } else {
+                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            }
+
+        }
+        }
 
     private DatePickerDialog.OnDateSetListener datePickerDialog = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -371,7 +428,7 @@ public class InputListFrag extends Fragment {
 
                 sformat =new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
 
-            alamTime = sformat.format( calendar.getTime() );
+            alarmTime = sformat.format( calendar.getTime() );
 
         }
     };
@@ -437,15 +494,15 @@ public class InputListFrag extends Fragment {
                 public void onClick(View v) {
                     if (today)
                     {
-                        alamTime = MyTimeSettingClass.getToday9am();
+                        alarmTime = MyTimeSettingClass.getToday9am();
                     }
                     if (tomorrow)
                     {
-                        alamTime = MyTimeSettingClass.getTomorrowMorning();
+                        alarmTime = MyTimeSettingClass.getTomorrowMorning();
                     }
                     if (nextWeek)
                     {
-                        alamTime = MyTimeSettingClass.getNextWeek9am();
+                        alarmTime = MyTimeSettingClass.getNextWeek9am();
                     }
                 }
             } );
@@ -456,15 +513,15 @@ public class InputListFrag extends Fragment {
 
                     if (today)
                     {
-                        alamTime = MyTimeSettingClass.getToday3pm();
+                        alarmTime = MyTimeSettingClass.getToday3pm();
                     }
                     if (tomorrow)
                     {
-                        alamTime = MyTimeSettingClass.getTomorrow3pm();
+                        alarmTime = MyTimeSettingClass.getTomorrow3pm();
                     }
                     if (nextWeek)
                     {
-                        alamTime = MyTimeSettingClass.getNextWeek3pm();
+                        alarmTime = MyTimeSettingClass.getNextWeek3pm();
                     }
                 }
             } );
@@ -475,15 +532,15 @@ public class InputListFrag extends Fragment {
 
                       if (today)
                       {
-                          alamTime = MyTimeSettingClass.getToday6pm();
+                          alarmTime = MyTimeSettingClass.getToday6pm();
                       }
                       if (tomorrow)
                       {
-                          alamTime = MyTimeSettingClass.getTomorrow6pm();
+                          alarmTime = MyTimeSettingClass.getTomorrow6pm();
                       }
                       if (nextWeek)
                       {
-                          alamTime = MyTimeSettingClass.getNextWeek6pm();
+                          alarmTime = MyTimeSettingClass.getNextWeek6pm();
                       }
                   }
               } );
@@ -551,6 +608,8 @@ public class InputListFrag extends Fragment {
 
 
     }
+
+
 
     @Override
     public void onDetach() {

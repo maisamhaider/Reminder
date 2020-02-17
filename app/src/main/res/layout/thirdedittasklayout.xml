@@ -2,18 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SUBTASKS"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SUBTASKS"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/newSubTaskIv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/add" />
+
+    </LinearLayout>
+
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/subTasksRecyclerView"
@@ -25,38 +45,37 @@
 
 
 
+
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/dummySubTaskCV"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:cardElevation="1dp"
+        android:elevation="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_gravity="start|center"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/dummycheckboxbg" />
+
         <EditText
             android:id="@+id/addSubTasksET"
             android:layout_width="match_parent"
-            android:layout_height="63dp"
-            android:layout_marginTop="16dp"
-            android:background="@mipmap/blurone_foreground"
+            android:layout_height="40dp"
+            android:textColor="@color/colorGray"
+            android:layout_marginStart="40dp"
+            android:background="@android:color/transparent"
             android:gravity="start|center" />
 
-        <LinearLayout
-            android:id="@+id/addNewSubTaskLL"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addSubTasksET"
-            >
+    </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/newSubTaskIv"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_add_circle_black_24dp" />
 
-            <TextView
-                android:id="@+id/newSubTaskTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="New Subtask" />
-
-        </LinearLayout>
 
 </LinearLayout>

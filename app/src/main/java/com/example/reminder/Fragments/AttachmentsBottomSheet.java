@@ -5,9 +5,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.drm.DrmStore;
 import android.icu.text.SimpleDateFormat;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -32,6 +34,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.Lifecycle;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.reminder.R;
@@ -63,7 +66,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
     DataBaseHelper dataBaseHelper;
 
-    private LinearLayout fromGalleryLL, takeAPictureLL, recordVideoLL, recordAudioLL;
+    private LinearLayout fromGalleryLL, takeAPictureLL, recordVideoLL, recordAudioLL,audio_btns_ll;
     private RecyclerCallBack mRecyclerCallBack;
 
 
@@ -94,6 +97,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.attachmentsbottomsheet, container, false );
+        mediaRecorder = new MediaRecorder();
 
         taskPosition = getArguments().getString( "Position" );
         dataBaseHelper = new DataBaseHelper( getContext() );
@@ -127,6 +131,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if (checkAudioPermission()) {
+
                     audioFun();
                 } else {
 
@@ -331,6 +336,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         dialog.show();
 
 
+        audio_btns_ll = view.findViewById( R.id.audio_btns_ll );
         audio_StartLottieAnimationView = view.findViewById( R.id.audio_StartLottieAnimationView );
         audio_StopLottieAnimationView = view.findViewById( R.id.audio_StopLottieAnimationView );
         audioTv = view.findViewById( R.id.audioTV );
@@ -338,13 +344,16 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         audioAddBtn = view.findViewById( R.id.audio_AddBtn );
         audioAddBtn.setEnabled( false );
         audio_StopLottieAnimationView.setVisibility( View.GONE );
+        audio_btns_ll.setVisibility( View.GONE );
         audio_StartLottieAnimationView.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
                         //  on audio stared
-                        startAudio = true;
+                audio_btns_ll.setVisibility( View.VISIBLE );
+
+                startAudio = true;
                 audio_StopLottieAnimationView.setVisibility( View.VISIBLE );
                 audio_StartLottieAnimationView.setVisibility( View.GONE );
                         String audioName = "Audio" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".mp3";
@@ -377,6 +386,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                                 mediaRecorder.stop();
                                 audioTv.setText( " Time Reached " );
                                 audioAddBtn.setEnabled( true );
+                                audio_btns_ll.setVisibility( View.VISIBLE );
                                 audio_StartLottieAnimationView.setVisibility( View.VISIBLE );
                                 audio_StopLottieAnimationView.setVisibility( View.GONE );
                             }
@@ -395,6 +405,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 audioTv.setText( " Press to Record" );
                 mediaRecorder.stop();
                 countDownTimer.cancel();
+                audio_btns_ll.setVisibility( View.VISIBLE );
                 audio_StopLottieAnimationView.setVisibility( View.GONE );
                 audio_StartLottieAnimationView.setVisibility( View.VISIBLE );
 
@@ -407,14 +418,15 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 boolean insert = dataBaseHelper.insertFile( audioSavePath,createdDateFormat.format( calendar.getTime()), taskPosition );
                 if (insert) {
-                    if (mRecyclerCallBack != null)
-                    {
+                    if (mRecyclerCallBack != null) {
                         mRecyclerCallBack.mCallBack();
                     }
 
 
                     dialog.dismiss();
                     Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
+                    audio_btns_ll.setVisibility( View.GONE );
+
                 } else {
                     Toast.makeText( getContext(), "not insert", Toast.LENGTH_SHORT ).show();
                 }
@@ -427,11 +439,20 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 dialog.dismiss();
             }
         } );
+        dialog.setOnDismissListener( new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (startAudio)
+                {  mediaRecorder.stop();
+                    countDownTimer.cancel();
+                }
+
+            }
+        } );
 
     }
 
     private void mediaRecorderFun() {
-        mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource( MediaRecorder.AudioSource.MIC );
         mediaRecorder.setOutputFormat( MediaRecorder.OutputFormat.THREE_GPP );
         mediaRecorder.setAudioEncoder( MediaRecorder.OutputFormat.AMR_NB );
@@ -444,7 +465,17 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         this.mRecyclerCallBack = mRecyclerCallBack;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (startAudio)
+        {
+            mediaRecorder.stop();
+            countDownTimer.cancel();
 
+        }
+        else {}
+    }
 
     private boolean checkAudioPermission() {
         int audioPermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.RECORD_AUDIO );

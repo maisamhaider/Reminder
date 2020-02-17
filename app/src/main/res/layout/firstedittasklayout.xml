@@ -6,93 +6,94 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/shareTaskCv"
+        <LinearLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_margin="15dp"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:elevation="10dp"
             android:gravity="center"
             android:orientation="vertical"
-            app:cardElevation="5dp"
             >
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_weight="1"
+                android:id="@+id/shareTaskIV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:src="@drawable/share_task_foreground" />
+                android:src="@drawable/share" />
 
             <TextView
+                android:textColor="@color/colorMainYellowOne"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:layout_marginBottom="9dp"
                 android:text="Share Task" />
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/listTasklCardView"
+        <LinearLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_margin="15dp"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:elevation="10dp"
             android:gravity="center"
             android:orientation="vertical"
-            app:cardElevation="5dp"
             >
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_weight="1"
+                android:id="@+id/listTaskIV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:src="@drawable/select_list_foreground" />
+                android:src="@drawable/listbtn" />
 
             <TextView
+                android:textColor="@color/colorMainYellowOne"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:layout_marginBottom="9dp"
                 android:gravity="center"
                 android:text="list" />
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/otherTasklayout"
+        <LinearLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_margin="15dp"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:elevation="10dp"
             android:gravity="center"
             android:orientation="vertical"
-            app:cardElevation="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             >
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:id="@+id/otherTaskIV"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:src="@drawable/add_location_foreground" />
+                android:src="@drawable/location" />
 
             <TextView
+                android:textStyle="bold"
+                android:textColor="@color/colorMainYellowOne"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
                 android:gravity="center"
-                android:text="location coming soon" />
+                android:text="location" />
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
 </LinearLayout>

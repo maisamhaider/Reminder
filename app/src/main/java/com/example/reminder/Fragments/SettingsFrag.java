@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
@@ -32,6 +33,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -60,29 +63,31 @@ import static com.example.reminder.Fragments.AttachmentsBottomSheet.getPath;
 public class SettingsFrag extends Fragment {
 
     private MainActivity mainActivity;
-    private LinearLayout settingsCompletedTasks_LL,settingsAbout_LL,settingsNotification_LL;
+    private LinearLayout settingsCompletedTasks_LL, settingsAbout_LL, settingsNotification_LL;
     private NotificationSounds notificationSounds;
 
     //profile Views
     private static final int CAMERA_REQ = 1;
     private static final int PICK_IMAGE = 2;
-    private static final int REQUEST_CODE =1001 ;
+    private static final int REQUEST_CODE = 1001;
     private SharedPreferences myPreferences;
 
 
     private CircleImageView personImageView;
-    private TextView personNameTV;
-    private ImageView profileEditIv,personNameEditIv;
+    private TextView personNameTV,appVersionTv1;
+    private ImageView profileEditIv, personNameEditIv;
 
     private String imageFilePathCamera;
     private Calendar calendar = Calendar.getInstance();
+    private boolean isVibrate = false;
 
-    String notificationStringPath;
+    private String notificationStringPath;
+    int itemPosition;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate( savedInstanceState );
         if (getArguments() != null) {
 
         }
@@ -92,12 +97,13 @@ public class SettingsFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        mainActivity = (MainActivity)getActivity();
+        View view = inflater.inflate( R.layout.fragment_settings, container, false );
+        mainActivity = (MainActivity) getActivity();
         notificationSounds = new NotificationSounds( getActivity() );
 
         personImageView = view.findViewById( R.id.Profile_CircleImage );
         personNameTV = view.findViewById( R.id.person_name_tv );
+        appVersionTv1 =view.findViewById( R.id.appVersionTv1 );
         profileEditIv = view.findViewById( R.id.profileEditIv );
         personNameEditIv = view.findViewById( R.id.personNameEditIv );
 
@@ -107,11 +113,16 @@ public class SettingsFrag extends Fragment {
 
         myPreferences = getActivity().getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
 
-        Uri imageUri = Uri.parse( myPreferences.getString( "Profile_Image", String.valueOf( R.drawable.person_image_foreground ) ) );
-        personImageView.setImageURI( imageUri  );
-        personNameTV.setText(myPreferences.getString( "Person_name", Build.MODEL ));
-
-
+        Uri imageUri = Uri.parse( myPreferences.getString( "Profile_Image", String.valueOf( R.drawable.usercircle ) ) );
+        personImageView.setImageURI( imageUri );
+        personNameTV.setText( myPreferences.getString( "Person_name", Build.MODEL ) );
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo( Objects.requireNonNull( getContext() ).getPackageName(), 0);
+            String version = pInfo.versionName;
+            appVersionTv1.setText( "To do list: "+version );
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
         profileEditIv.setOnClickListener( new View.OnClickListener() {
@@ -130,21 +141,29 @@ public class SettingsFrag extends Fragment {
 
         settingsCompletedTasks_LL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) { Intent intent = new Intent( getActivity(), CompletedTasksActivity.class );startActivity( intent );
+            public void onClick(View v) {
+                Intent intent = new Intent( getActivity(), CompletedTasksActivity.class );
+                startActivity( intent );
             }
         } );
-        settingsNotification_LL.setOnClickListener( new View.OnClickListener() {@Override
-            public void onClick(View v) { notificationSoundsFun();
+        settingsNotification_LL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notificationSoundsFun();
             }
         } );
 
-        settingsAbout_LL.setOnClickListener( new View.OnClickListener() {@Override
-            public void onClick(View v) { Intent intent = new Intent( getActivity(), AboutActivity.class );startActivity( intent );
+        settingsAbout_LL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( getActivity(), AboutActivity.class );
+                startActivity( intent );
             }
         } );
 
-        return  view;
+        return view;
     }
+
     public void updateProfilePicFun() {
         LayoutInflater layoutInflater = getLayoutInflater();
         View view = layoutInflater.inflate( R.layout.profile_update_ad_corg, null );
@@ -155,22 +174,21 @@ public class SettingsFrag extends Fragment {
         final AlertDialog dialog = builder.create();
         dialog.show();
 
-        TextView profile_fromGallery = view.findViewById( R.id.profile_fromGallery );
+//        TextView profile_fromGallery = view.findViewById( R.id.profile_fromGallery );
         TextView profile_openCamera = view.findViewById( R.id.profile_openCamera );
         Button profile_ADCancelBtn = view.findViewById( R.id.profile_ADCancelBtn );
 
-        profile_fromGallery.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                galleryWork();
-                dialog.dismiss();
-            }
-        } );
+//        profile_fromGallery.setOnClickListener( new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//               galleryWork();
+//                dialog.dismiss();
+//            }
+//        } );
         profile_openCamera.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkPermission())
-                {
+                if (checkPermission()) {
                     openImageCamera();
                     dialog.dismiss();
                 }
@@ -208,14 +226,13 @@ public class SettingsFrag extends Fragment {
 
     }
 
-    public void updatePersonName()
-    {
-        View view = LayoutInflater.from( getContext() ).inflate( R.layout.person_name_ad_layouyt,null );
-        AlertDialog.Builder builder = new AlertDialog.Builder( getContext()  );
+    public void updatePersonName() {
+        View view = LayoutInflater.from( getContext() ).inflate( R.layout.person_name_ad_layouyt, null );
+        AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
         builder.setView( view ).setCancelable( true );
         final EditText editPersonName = view.findViewById( R.id.person_name_et );
-        Button cancel_person_name_btn =view.findViewById( R.id.cancel_person_name_btn );
-        Button save_person_name_btn =view.findViewById( R.id.save_person_name_btn );
+        Button cancel_person_name_btn = view.findViewById( R.id.cancel_person_name_btn );
+        Button save_person_name_btn = view.findViewById( R.id.save_person_name_btn );
         final AlertDialog dialog = builder.create();
         dialog.show();
 
@@ -231,13 +248,10 @@ public class SettingsFrag extends Fragment {
             public void onClick(View v) {
                 String name = editPersonName.getText().toString();
 
-                if(name.matches( "" ))
-                {
-                    editor.putString( "Person_name",android.os.Build.MODEL  ).apply();
-                }
-                else
-                {
-                    editor.putString( "Person_name",name).commit();
+                if (name.matches( "" )) {
+                    editor.putString( "Person_name", android.os.Build.MODEL ).apply();
+                } else {
+                    editor.putString( "Person_name", name ).commit();
                 }
                 mainActivity.setSettingsBNBItem();
                 dialog.dismiss();
@@ -247,17 +261,14 @@ public class SettingsFrag extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-                if ((event!=null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId== EditorInfo.IME_ACTION_DONE))
-                {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     String name = editPersonName.getText().toString();
 
-                    if (editPersonName.length()==0)
-                    {
-                        editor.putString( "Person_name",android.os.Build.MODEL ).apply();
+                    if (editPersonName.length() == 0) {
+                        editor.putString( "Person_name", android.os.Build.MODEL ).apply();
 
-                    }
-                    else{
-                        editor.putString( "Person_name",name).commit();
+                    } else {
+                        editor.putString( "Person_name", name ).commit();
                     }
                     mainActivity.setSettingsBNBItem();
 
@@ -295,39 +306,35 @@ public class SettingsFrag extends Fragment {
         super.onActivityResult( requestCode, resultCode, data );
         @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = myPreferences.edit();
 
-        String imageName = "Image"+ ".png";
+        String imageName = "Image" + ".png";
         File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/.Reminder/Person/" );
         String imagePath = Environment.getExternalStorageDirectory() + "/.Reminder/Person/" + imageName;
 
         try {
-            if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-                Uri selectedImageUri = data.getData();
-                String filePath = getPath( getActivity().getApplicationContext(), selectedImageUri );
-                editor.putString( "Profile_Image",filePath ).commit();
-                mainActivity.setSettingsBNBItem();
+//            if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+//                Uri selectedImageUri = data.getData();
+//                String filePath = getPath( getActivity().getApplicationContext(), selectedImageUri );
+//                editor.putString( "Profile_Image", filePath ).commit();
+//                mainActivity.setSettingsBNBItem();
+//
+//
+//            } else
+                if (requestCode == CAMERA_REQ && resultCode == Activity.RESULT_OK) {
 
-
-            }
-            else if (requestCode == CAMERA_REQ && resultCode == Activity.RESULT_OK) {
-
-                if (!dir.exists())
-                {
+                if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                File SourceFile = new File(imageFilePathCamera);
+                File SourceFile = new File( imageFilePathCamera );
 
-                File DestinationFile = new File(imagePath);
+                File DestinationFile = new File( imagePath );
 
-                if(SourceFile.renameTo(DestinationFile))
-                {
-                    Log.v("Moving", "Moving file successful.");
-                }
-                else
-                {
-                    Log.v("Moving", "Moving file failed.");
+                if (SourceFile.renameTo( DestinationFile )) {
+                    Log.v( "Moving", "Moving file successful." );
+                } else {
+                    Log.v( "Moving", "Moving file failed." );
                 }
 
-                editor.putString( "Profile_Image",imagePath ).commit();
+                editor.putString( "Profile_Image", imagePath ).commit();
                 mainActivity.setSettingsBNBItem();
 
 
@@ -337,16 +344,16 @@ public class SettingsFrag extends Fragment {
         }
     }
 
-    private void galleryWork() {
-
-        Intent photoPickerIntent = new Intent( Intent.ACTION_PICK );
-        photoPickerIntent.setType( "image/*" );
-        photoPickerIntent.putExtra( Intent.CATEGORY_APP_GALLERY, new String[]{"image/*"} );
-        startActivityForResult( photoPickerIntent, PICK_IMAGE );
-    }
+//    private void galleryWork() {
+//
+//        Intent photoPickerIntent = new Intent( Intent.ACTION_PICK );
+//        photoPickerIntent.setType( "image/*" );
+//        photoPickerIntent.putExtra( Intent.CATEGORY_APP_GALLERY, new String[]{"image/*"} );
+//        startActivityForResult( photoPickerIntent, PICK_IMAGE );
+//    }
 
     public boolean checkPermission() {
-        int cameraPermission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA );
+        int cameraPermission = ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.CAMERA );
         int readStoragePermission = ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE );
         int writeStoragePermission = ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE );
 
@@ -361,31 +368,32 @@ public class SettingsFrag extends Fragment {
     }
 
 
-
-
-    private void notificationSoundsFun()
-    {
+    private void notificationSoundsFun() {
         @SuppressLint("CommitPrefEdits") final SharedPreferences.Editor editor = myPreferences.edit();
 
-        View view = LayoutInflater.from( getContext() ).inflate( R.layout.fragment_notification_sounds_dialog,null );
+        View view = LayoutInflater.from( getContext() ).inflate( R.layout.fragment_notification_sounds_dialog, null );
         AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
         builder.setCancelable( true ).setView( view );
 
         final AlertDialog dialog = builder.create();
         dialog.show();
 
-        boolean isVibrate = false;
 
         RecyclerView notificationSoundRecyclerView = view.findViewById( R.id.notificationSoundRecyclerView );
 
         CheckBox vibrateCheckBox = view.findViewById( R.id.vibrateCheckBox );
-        Button notification_sound_cancelBtn =  view.findViewById( R.id.notification_sound_cancelBtn );
-        Button notification_sound_saveBtn =  view.findViewById( R.id.notification_sound_saveBtn );
-
+        Button notification_sound_cancelBtn = view.findViewById( R.id.notification_sound_cancelBtn );
+        Button notification_sound_saveBtn = view.findViewById( R.id.notification_sound_saveBtn );
+        boolean isV = myPreferences.getBoolean( "Is_Vibrate", false );
+        if (isV) {
+            vibrateCheckBox.setChecked( true );
+        } else {
+            vibrateCheckBox.setChecked( false );
+        }
         notification_sound_cancelBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            dialog.dismiss();
+                dialog.dismiss();
             }
         } );
 
@@ -394,7 +402,7 @@ public class SettingsFrag extends Fragment {
         notificationSoundRecyclerView.setLayoutManager( linearLayoutManager );
         NotificationSoundsAdapter notificationSoundsAdapter;
 
-        notificationSoundsAdapter = new NotificationSoundsAdapter(getContext(), notificationSounds.getNotificationSoundsName(),notificationSounds.getNotificationSoundsPath());
+        notificationSoundsAdapter = new NotificationSoundsAdapter( getContext(), notificationSounds.getNotificationSoundsName(), notificationSounds.getNotificationSoundsPath() );
         notificationSoundRecyclerView.setAdapter( notificationSoundsAdapter );
         notificationSoundsAdapter.notifyDataSetChanged();
         notificationSoundsAdapter.getPathListener( new EditTextStringListener() {
@@ -402,30 +410,43 @@ public class SettingsFrag extends Fragment {
             public void myString(String ss) {
                 notificationStringPath = ss;
             }
-        } );
 
-        if (vibrateCheckBox.isChecked())
-        {
-            isVibrate = true;
-        }
-
-        final boolean finalIsVibrate = isVibrate;
-        notification_sound_saveBtn.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                editor.putBoolean( "Is_Vibrate", finalIsVibrate ).apply();
-                editor.putString( "NotificationSoundPath",notificationStringPath ).commit();
-                dialog.dismiss();
+            public void myItemPosition(int pos) {
+                itemPosition = pos;
             }
         } );
 
+        vibrateCheckBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    isVibrate = true;
+                }
+                else
+                {
+                    isVibrate = false;
+                }
+            }
+        } );
+
+
+        notification_sound_saveBtn.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putBoolean( "Is_Vibrate", isVibrate ).commit();
+                editor.putString( "NotificationSoundPath", notificationStringPath ).commit();
+                editor.putInt( "sound_item_position",itemPosition ).commit();
+                dialog.dismiss();
+            }
+        } );
 
 
     }
 
     @Override
     public void onAttach(Context context) {
-        super.onAttach(context);
+        super.onAttach( context );
     }
 
     @Override

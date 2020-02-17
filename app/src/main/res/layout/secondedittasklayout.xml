@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
@@ -11,144 +15,96 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        >
+        app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/RMBT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="REMIND ME ABOUT THIS"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/editDeleteUpperTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="DELETE"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/RMBT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="REMIND ME ABOUT THIS"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/editDeleteUpperTv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/clear"
+                android:text="DELETE"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
         <LinearLayout
             android:id="@+id/editSetTimeLL"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/colorBlueGray"
-            android:orientation="horizontal"
             android:layout_marginTop="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/colorMainYellowOne"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/RMBT">
 
             <TextView
                 android:id="@+id/editSetTimeTv"
-                android:layout_gravity="start|center"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center"
+                android:textColor="@color/colorWhite"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1" />
 
-<!--            <Switch-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginRight="10dp"-->
-<!--                android:id="@+id/editReminderOnOffSwitch"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"/>-->
+            <!--            <Switch-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginRight="10dp"-->
+            <!--                android:id="@+id/editReminderOnOffSwitch"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"/>-->
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/editRemindTagsLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RMBT"
-            >
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/RMBT">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/setTaskTimeCV"
-                android:layout_width="60dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:layout_weight="1"
-                android:background="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                >
 
-                <ImageView
-
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/notification_foreground" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:text="Set time" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:id="@+id/setTaskTimeTV"
+                    android:textColor="@color/colorMainYellowOne"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Set Time" />
 
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/tomorrow9amCv"
-                android:layout_width="60dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:layout_weight="1"
-                android:background="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                >
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/notification_foreground" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:textColor="@color/colorMainYellowOne"
+                    android:id="@+id/tomorrow9amTv"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:gravity="center"
-                    android:text="Tomorrow 9:00Am" />
-            </androidx.cardview.widget.CardView>
+                    android:layout_weight="1"
+                    android:text="Tomorrow (9:00Am)" />
 
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/setTaskRepeatCv"
-                android:layout_width="60dp"
-                android:layout_height="80dp"
-                android:layout_margin="15dp"
-                android:layout_weight="1"
-                android:background="?android:attr/selectableItemBackground"
-                android:gravity="center"
-                android:orientation="horizontal"
-                >
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/notification_foreground" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:gravity="center"
-                    android:text="Daily, weekly, etc..." />
-            </androidx.cardview.widget.CardView>
+                    android:background="?android:attr/selectableItemBackground"
+                    android:textColor="@color/colorMainYellowOne"
+                    android:id="@+id/setTaskRepeatTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Daily, Weekly, Monthly,Yearly" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

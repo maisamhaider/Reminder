@@ -55,15 +55,13 @@
                 android:orientation="vertical">
 
                 <include layout="@layout/everyfisrtedittasklayout" />
-
+                <include layout="@layout/sixthedittasklayout"/>
                 <include layout="@layout/firstedittasklayout" />
 
                 <include layout="@layout/secondedittasklayout" />
-
-                <include layout="@layout/thirdedittasklayout"/>
                 <include layout="@layout/fourthedittasklayout"/>
+                <include layout="@layout/thirdedittasklayout"/>
                 <include layout="@layout/fifthedittasklayout"/>
-                <include layout="@layout/sixthedittasklayout"/>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

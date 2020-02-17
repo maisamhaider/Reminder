@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/calendarbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        >
+
+        <devs.mulham.horizontalcalendar.HorizontalCalendarView
+            android:id="@+id/myHorizontalCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorMainYellowOne"
+            app:colorBottomText="@color/colorBlack"
+            app:colorMiddleText="@color/colorBlack"
+            app:textColorSelected="@color/colorWhite" />
+    </com.google.android.material.appbar.AppBarLayout>
+</LinearLayout>

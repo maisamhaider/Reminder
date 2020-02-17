@@ -34,6 +34,9 @@ public class mainfrag extends Fragment {
         super.onAttach(context);
 
     }
+    public boolean onBackPressed() {
+        return false;
+    }
 
     @Override
     public void onDetach() {

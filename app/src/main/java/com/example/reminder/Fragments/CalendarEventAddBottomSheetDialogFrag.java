@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -51,23 +52,27 @@ import java.util.TimeZone;
 
 public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFragment {
 
-    TextView startDateTv, endDateTv, addRepeatTv, addAlarmTv1;
-    EditText eventTitleEt, addNotesEt;
-    Button saveBtn;
-    String formattedDate, formattedTime;
-    Long sDate, sTime, eDate, eTime, sDateAndTime, eDateAndTime;
-    Switch allTimeSwitch;
+    private TextView startDateTv, endDateTv, addRepeatTv, addAlarmTv1;
+    private EditText eventTitleEt, addNotesEt;
+    private Button saveBtn;
+    private String formattedDate, formattedTime;
+    private long sDate, sTime, eDate, eTime, sDateAndTime, eDateAndTime;
+    private Switch allTimeSwitch;
     LinearLayout fragment_my_bottom_sheet_dialog;
 
-    boolean isFirstFieldSelected = false;
+    private boolean isFirstFieldSelected = false;
     private boolean isStartDate = true;
     private boolean isStartTime = false;
     private boolean isAllTime;
+    private String addRepeat;
+    private boolean hasAlarm = false,hasRepeat = false;
 
-    long startDate, endDate;
 
 
-    public static CalendarEventAddBottomSheetDialogFrag newInstance() {
+    private long startDate, endDate, addTime = 0;
+
+
+    static CalendarEventAddBottomSheetDialogFrag newInstance() {
 
 
         return new CalendarEventAddBottomSheetDialogFrag();
@@ -76,7 +81,7 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
+        setStyle( BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme );
     }
 
     @Override
@@ -87,12 +92,10 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
 
 
         Calendar ccc = Calendar.getInstance();
-        ccc.add( Calendar.HOUR_OF_DAY,1 );
+        ccc.add( Calendar.HOUR_OF_DAY, 1 );
         SimpleDateFormat ff = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
         Calendar cccc = Calendar.getInstance();
-        cccc.add( Calendar.HOUR_OF_DAY,2 );
-
-
+        cccc.add( Calendar.HOUR_OF_DAY, 2 );
 
 
         saveBtn = view.findViewById( R.id.event_save_btn );
@@ -114,7 +117,6 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
 
         return view;
     }
-
 
 
     @Override
@@ -143,7 +145,7 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
                 TimePickerDialog dpd = new TimePickerDialog( getContext(), (timeSetListener), hour, minutes, false );
                 dpd.show();
             } else if (!isStartDate) {
-                eDate =MyTimeSettingClass.getMilliFromDate( formattedDate );
+                eDate = MyTimeSettingClass.getMilliFromDate( formattedDate );
                 TimePickerDialog dpd = new TimePickerDialog( getContext(), (timeSetListener), hour, minutes, false );
                 dpd.show();
             }
@@ -170,12 +172,12 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
 
                 long sTimeMS = calendar.getTimeInMillis();
                 startDateTv.setText( formattedDate + formattedTime );
-                startDate = MyTimeSettingClass.getMilliFromDate(  formattedDate + formattedTime );
+                startDate = MyTimeSettingClass.getMilliFromDate( formattedDate + formattedTime );
 
             } else if (!isStartDate) {
                 long eTimeMS = calendar.getTimeInMillis();
                 endDateTv.setText( formattedDate + formattedTime );
-                endDate = MyTimeSettingClass.getMilliFromDate(  formattedDate + formattedTime );
+                endDate = MyTimeSettingClass.getMilliFromDate( formattedDate + formattedTime );
             }
 
         }
@@ -252,57 +254,89 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         ContentResolver contentResolver = Objects.requireNonNull( getContext() ).getContentResolver();
         ContentValues values = new ContentValues();
 
-        String eventTitle, alarm, repeat, notes;
+         String eventTitle,alarm,repeat,notes;
 
         TimeZone timeZone = TimeZone.getDefault();
 
         if (eventTitleEt.length() == 0) {
-            eventTitleEt.setText( "Untitled" );
+            eventTitle = "Untitled";
+
         }
-        eventTitle = eventTitleEt.getText().toString();
+        else
+            {
+                eventTitle = eventTitleEt.getText().toString();
+            }
 
-            startDate = MyTimeSettingClass.getMilliFromDate(startDateTv.getText().toString());
+        startDate = MyTimeSettingClass.getMilliFromDate( startDateTv.getText().toString() );
 
-            endDate = MyTimeSettingClass.getMilliFromDate(endDateTv.getText().toString());
+        endDate = MyTimeSettingClass.getMilliFromDate( endDateTv.getText().toString() );
 
+        repeat = addRepeatTv.getText().toString();
         alarm = addAlarmTv1.getText().toString();
-        int hasAlarm = 0;
+
+
+        if (repeat.matches( "Never" )) {
+            addRepeat = "NEVER";
+            hasRepeat = false;
+
+        } else if (repeat.matches( "Daily" )) {
+            hasRepeat = true;
+            addRepeat = "DAILY";
+
+        } else if (repeat.matches( "Weekly" )) {
+            hasRepeat = true;
+            addRepeat = "WEEKLY";
+
+        } else if (repeat.matches( "Monthly" )) {
+            hasRepeat = true;
+            addRepeat = "MONTHLY";
+
+
+        } else if (repeat.matches( "Yearly" )) {
+            hasRepeat = true;
+            addRepeat = "YEARLY";
+        }
+
 
 
         if (alarm.matches( "None" )) {
-            hasAlarm = 0;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            hasAlarm = false;
+
         } else if (alarm.matches( "At time of event" )) {
-            hasAlarm = 1;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            addTime = 0;
+            hasAlarm = true;
         } else if (alarm.matches( "5 minutes before" )) {
-            hasAlarm = 1;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            addTime = 5;
+            hasAlarm = true;
         } else if (alarm.matches( "30 minutes before" )) {
-            hasAlarm = 1;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            addTime = 30;
+            hasAlarm = true;
         } else if (alarm.matches( "1 hour before" )) {
-            hasAlarm = 1;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            addTime = 60;
+            hasAlarm = true;
         } else if (alarm.matches( "2 hours before" )) {
-            hasAlarm = 1;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            addTime = 2 * 60;
+
+            hasAlarm = true;
         } else if (alarm.matches( "1 day before" )) {
-            hasAlarm = 1;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            addTime = 24 * 60;
+
+            hasAlarm = true;
         } else if (alarm.matches( "2 day before" )) {
-            hasAlarm = 1;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            addTime = 48 * 60;
+
+            hasAlarm = true;
         } else if (alarm.matches( "1 week before" )) {
-            hasAlarm = 1;
-            values.put( CalendarContract.Events.HAS_ALARM, hasAlarm );
+            addTime = 7 * 24 * 60;
+
+            hasAlarm = true;
         }
+
         repeat = addRepeatTv.getText().toString();
         if (addNotesEt.length() == 0) {
             addNotesEt.setText( "Empty" );
         }
         notes = addNotesEt.getText().toString();
-
 
         values.put( CalendarContract.Events.CALENDAR_ID, 1 );
         values.put( CalendarContract.Events.TITLE, eventTitle );
@@ -312,8 +346,36 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         values.put( CalendarContract.Events.DESCRIPTION, notes );
         values.put( CalendarContract.Events.ALL_DAY, this.isAllTime );
 
-        contentResolver.insert( CalendarContract.Events.CONTENT_URI, values );
-        MainActivity mainActivity = (MainActivity)getActivity();
+
+        if (hasAlarm) {
+            if (hasRepeat)
+            {
+                values.put( CalendarContract.Events.RRULE,"FREQ="+addRepeat);
+            }
+
+            Uri url = getContext().getContentResolver().insert( CalendarContract.Events.CONTENT_URI, values );
+
+            long eventId = Long.parseLong( url.getLastPathSegment() );
+
+            ContentValues reminder = new ContentValues();
+            reminder.put( CalendarContract.Reminders.EVENT_ID, eventId );
+            reminder.put( CalendarContract.Reminders.MINUTES, addTime );
+            reminder.put( CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT );
+            getContext().getContentResolver().insert( CalendarContract.Reminders.CONTENT_URI, reminder );
+            contentResolver.insert( CalendarContract.Events.CONTENT_URI, reminder );
+
+        }
+        else
+        {
+            if (hasRepeat)
+            {
+                values.put( CalendarContract.Events.RRULE,"FREQ="+addRepeat);
+            }
+            contentResolver.insert( CalendarContract.Events.CONTENT_URI, values );
+        }
+
+
+        MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setCalendarBNBItem();
     }
 
@@ -351,6 +413,11 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
             public void myString(String ss) {
                 addAlarmTv1.setText( ss );
             }
+
+            @Override
+            public void myItemPosition(int pos) {
+
+            }
         } );
         recyclerView.setAdapter( adapter );
         adapter.notifyDataSetChanged();
@@ -374,17 +441,22 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         recyclerView.setLayoutManager( new LinearLayoutManager( getContext() ) );
         ArrayList<String> list = new ArrayList<>();
         list.add( ("Never") );
-        list.add( ("Every day") );
-        list.add( ("Every week") );
-        list.add( ("Every 2 weeks") );
-        list.add( ("Every month") );
-        list.add( ("Every year") );
+        list.add( ("Daily") );
+        list.add( ("Weekly") );
+        list.add( ("Monthly") );
+        list.add( ("Yearly") );
+
 
         adapter = new CalBottomShRepeatDialogAdapter( getContext(), list, dialog );
         adapter.getRepeatStringListener( new EditTextStringListener() {
             @Override
             public void myString(String ss) {
                 addRepeatTv.setText( ss );
+
+            }
+
+            @Override
+            public void myItemPosition(int pos) {
 
             }
         } );

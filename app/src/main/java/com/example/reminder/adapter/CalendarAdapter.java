@@ -55,27 +55,27 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
         holder.event_locationTv.setText( eventLocationList.get( position ) );
         holder.event_calendarIdTv.setText( eventCalendarId.get( position ) );
 
-        holder.itemView.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Uri eventsUri;
-                int osVersion = android.os.Build.VERSION.SDK_INT;
-                if (osVersion <= 7) { //up-to Android 2.1
-                    eventsUri = Uri.parse("content://calendar/events");
-                } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
-                    eventsUri = Uri.parse("content://com.android.calendar/events");
-                }
-                ContentResolver resolver = context.getContentResolver();
-                deleteEvent(resolver, eventsUri, Integer.parseInt( eventCalendarId.get( position ) ) );
-             eventTitleList.remove( position );
-             eventDateList.remove( position );
-             eventLocationList.remove( position );
-             eventDescriptionList.remove( position );
-             eventCalendarId.remove( position );
-             notifyDataSetChanged();
-            }
-        } );
+//        holder.deleteEventIV.setOnClickListener( new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Uri eventsUri;
+//                int osVersion = android.os.Build.VERSION.SDK_INT;
+//                if (osVersion <= 7) { //up-to Android 2.1
+//                    eventsUri = Uri.parse("content://calendar/events");
+//                } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
+//                    eventsUri = Uri.parse("content://com.android.calendar/events");
+//                }
+//                ContentResolver resolver = context.getContentResolver();
+//                deleteEvent(resolver, eventsUri, Integer.parseInt( eventCalendarId.get( position ) ) );
+//             eventTitleList.remove( position );
+//             eventDateList.remove( position );
+//             eventLocationList.remove( position );
+//             eventDescriptionList.remove( position );
+//             eventCalendarId.remove( position );
+//             notifyDataSetChanged();
+//            }
+//        } );
     }
 
     @Override
@@ -92,7 +92,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
         TextView event_locationTv;
         TextView event_calendarIdTv;
         CheckBox eventCheckBox;
-        ImageView deleteEventIV;
 
         public EventViewHolder(@NonNull View itemView) {
             super( itemView );
@@ -100,7 +99,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
             event_date = itemView.findViewById( R.id.event_date );
             event_descriptionTv = itemView.findViewById( R.id.event_descriptionTv );
             event_locationTv = itemView.findViewById( R.id.event_locationTv );
-            deleteEventIV = itemView.findViewById( R.id.deleteEventIV );
             event_calendarIdTv = itemView.findViewById( R.id.event_calendarIdTv );
 //            eventCheckBox = itemView.findViewById( R.id.eventCheckBox );
 
@@ -108,19 +106,19 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
     }
 
     }
-    private void deleteEvent(ContentResolver resolver, Uri eventsUri, int calendarId) {
-        Cursor cursor;
-        if (android.os.Build.VERSION.SDK_INT <= 7) { //up-to Android 2.1
-            cursor = resolver.query( eventsUri, new String[]{"_id"}, "Calendars._id=" + calendarId, null, null );
-        } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
-            cursor = resolver.query( eventsUri, new String[]{"_id"}, "calendar_id=" + calendarId, null, null );
-        }
-        while (cursor.moveToNext()) {
-            long eventId = cursor.getLong( cursor.getColumnIndex( "_id" ) );
-            resolver.delete( ContentUris.withAppendedId( eventsUri, eventId ), null, null );
-        }
-        cursor.close();
-
-    }
+//    private void deleteEvent(ContentResolver resolver, Uri eventsUri, int calendarId) {
+//        Cursor cursor;
+//        if (android.os.Build.VERSION.SDK_INT <= 7) { //up-to Android 2.1
+//            cursor = resolver.query( eventsUri, new String[]{"_id"}, "Calendars._id=" + calendarId, null, null );
+//        } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
+//            cursor = resolver.query( eventsUri, new String[]{"_id"}, "calendar_id=" + calendarId, null, null );
+//        }
+//        while (cursor.moveToNext()) {
+//            long eventId = cursor.getLong( cursor.getColumnIndex( "_id" ) );
+//            resolver.delete( ContentUris.withAppendedId( eventsUri, eventId ), null, null );
+//        }
+//        cursor.close();
+//
+//    }
 
 }

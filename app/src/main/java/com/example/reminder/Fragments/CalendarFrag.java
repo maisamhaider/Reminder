@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +48,7 @@ import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
-public class CalendarFrag extends Fragment {
+public class CalendarFrag extends Fragment  {
 
     private static final int REQUEST_PERMISSION = 1;
     MainActivity mainActivity;
@@ -88,7 +89,7 @@ public class CalendarFrag extends Fragment {
         calActionBarDateTv2 = view.findViewById( R.id.calActionBarDateTv2 );
 //
         final SimpleDateFormat formatYear = new SimpleDateFormat( "yyyy" );
-        final SimpleDateFormat formatRestDate= new SimpleDateFormat( "dd MMM" );
+        final SimpleDateFormat formatRestDate= new SimpleDateFormat( "MMMM dd" );
         mainActivity = (MainActivity) getActivity();
         allTasksFrag = new AllTasksFrag();
         recyclerView = view.findViewById( R.id.recyclerView );
@@ -120,15 +121,14 @@ public class CalendarFrag extends Fragment {
                 .datesNumberOnScreen( 7 )
                 .defaultSelectedDate( date )
                 .configure()
-                .showBottomText(false)
-                .sizeTopText( 12 )
-                .sizeBottomText( 12 )
-                .sizeMiddleText( 12 )
+                .showTopText(false)
+                .sizeBottomText( 10 )
+                .sizeMiddleText( 15 )
                 .end()
                 .build();
 
         calActionBarDateTv1.setText(formatYear.format( defaultActionBarDate.getTime() ));
-        calActionBarDateTv2.setText( new SimpleDateFormat("MMM dd").format( defaultActionBarDate.getTime() ) );
+        calActionBarDateTv2.setText( new SimpleDateFormat("MMMM dd").format( defaultActionBarDate.getTime() ) );
 
         horizontalCalendar.setCalendarListener( new HorizontalCalendarListener() {
             @Override
@@ -156,6 +156,7 @@ public class CalendarFrag extends Fragment {
         return view;
 
     }
+
 
 
     public void setBMB() {
@@ -204,13 +205,13 @@ public class CalendarFrag extends Fragment {
 
     public void readCalendarEvent() {
 
-        if (checkPermission()) {
+    if (checkPermission()) {
             Cursor cursor = getContext().getContentResolver()
                     .query(
                             Uri.parse( "content://com.android.calendar/events" ),
-                            new String[]{"calendar_id", "title", "description",
-                                    "dtstart", "dtend", "eventLocation"}, null,
-                            null, null );
+                            new String[]{"_id", "title", "description",
+                                    "dtstart", "dtend", "eventLocation"},  new String("("+ CalendarContract.Events.DELETED +" != 1)"),
+                           null, null );
             cursor.moveToFirst();
             // fetching calendars name
             String CNames[] = new String[cursor.getCount()];
@@ -231,8 +232,6 @@ public class CalendarFrag extends Fragment {
                 cursor.moveToNext();
             }
         }
-
-
     }
 
 

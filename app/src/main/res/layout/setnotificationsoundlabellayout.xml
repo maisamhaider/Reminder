@@ -5,7 +5,7 @@
     android:background="@color/colorTransparentTwo"
     android:orientation="vertical">
     <TextView
-        android:background="@color/colorPurple"
+        android:background="@color/colorMainYellowOne"
         android:id="@+id/setNotificationSoundLabelTv"
         android:textColor="@color/colorBlackType"
         android:layout_width="match_parent"

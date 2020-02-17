@@ -162,6 +162,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else
             return true;
     }
+    public boolean update(String reminder_date, String position) {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( DataBaseHelper.reminder_date, reminder_date );
+        contentValues.put( DataBaseHelper.repeat,repeat );
+        contentValues.put( DataBaseHelper.isAlarmOn,isAlarmOn );
+
+        long result = database.update( TABLE_NAME, contentValues, "ID=?", new String[]{position} );
+
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
 
     public boolean updateNotesColumn(String notes, String position) {
         SQLiteDatabase database = getWritableDatabase();
@@ -239,14 +253,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return singleDateToPlaceRow;
     }
 
-    public Cursor getRepeatColumnValue()
-    {
-        SQLiteDatabase database = getWritableDatabase();
-        Cursor repeatRow;
-        repeatRow = database.rawQuery( "SELECT * FROM " + TABLE_NAME, null, null );
-        return repeatRow;
-
-    }
+//    public Cursor getRepeatColumnValue()
+//    {
+//        SQLiteDatabase database = getWritableDatabase();
+//        Cursor repeatRow;
+//        repeatRow = database.rawQuery( "SELECT * FROM " + TABLE_NAME, null, null );
+//        return repeatRow;
+//
+//    }
     public Cursor getSingleRepeatRowValue(String position)
     {
         SQLiteDatabase database = getWritableDatabase();
@@ -291,12 +305,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return AC;
     }
 
-    public Cursor getCompletedTask()
-    {
-        SQLiteDatabase database = getWritableDatabase();
-        Cursor CTC = database.rawQuery( " SELECT * FROM "+ TABLE_NAME ,null,null );
-        return CTC;
-    }
+//    public Cursor getCompletedTask()
+//    {
+//        SQLiteDatabase database = getWritableDatabase();
+//        Cursor CTC = database.rawQuery( " SELECT * FROM "+ TABLE_NAME ,null,null );
+//        return CTC;
+//    }
 
 
     public void deleteOneTask(String position) {
