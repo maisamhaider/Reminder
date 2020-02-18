@@ -54,7 +54,6 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
         this.dataBaseHelper = dataBaseHelper;
         this.fragmentManager = fragmentManager;
         mediaPlayer = new MediaPlayer();
-
     }
 
     @NonNull
@@ -64,7 +63,6 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
         View view = LayoutInflater.from( parent.getContext() ).inflate( R.layout.attachmentsitemslayout, parent, false );
         return new MyAttachmentHolder( view );
     }
-
     @Override
     public void onBindViewHolder(@NonNull final MyAttachmentHolder holder, final int position) {
         final String title = list.get( position ).getTaskAttachmentTitle();
@@ -74,19 +72,13 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
         holder.attaCreateTimeTV.setText( list.get( position ).getCreateDate() );
         holder.attaTitleTV.setText( myFinalString );
 
-        if (play==position)
-        {
-            if (title.contains( "mp3" ))
-            {
+        if (play == position) {
+            if (title.contains( "mp3" )) {
                 holder.attaImageView.setImageResource( R.drawable.stop_audio_foreground );
+            } else {
+                holder.attaImageView.setImageResource( R.drawable.video );
             }
-            else
-                {
-                    holder.attaImageView.setImageResource( R.drawable.video );
-
-                }
         }
-
         holder.itemView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,33 +107,20 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
 
                 } else if (path.contains( ".mp3" )) {
                     {
-
-
                         File file = new File( path );
-                        if (mediaPlayer != null)
-                        {
-
-                            if (mediaPlayer.isPlaying())
-                            {
+                        if (mediaPlayer != null) {
+                            if (mediaPlayer.isPlaying()) {
                                 mediaPlayer.pause();
-
-
-                            }
-                            else {
+                            } else {
 
                                 play = position;
                                 mediaPlayer = MediaPlayer.create( context, Uri.fromFile( file ) );
                                 mediaPlayer.start();
                                 mediaPlayer.setLooping( true );
-
                             }
-
                         }
                         notifyDataSetChanged();
-
                     }
-
-
                 } else {
 
                     final View view = LayoutInflater.from( context ).inflate( R.layout.view_image, null );
@@ -158,24 +137,21 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
 
                     dialog.show();
                 }
-
-
             }
         } );
-
 
         holder.attaRemoveIV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                View view = LayoutInflater.from( context ).inflate( R.layout.attachmentdeletelayout,null );
+                View view = LayoutInflater.from( context ).inflate( R.layout.attachmentdeletelayout, null );
                 AlertDialog.Builder builder = new AlertDialog.Builder( context );
                 builder.setCancelable( true );
                 builder.setView( view );
                 final AlertDialog dialog = builder.create();
                 dialog.show();
 
-                Button cancelBtn,deleteBtn;
+                Button cancelBtn, deleteBtn;
                 cancelBtn = view.findViewById( R.id.attachment_cancelBtn );
                 deleteBtn = view.findViewById( R.id.attachment_deleteBtn );
                 cancelBtn.setOnClickListener( new View.OnClickListener() {
@@ -190,17 +166,13 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
 
                         dataBaseHelper.deleteAttachment( list.get( position ).getId() );
                         list.remove( position );
-                        deleteFile(title);
+                        deleteFile( title );
                         notifyDataSetChanged();
                         dialog.dismiss();
-
                     }
                 } );
-
-
             }
         } );
-
     }
 
     public void stopAudioOnBackPres()
@@ -219,22 +191,16 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
             Log.e("tag", e.getMessage());
         }
     }
-
-
     @Override
     public int getItemCount() {
         return list.size();
     }
-
     class MyAttachmentHolder extends RecyclerView.ViewHolder {
 
         TextView attaTitleTV, attaCreateTimeTV;
         ImageView attaImageView, attaRemoveIV;
-
-
         public MyAttachmentHolder(@NonNull View itemView) {
             super( itemView );
-
             attaTitleTV = itemView.findViewById( R.id.attaTitleTV );
             attaCreateTimeTV = itemView.findViewById( R.id.attaCreateTimeTV );
             attaImageView = itemView.findViewById( R.id.attaImageView );

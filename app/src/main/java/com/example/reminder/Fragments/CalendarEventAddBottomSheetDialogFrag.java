@@ -242,6 +242,7 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         saveBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dismiss();
                 onEventSaveClick();
             }
         } );

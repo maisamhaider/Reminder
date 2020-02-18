@@ -77,7 +77,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     TextView audioTv;
     private ImageView audio_CancelIV, audioAddIv;
 
-    LottieAnimationView  audio_StartLottieAnimationView,audio_StopLottieAnimationView;
+    LottieAnimationView audio_StartLottieAnimationView, audio_StopLottieAnimationView;
 
     String taskPosition;
 
@@ -112,34 +112,25 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
         fromGalleryLL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                galleryWork();
-            }
+            public void onClick(View v) {dismiss();galleryWork(); }
         } );
         takeAPictureLL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                openImageCamera();
+            public void onClick(View v) { dismiss();openImageCamera();
             }
         } );
         recordVideoLL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                openVideoCamera();
+            public void onClick(View v) { dismiss();openVideoCamera();
 
             }
         } );
         recordAudioLL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (checkAudioPermission()) {
-
+            public void onClick(View v) { if (checkAudioPermission()) {
+                    dismiss();
                     audioFun();
-                } else {
-
-                }
-            }
-        } );
+                } else { } }} );
 
         return view;
 
@@ -232,7 +223,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 String filePath = getPath( getActivity().getApplicationContext(), selectedImageUri );
                 Log.d( "Picture Path", filePath );
 
-                boolean insert = dataBaseHelper.insertFile( filePath, createdDateFormat.format( calendar.getTime() ) ,taskPosition   );
+                boolean insert = dataBaseHelper.insertFile( filePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
 
                 if (insert) {
                     Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
@@ -246,20 +237,17 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                File SourceFile = new File(imageFilePathCamera);
+                File SourceFile = new File( imageFilePathCamera );
 
-                File DestinationFile = new File(imagePath);
+                File DestinationFile = new File( imagePath );
 
-                if(SourceFile.renameTo(DestinationFile))
-                {
-                    Log.v("Moving", "Moving file successful.");
-                }
-                else
-                {
-                    Log.v("Moving", "Moving file failed.");
+                if (SourceFile.renameTo( DestinationFile )) {
+                    Log.v( "Moving", "Moving file successful." );
+                } else {
+                    Log.v( "Moving", "Moving file failed." );
                 }
 
-                boolean insert = dataBaseHelper.insertFile( imagePath,createdDateFormat.format( calendar.getTime()), taskPosition );
+                boolean insert = dataBaseHelper.insertFile( imagePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
                     mRecyclerCallBack.mCallBack();
                     Toast.makeText( getContext(), "inserted", Toast.LENGTH_SHORT ).show();
@@ -272,20 +260,17 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                File SourceFile = new File(videoFilePathCamera);
+                File SourceFile = new File( videoFilePathCamera );
 
-                File DestinationFile = new File(videoPath);
+                File DestinationFile = new File( videoPath );
 
-                if(SourceFile.renameTo(DestinationFile))
-                {
-                    Log.v("Moving", "Moving file successful.");
-                }
-                else
-                {
-                    Log.v("Moving", "Moving file failed.");
+                if (SourceFile.renameTo( DestinationFile )) {
+                    Log.v( "Moving", "Moving file successful." );
+                } else {
+                    Log.v( "Moving", "Moving file failed." );
                 }
 
-                boolean insert = dataBaseHelper.insertFile( videoPath,createdDateFormat.format( calendar.getTime()), taskPosition );
+                boolean insert = dataBaseHelper.insertFile( videoPath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
                     Toast.makeText( getContext(), "inserted", Toast.LENGTH_SHORT ).show();
                     mRecyclerCallBack.mCallBack();
@@ -353,49 +338,49 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
 
-                        //  on audio stared
+                //  on audio stared
                 audio_btns_cl.setVisibility( View.VISIBLE );
 
                 startAudio = true;
                 audio_StopLottieAnimationView.setVisibility( View.VISIBLE );
                 audio_StartLottieAnimationView.setVisibility( View.GONE );
-                        String audioName = "Audio" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".mp3";
-                        File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/.Reminder/" );
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-                        audioSavePath = Environment.getExternalStorageDirectory() + "/.Reminder/" + audioName;
-                        mediaRecorderFun();
+                String audioName = "Audio" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".mp3";
+                File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/.Reminder/" );
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                audioSavePath = Environment.getExternalStorageDirectory() + "/.Reminder/" + audioName;
+                mediaRecorderFun();
 
-                        try {
-                            mediaRecorder.prepare();
-                            mediaRecorder.start();
-                        } catch (Exception e) {
-                            // error
-                        }
+                try {
+                    mediaRecorder.prepare();
+                    mediaRecorder.start();
+                } catch (Exception e) {
+                    // error
+                }
 
-                        final long[] secCounter = {totalSeconds};
-                        countDownTimer = new CountDownTimer( totalSeconds * 1000, intervalSeconds * 1000 ) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                long recordedTime = totalSeconds-secCounter[0];
-                                secCounter[0]=secCounter[0]-1;
-                                audioTv.setText( String.valueOf( recordedTime ) );
-                            }
-
-                            @SuppressLint("SetTextI18n")
-                            @Override
-                            public void onFinish() {
-                                mediaRecorder.stop();
-                                audioTv.setText( " Time Reached " );
-                                audioAddIv.setEnabled( true );
-                                audio_btns_cl.setVisibility( View.VISIBLE );
-                                audio_StartLottieAnimationView.setVisibility( View.VISIBLE );
-                                audio_StopLottieAnimationView.setVisibility( View.GONE );
-                            }
-                        };
-                        countDownTimer.start();
+                final long[] secCounter = {totalSeconds};
+                countDownTimer = new CountDownTimer( totalSeconds * 1000, intervalSeconds * 1000 ) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        long recordedTime = totalSeconds - secCounter[0];
+                        secCounter[0] = secCounter[0] - 1;
+                        audioTv.setText( String.valueOf( recordedTime ) );
                     }
+
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onFinish() {
+                        mediaRecorder.stop();
+                        audioTv.setText( " Time Reached " );
+                        audioAddIv.setEnabled( true );
+                        audio_btns_cl.setVisibility( View.VISIBLE );
+                        audio_StartLottieAnimationView.setVisibility( View.VISIBLE );
+                        audio_StopLottieAnimationView.setVisibility( View.GONE );
+                    }
+                };
+                countDownTimer.start();
+            }
 
 
         } );
@@ -419,7 +404,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         audioAddIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean insert = dataBaseHelper.insertFile( audioSavePath,createdDateFormat.format( calendar.getTime()), taskPosition );
+                boolean insert = dataBaseHelper.insertFile( audioSavePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
                     if (mRecyclerCallBack != null) {
                         mRecyclerCallBack.mCallBack();
@@ -443,8 +428,8 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         dialog.setOnDismissListener( new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                if (startAudio)
-                {  mediaRecorder.stop();
+                if (startAudio) {
+                    mediaRecorder.stop();
                     countDownTimer.cancel();
                 }
 
@@ -469,13 +454,12 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (startAudio)
-        {
+        if (startAudio) {
             mediaRecorder.stop();
             countDownTimer.cancel();
 
+        } else {
         }
-        else {}
     }
 
     private boolean checkAudioPermission() {

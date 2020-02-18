@@ -224,6 +224,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 boolean isUpdate = dataBaseHelper.upDate( taskPosition, "yes", "0" );
                 if (isUpdate) {
                     alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( taskPosition ) );
+                    dismiss();
                     Toast.makeText( getContext(), "updated", Toast.LENGTH_SHORT ).show();
                 } else {
                     Toast.makeText( getContext(), "not updated", Toast.LENGTH_SHORT ).show();
@@ -251,6 +252,7 @@ public class EditTask extends BottomSheetDialogFragment {
                                 mainActivity.setTaskFragDefaultBNBItem();
                                 alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( taskPosition ) );
 
+                                dismiss();
                                 dialog.dismiss();
                             }
                         } ).setNegativeButton( "Keep Editing", new DialogInterface.OnClickListener() {
