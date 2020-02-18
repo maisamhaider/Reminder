@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -28,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -74,8 +76,8 @@ public class EditTask extends BottomSheetDialogFragment {
     private TextView edittaskTitle, createdTextView, notesHolderTv, editSetTimeTv, setTimeTv, tomorrow9AmTv, daily_WeeklyTv;
     private EditText addSubTasksET;
     private CardView dummySubTaskCV;
-    private LinearLayout editSetTimeLL, tabToAddAttachmentsLL, edit_MarkAsDoneLL, edit_deleteTaskLL;
-    private ImageView newSubTaskIv, shareTaskIV, editDeleteUpperIV,addNotesIv,edit_uploadTv;
+    private LinearLayout editSetTimeLL, tabToAddAttachmentsLL;
+    private ImageView newSubTaskIv, shareTaskIV, editDeleteUpperIV,addNotesIv, edit_uploadIv, edit_deleteTaskIV, edit_MarkAsDoneIV;
     //    private Switch editReminderOnOffSwitch;
     private RecyclerView subTaskRecyclerView, attachmentRecyclerView;
     private SubTaskAdapter subTaskAdapter;
@@ -92,21 +94,21 @@ public class EditTask extends BottomSheetDialogFragment {
 
 
     // Edit Notes AlerDialog Views
-    Button myNotesSaveBtn;
-    ImageView myNotesBackIv;
+    ImageView myNotesBackIv, myNotesSaveIv;
     EditText myNotesET;
 
     // addReminder views
     private Button oneTimeBtn, repeatBtn, locationBtn;
-    private LinearLayout repeatLL, editTagsLL, editLocationLL, editRemindTagsLL, edit_thisEveningLL, edit_later_todayLL,
-            edit_tomorrowLL, edit_nextWeekLL, edit_somedayLL, edit_customLL, repeat_Daily_LL, repeat_Weekly_LL, repeat_Monthly_LL,
-            repeat_Yearly_LL;
+    private LinearLayout repeatLL, editTagsLL, editLocationLL, editRemindTagsLL;
     private TextView editLaterTodayTimeTv, editThisEvening, edit_remindMeOrNoReminderTv, edit_addReminderShowTimeTv,
             editTimeTomorrowTv, ediTimeNextweekTv, repeatTimeHolderTv;
 
-    private ImageView edit_addReminderDeleteTimeIV;
-    private Button edit_task_SetBtn, edit_task_cancelBtn;
-    ConstraintLayout edit_showReminderTimeCL;
+    private ImageView edit_addReminderDeleteTimeIV,repeat_Daily_IV,repeat_Weekly_IV,repeat_Monthly_IV,
+            repeat_Yearly_IV;
+    private ImageButton edit_task_SetIB, edit_task_cancelIB;
+    private TextView edit_task_setTV;
+    ConstraintLayout edit_showReminderTimeCL, edit_later_todayCl, edit_thisEveningCl, edit_tomorrowCl,
+            edit_nextWeekCl,edit_somedayCl, edit_customCl;
 //    private Switch edit_oneTimeAddReminderSwitch;
 
     private boolean isOneButton = true;
@@ -151,7 +153,6 @@ public class EditTask extends BottomSheetDialogFragment {
         edittaskTitle = view.findViewById( R.id.taskTitle_tv );
         createdTextView = view.findViewById( R.id.createdDateTv );
         editSetTimeTv = view.findViewById( R.id.editSetTimeTv );
-//        editReminderOnOffSwitch = view.findViewById( R.id.editReminderOnOffSwitch );
         editDeleteUpperIV = view.findViewById( R.id.editDeleteUpperTv );
 
         newSubTaskIv = view.findViewById( R.id.newSubTaskIv );
@@ -163,9 +164,9 @@ public class EditTask extends BottomSheetDialogFragment {
         notesHolderTv = view.findViewById( R.id.holdNotesTv );
 
         tabToAddAttachmentsLL = view.findViewById( R.id.tabToAddAttachmentsLL );
-        edit_uploadTv = view.findViewById( R.id.edit_uploadIv );
-        edit_MarkAsDoneLL = view.findViewById( R.id.edit_MarkAsDoneLL );
-        edit_deleteTaskLL = view.findViewById( R.id.edit_deleteTaskLL );
+        edit_uploadIv = view.findViewById( R.id.edit_uploadIv );
+        edit_MarkAsDoneIV = view.findViewById( R.id.edit_MarkAsDoneIV );
+        edit_deleteTaskIV = view.findViewById( R.id.edit_deleteTaskIV );
 
         editSetTimeLL.setVisibility( View.GONE );
 
@@ -217,7 +218,7 @@ public class EditTask extends BottomSheetDialogFragment {
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         subTaskRecyclerView.setLayoutManager( linearLayoutManager );
 
-        edit_MarkAsDoneLL.setOnClickListener( new View.OnClickListener() {
+        edit_MarkAsDoneIV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean isUpdate = dataBaseHelper.upDate( taskPosition, "yes", "0" );
@@ -229,7 +230,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 }
             }
         } );
-        edit_deleteTaskLL.setOnClickListener( new View.OnClickListener() {
+        edit_deleteTaskIV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder( getContext() )
@@ -351,70 +352,6 @@ public class EditTask extends BottomSheetDialogFragment {
     }
 
 
-//    private DatePickerDialog.OnDateSetListener datePickerDialog1 = new DatePickerDialog.OnDateSetListener() {
-//        @Override
-//        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//
-//            calendar.set( Calendar.YEAR, year );
-//            calendar.set( Calendar.MONTH, month );
-//            calendar.set( Calendar.DAY_OF_MONTH, dayOfMonth );
-//
-//            Calendar calendar1 = Calendar.getInstance();
-//
-//            checkYear = calendar.get( Calendar.YEAR );
-//            currentYear = calendar1.get( Calendar.YEAR );
-//            isTomorrow = calendar.get( Calendar.DAY_OF_MONTH );
-//            mTomorrow = calendar1.get( Calendar.DAY_OF_MONTH ) + 1;
-//            isToday = calendar.get( Calendar.DAY_OF_MONTH );
-//            mToday = calendar1.get( Calendar.DAY_OF_MONTH );
-//
-//            myTimeSettingClass.setCustomPlaceDate( dayOfMonth, month, year );
-//            date_to_place_task = MyTimeSettingClass.getCustomPlaceDate();
-//
-//
-//        }
-//    };
-//    private TimePickerDialog.OnTimeSetListener timePickerListener1 = new TimePickerDialog.OnTimeSetListener() {
-//        @RequiresApi(api = Build.VERSION_CODES.N)
-//        @Override
-//        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-//
-//            calendar.set( Calendar.HOUR_OF_DAY, hourOfDay );
-//            calendar.set( Calendar.MINUTE, minute );
-//
-//            if (minute == 0 && checkYear > currentYear && isTomorrow != mTomorrow && isToday != mToday) {
-//                sformat = new SimpleDateFormat( "dd MMM yyyy, h a" );
-//            } else if (minute != 0 && checkYear > currentYear && isTomorrow != mTomorrow && isToday != mToday) {
-//                sformat = new SimpleDateFormat( "d MMM yyyy, h:mm a" );
-//            }
-//
-//            if (minute == 0 && checkYear == currentYear && isTomorrow != mTomorrow) {
-//                sformat = new SimpleDateFormat( "d MMM, h a" );
-//            } else if (minute != 0 && checkYear == currentYear && isTomorrow != mTomorrow) {
-//                sformat = new SimpleDateFormat( "d MMM, h:mm a" );
-//            }
-//
-//            if (minute == 0 && isTomorrow == mTomorrow && isToday != mToday) {
-//                sformat = new SimpleDateFormat( "EEE, h a " );
-//            } else if (minute != 0 && isTomorrow == mTomorrow && isToday != mToday) {
-//                sformat = new SimpleDateFormat( "EEE, h:mm a" );
-//            }
-//
-//            if (minute == 0 && isToday == mToday && isTomorrow != mTomorrow) {
-//                sformat = new SimpleDateFormat( "h a" );
-//            } else if (minute != 0 && isToday == mToday && isTomorrow != mTomorrow) {
-//                sformat = new SimpleDateFormat( "h:mm a" );
-//            }
-//            reminder_date = sformat.format( calendar.getTime() );
-//
-//            Log.i( "formated date", reminder_date );
-//            dataBaseHelper.update( reminder_date, date_to_place_task, taskPosition );
-//            editSetTimeTv.setText( reminder_date );
-//
-//        }
-//    };
-
-
     private void launchNotesDialogFragFun() {
 
         notesHolderTv.setOnClickListener( new View.OnClickListener() {
@@ -439,15 +376,12 @@ public class EditTask extends BottomSheetDialogFragment {
         editSetTimeLL.setVisibility( View.VISIBLE );
         editRemindTagsLL.setVisibility( View.GONE );
         editDeleteUpperIV.setVisibility( View.VISIBLE );
-//        editReminderOnOffSwitch.setChecked( true );
-
     }
 
     private void showEditRemindTagsLLAndStuffs() {
         editSetTimeLL.setVisibility( View.GONE );
         editRemindTagsLL.setVisibility( View.VISIBLE );
         editDeleteUpperIV.setVisibility( View.GONE );
-//        editReminderOnOffSwitch.setChecked( false );
     }
 
     private void getDataInBSHDF() {
@@ -502,12 +436,12 @@ public class EditTask extends BottomSheetDialogFragment {
             getSubTaskFromDb();
         }
         if (attachments == null) {
-            edit_uploadTv.setVisibility( View.GONE );
+            edit_uploadIv.setVisibility( View.GONE );
             tabToAddAttachmentsLL.setVisibility( View.VISIBLE );
             attachmentRecyclerView.setVisibility( View.GONE );
 
         } else {
-            edit_uploadTv.setVisibility( View.VISIBLE );
+            edit_uploadIv.setVisibility( View.VISIBLE );
             tabToAddAttachmentsLL.setVisibility( View.GONE );
             attachmentRecyclerView.setVisibility( View.VISIBLE );
             getAttachmentFromDB();
@@ -524,27 +458,23 @@ public class EditTask extends BottomSheetDialogFragment {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate( R.layout.editaddreminderdialogfrag, null );
 
-//        edit_oneTimeAddReminderSwitch = view.findViewById( R.id.edit_oneTimeAddReminderSwitch );
-//        edit_oneTimeAddReminderSwitch.setChecked( false );
-
-        edit_task_SetBtn = view.findViewById( R.id.edit_task_SetBtn );
-        edit_task_SetBtn.setEnabled( false );
-        edit_task_cancelBtn = view.findViewById( R.id.edit_task_cancelBtn );
+        edit_task_SetIB = view.findViewById( R.id.edit_task_SetBtn );
+        edit_task_setTV = view.findViewById( R.id.edit_task_setTV );
+        edit_task_SetIB.setEnabled( false );
+        edit_task_cancelIB = view.findViewById( R.id.edit_task_cancelIv);
         edit_showReminderTimeCL = view.findViewById( R.id.edit_showReminderTimeCL );
         edit_showReminderTimeCL.setVisibility( View.GONE );
         edit_remindMeOrNoReminderTv = view.findViewById( R.id.edit_remindMeOrNoReminderTv );
         edit_addReminderShowTimeTv = view.findViewById( R.id.edit_addReminderShowTimeTv );
         edit_addReminderDeleteTimeIV = view.findViewById( R.id.edit_addReminderDeleteTimeIV );
-
-        editTagsLL = view.findViewById( R.id.editTagsLL );
         oneTimeBtn = view.findViewById( R.id.oneTime_button );
 
 
         repeatBtn = view.findViewById( R.id.repeat_button );
-        repeat_Daily_LL = view.findViewById( R.id.edit_dailyLL );
-        repeat_Weekly_LL = view.findViewById( R.id.edit_weeklyLL );
-        repeat_Monthly_LL = view.findViewById( R.id.edit_monthlyLL );
-        repeat_Yearly_LL = view.findViewById( R.id.edit_yearlyLL );
+        repeat_Daily_IV = view.findViewById( R.id.edit_dailyIv );
+        repeat_Weekly_IV = view.findViewById( R.id.edit_weeklyIv );
+        repeat_Monthly_IV = view.findViewById( R.id.edit_monthlyIv );
+        repeat_Yearly_IV = view.findViewById( R.id.edit_yearlyIv );
 
         repeatTimeHolderTv = view.findViewById( R.id.repeatTimeHolderTv );
 
@@ -554,12 +484,12 @@ public class EditTask extends BottomSheetDialogFragment {
         editTagsLL = view.findViewById( R.id.editTagsLL );
         editLocationLL = view.findViewById( R.id.editLocationLL );
 
-        edit_later_todayLL = view.findViewById( R.id.edit_later_todayLL );
-        edit_thisEveningLL = view.findViewById( R.id.edit_thisEveningLL );
-        edit_tomorrowLL = view.findViewById( R.id.edit_tomorrowLL );
-        edit_nextWeekLL = view.findViewById( R.id.edit_nextWeekLL );
-        edit_somedayLL = view.findViewById( R.id.edit_somedayLL );
-        edit_customLL = view.findViewById( R.id.edit_customLL );
+        edit_later_todayCl = view.findViewById( R.id.edit_later_todayCL );
+        edit_thisEveningCl = view.findViewById( R.id.edit_thisEveningCl );
+        edit_tomorrowCl = view.findViewById( R.id.edit_tomorrowCl );
+        edit_nextWeekCl = view.findViewById( R.id.edit_nextWeekCl );
+        edit_somedayCl = view.findViewById( R.id.edit_somedayCl );
+        edit_customCl = view.findViewById( R.id.edit_customCl );
 
         editLaterTodayTimeTv = view.findViewById( R.id.edit_latertodayTimeTv );
         editThisEvening = view.findViewById( R.id.editThis_EveningTv );
@@ -570,13 +500,13 @@ public class EditTask extends BottomSheetDialogFragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder( getContext() ).setView( view ).setCancelable( true );
         String s = editSetTimeTv.getText().toString();
         final AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
         if (isOneButton) {
 
             if (editSetTimeTv.length() == 0) {
                 changeButtonBg( oneTimeBtn, repeatBtn, locationBtn );
                 repeatLL.setVisibility( View.GONE );
-                edit_task_SetBtn.setEnabled( false );
-//                edit_oneTimeAddReminderSwitch.setChecked( false );
+                edit_task_SetIB.setEnabled( false );
                 editTagsLL.setVisibility( View.VISIBLE );
                 edit_showReminderTimeCL.setVisibility( View.GONE );
             } else if (s.contains( "Once" )) {
@@ -588,8 +518,7 @@ public class EditTask extends BottomSheetDialogFragment {
             } else {
                 changeButtonBg( oneTimeBtn, repeatBtn, locationBtn );
                 repeatLL.setVisibility( View.GONE );
-                edit_task_SetBtn.setEnabled( false );
-//                edit_oneTimeAddReminderSwitch.setChecked( false );
+                edit_task_SetIB.setEnabled( false );
                 editTagsLL.setVisibility( View.GONE );
                 edit_remindMeOrNoReminderTv.setText( "Remind Me" );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
@@ -602,31 +531,23 @@ public class EditTask extends BottomSheetDialogFragment {
         }
 
         if (timeOfDay > 0 && timeOfDay < 18) {
-            edit_thisEveningLL.setVisibility( View.VISIBLE );
-            edit_later_todayLL.setVisibility( View.VISIBLE );
+            edit_thisEveningCl.setVisibility( View.VISIBLE );
+            edit_later_todayCl.setVisibility( View.VISIBLE );
         } else {
-            edit_thisEveningLL.setVisibility( View.GONE );
-            edit_later_todayLL.setVisibility( View.GONE );
+            edit_thisEveningCl.setVisibility( View.GONE );
+            edit_later_todayCl.setVisibility( View.GONE );
         }
         editLocationLL.setVisibility( View.GONE );
 
 
-//        edit_oneTimeAddReminderSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                } else {
-//                }
-//            }
-//        } );
 
 
-        edit_later_todayLL.setOnClickListener( new View.OnClickListener() {
+
+        edit_later_todayCl.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-//                edit_oneTimeAddReminderSwitch.setChecked( true );
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
                 reminder_date = MyTimeSettingClass.getLaterToday();
@@ -637,12 +558,11 @@ public class EditTask extends BottomSheetDialogFragment {
             }
         } );
 
-        edit_thisEveningLL.setOnClickListener( new View.OnClickListener() {
+        edit_thisEveningCl.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-//                edit_oneTimeAddReminderSwitch.setChecked( true );
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
                 reminder_date = MyTimeSettingClass.getToday6pm();
@@ -653,12 +573,11 @@ public class EditTask extends BottomSheetDialogFragment {
 
             }
         } );
-        edit_tomorrowLL.setOnClickListener( new View.OnClickListener() {
+        edit_tomorrowCl.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-//                edit_oneTimeAddReminderSwitch.setChecked( true );
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
                 reminder_date = MyTimeSettingClass.getTomorrowMorning();
@@ -668,12 +587,12 @@ public class EditTask extends BottomSheetDialogFragment {
 
             }
         } );
-        edit_nextWeekLL.setOnClickListener( new View.OnClickListener() {
+        edit_nextWeekCl.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 //                edit_oneTimeAddReminderSwitch.setChecked( true );
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
                 reminder_date = MyTimeSettingClass.getNextWeek();
@@ -684,12 +603,11 @@ public class EditTask extends BottomSheetDialogFragment {
 
             }
         } );
-        edit_somedayLL.setOnClickListener( new View.OnClickListener() {
+        edit_somedayCl.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-//                edit_oneTimeAddReminderSwitch.setChecked( true );
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
                 edit_showReminderTimeCL.setVisibility( View.VISIBLE );
                 reminder_date = "";
@@ -703,7 +621,7 @@ public class EditTask extends BottomSheetDialogFragment {
         } );
 
 
-        edit_customLL.setOnClickListener( new View.OnClickListener() {
+        edit_customCl.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -721,7 +639,7 @@ public class EditTask extends BottomSheetDialogFragment {
         } );
 
 
-        edit_task_SetBtn.setOnClickListener( new View.OnClickListener() {
+        edit_task_SetIB.setOnClickListener( new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @SuppressLint("SetTextI18n")
             @Override
@@ -730,9 +648,19 @@ public class EditTask extends BottomSheetDialogFragment {
                 if (isOneButton) {
                     if (repeatValue.matches( "" )) {
 
-                    } else {
-
                     }
+                    else
+                        {
+                        }
+//                    String check = edit_remindMeOrNoReminderTv.getText().toString() ;
+//                    if (check.matches( "No reminder set" ))
+//                    {
+//                        dataBaseHelper.update( "", "", "", "0", taskPosition );
+//                        editSetTimeLL.setVisibility( View.VISIBLE );
+//                        editRemindTagsLL.setVisibility( View.GONE );
+//                        editDeleteUpperIV.setVisibility( View.VISIBLE );
+//                        dialog.dismiss();
+//                    }
                     mainActivity.setTaskFragDefaultBNBItem();
                     Toast.makeText( getContext(), "i am Clicked", Toast.LENGTH_SHORT ).show();
                     hideEditRemindTagsLLAndStuffs();
@@ -790,7 +718,7 @@ public class EditTask extends BottomSheetDialogFragment {
 
                         } else {
                         }
-                        edit_task_SetBtn.setText( "save" );
+                        edit_task_setTV.setText( "save" );
 
                     } else {
                         if (date_to_place_task.matches( "" )) {
@@ -826,7 +754,7 @@ public class EditTask extends BottomSheetDialogFragment {
             }
         } );
 
-        edit_task_cancelBtn.setOnClickListener( new View.OnClickListener() {
+        edit_task_cancelIB.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -838,8 +766,7 @@ public class EditTask extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
 
-                edit_task_SetBtn.setEnabled( false );
-//                edit_oneTimeAddReminderSwitch.setChecked( false );
+                edit_task_SetIB.setEnabled( true );
                 edit_remindMeOrNoReminderTv.setText( "No reminder set" );
                 edit_addReminderShowTimeTv.setText( "Tap To add" );
             }
@@ -904,16 +831,16 @@ public class EditTask extends BottomSheetDialogFragment {
         } );
 
 
-        editLaterTodayTimeTv.setText( MyTimeSettingClass.getLaterToday() );
-        editThisEvening.setText( MyTimeSettingClass.getToday6pm() );
-        editTimeTomorrowTv.setText( MyTimeSettingClass.getTomorrowMorning() );
-        ediTimeNextweekTv.setText( MyTimeSettingClass.getNextWeek() );
+        editLaterTodayTimeTv.setText( MyTimeSettingClass.getLaterTodayShortFormatted() );
+        editThisEvening.setText( MyTimeSettingClass.getToday6pmShortFormatted() );
+        editTimeTomorrowTv.setText( MyTimeSettingClass.getTomorrowMorningShortFormatted() );
+        ediTimeNextweekTv.setText( MyTimeSettingClass.getNextWeekShortFormatted() );
 
 
         oneTimeBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edit_task_SetBtn.setText( "set" );
+                edit_task_setTV.setText( "set" );
                 isOneButton = true;
                 edit_showReminderTimeCL.setVisibility( View.GONE );
                 editTagsLL.setVisibility( View.VISIBLE );
@@ -941,35 +868,35 @@ public class EditTask extends BottomSheetDialogFragment {
 
             }
         } );
-        repeat_Daily_LL.setOnClickListener( new View.OnClickListener() {
+        repeat_Daily_IV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkRepeat = "daily";
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
 
             }
         } );
-        repeat_Weekly_LL.setOnClickListener( new View.OnClickListener() {
+        repeat_Weekly_IV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkRepeat = "weekly";
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
 
             }
         } );
-        repeat_Monthly_LL.setOnClickListener( new View.OnClickListener() {
+        repeat_Monthly_IV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkRepeat = "monthly";
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
 
             }
         } );
-        repeat_Yearly_LL.setOnClickListener( new View.OnClickListener() {
+        repeat_Yearly_IV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkRepeat = "yearly";
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
 
             }
         } );
@@ -993,7 +920,7 @@ public class EditTask extends BottomSheetDialogFragment {
         locationBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edit_task_SetBtn.setText( "set" );
+                edit_task_setTV.setText( "set" );
 
                 edit_showReminderTimeCL.setVisibility( View.GONE );
                 changeButtonBg( locationBtn, oneTimeBtn, repeatBtn );
@@ -1010,7 +937,7 @@ public class EditTask extends BottomSheetDialogFragment {
         changeButtonBg( repeatBtn, oneTimeBtn, locationBtn );
         isOneButton = false;
         repeatBtn.setSelected( true );
-        edit_task_SetBtn.setEnabled( true );
+        edit_task_SetIB.setEnabled( true );
         repeatLL.setVisibility( View.GONE );
         editTagsLL.setVisibility( View.GONE );
         edit_showReminderTimeCL.setVisibility( View.VISIBLE );
@@ -1059,7 +986,7 @@ public class EditTask extends BottomSheetDialogFragment {
 
             if (isOneButton) {
                 reminder_date = sformat.format( calendar.getTime() );
-                edit_task_SetBtn.setEnabled( true );
+                edit_task_SetIB.setEnabled( true );
                 editTagsLL.setVisibility( View.GONE );
 //                edit_oneTimeAddReminderSwitch.setChecked( true );
                 edit_addReminderDeleteTimeIV.setVisibility( View.VISIBLE );
@@ -1100,13 +1027,14 @@ public class EditTask extends BottomSheetDialogFragment {
 
         myNotesBackIv = view.findViewById( R.id.editAddNotesBackIV );
         myNotesET = view.findViewById( R.id.editAddNotesET );
-        myNotesSaveBtn = view.findViewById( R.id.editNotesSaveBTn );
+        myNotesSaveIv = view.findViewById( R.id.editNotesSaveIV );
 
         final AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
         builder.setView( view );
         builder.setCancelable( true );
 
         final AlertDialog myDialog = builder.create();
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
 
         if (taskNotes.matches( "" )) {
@@ -1115,7 +1043,7 @@ public class EditTask extends BottomSheetDialogFragment {
             myNotesET.setText( taskNotes );
         }
 
-        myNotesSaveBtn.setOnClickListener( new View.OnClickListener() {
+        myNotesSaveIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -1233,7 +1161,7 @@ public class EditTask extends BottomSheetDialogFragment {
             }
         } );
 
-        edit_uploadTv.setOnClickListener( new View.OnClickListener() {
+        edit_uploadIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPermission();
@@ -1273,17 +1201,17 @@ public class EditTask extends BottomSheetDialogFragment {
         while (AC.moveToNext()) {
             String string = AC.getString( 2 );
             if (string.contains( ".png" )) {
-                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.image_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.photo, AC.getString( 2 ), AC.getString( 3 ) ) );
             } else if (string.contains( ".jpg" )) {
-                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.image_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.photo, AC.getString( 2 ), AC.getString( 3 ) ) );
             } else if (string.contains( ".jpeg" )) {
-                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.image_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.photo, AC.getString( 2 ), AC.getString( 3 ) ) );
             } else if (string.contains( ".mp4" )) {
-                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.record_video_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.video, AC.getString( 2 ), AC.getString( 3 ) ) );
             } else if (string.contains( ".mp3" )) {
-                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.play_audio_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.video, AC.getString( 2 ), AC.getString( 3 ) ) );
             } else {
-                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.image_foreground, AC.getString( 2 ), AC.getString( 3 ) ) );
+                attachmentTaskModelList.add( new AttachmentTaskModel( AC.getString( 0 ), R.drawable.photo, AC.getString( 2 ), AC.getString( 3 ) ) );
             }
         }
         FragmentManager fragmentManager = getFragmentManager();

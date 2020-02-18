@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.R;
@@ -82,13 +82,13 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
     class InputHolder extends RecyclerView.ViewHolder{
         TextView input_RV_Item_TV;
         ImageView input_RV_Item_IV;
-        LinearLayout linearLayout ;
+        CardView Cv;
 
         public InputHolder(@NonNull View itemView) {
             super(itemView);
             input_RV_Item_TV =itemView.findViewById(R.id.inputRVItemTV);
             input_RV_Item_IV =itemView.findViewById(R.id.inputRVItemIV);
-            linearLayout = itemView.findViewById(R.id.inputindividualLLayout);
+            Cv = itemView.findViewById(R.id.inputindividualCV );
 
         }
 

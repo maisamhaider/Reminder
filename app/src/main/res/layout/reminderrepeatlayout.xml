@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -11,17 +13,18 @@
         android:orientation="vertical"
        >
         <LinearLayout
+            android:orientation="vertical"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="Start on"
+                android:textStyle="bold"
+                android:text="Start Time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:gravity="right"
-                android:layout_marginEnd="10dp"
+                android:textColor="@color/colorMud"
                 android:id="@+id/repeatTimeHolderTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -33,84 +36,122 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/edit_dailyLL"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="5dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/colorBlueGray"
-                android:gravity="center"
-                android:orientation="vertical"
-            >
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/edit_dailyIv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/flat"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Daily"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_dailyIv"
+                app:layout_constraintEnd_toEndOf="@+id/edit_dailyIv"
+                app:layout_constraintStart_toStartOf="@+id/edit_dailyIv"
+                app:layout_constraintTop_toTopOf="@+id/edit_dailyIv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/edit_weeklyIv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/flat"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Daily" />
+                    android:text="Weekly"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_weeklyIv"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_weeklyIv"
+                    app:layout_constraintStart_toStartOf="@+id/edit_weeklyIv"
+                    app:layout_constraintTop_toTopOf="@+id/edit_weeklyIv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/edit_weeklyLL"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="5dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_weight="1"
-                android:background="@color/colorBlueGray"
-                android:gravity="center"
-                android:orientation="vertical"
-           >
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/edit_monthlyIv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/flat"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="53dp"
+                    android:layout_height="19dp"
+                    android:layout_gravity="center"
+                    android:text="Monthly"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_monthlyIv"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_monthlyIv"
+                    app:layout_constraintStart_toStartOf="@+id/edit_monthlyIv"
+                    app:layout_constraintTop_toTopOf="@+id/edit_monthlyIv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/edit_yearlyIv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@drawable/flat"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Weekly" />
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/edit_monthlyLL"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/colorBlueGray"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Monthly" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/edit_yearlyLL"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@color/colorBlueGray"
-                android:gravity="center"
-                android:orientation="vertical"
-               >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Yearly" />
-
-
-            </LinearLayout>
+                    android:text="Yearly"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_yearlyIv"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_yearlyIv"
+                    app:layout_constraintStart_toStartOf="@+id/edit_yearlyIv"
+                    app:layout_constraintTop_toTopOf="@+id/edit_yearlyIv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

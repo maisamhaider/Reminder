@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/alertdialogsbg"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/alertdialogsbg"
     android:orientation="vertical">
+
     <LinearLayout
-        android:background="@drawable/alertdialogsbg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/alertdialogsbg"
         android:orientation="vertical">
 
-    <include layout="@layout/reminderupperlayout" />
+        <include layout="@layout/reminderupperlayout" />
 
-    <include layout="@layout/reminderthreebuttonlayout" />
+        <include layout="@layout/reminderthreebuttonlayout" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp">
 
-        <include layout="@layout/reminderonetimelayout" />
+            <include layout="@layout/reminderonetimelayout" />
 
-        <include layout="@layout/reminderrepeatlayout" />
+            <include
+                android:id="@+id/include"
+                layout="@layout/reminderrepeatlayout" />
 
-        <include layout="@layout/reminderlocationlayout" />
+            <include layout="@layout/reminderlocationlayout" />
 
-        <include layout="@layout/remindershowtimell" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <include layout="@layout/remindershowtimell" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/remindercancelandsetbuttonlayout" />
+        <include layout="@layout/remindercancelandsetbuttonlayout" />
     </LinearLayout>
 
 </LinearLayout>

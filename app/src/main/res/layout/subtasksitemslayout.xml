@@ -32,5 +32,5 @@
         android:layout_height="20dp"
         android:layout_gravity="end|center"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/ic_remove_circle_black_24dp" />
+        android:src="@drawable/clear" />
 </androidx.cardview.widget.CardView>

@@ -13,6 +13,8 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -183,8 +185,16 @@ public class CalendarFrag extends Fragment  {
                                 calendarEventAddBottomSheetDialogFrag.show( Objects.requireNonNull( getActivity() ).getSupportFragmentManager(),
                                         "BSheet" );
                             } else {
+
+                                Bundle bundle = new Bundle(  );
+                                bundle.putString( "get_btn","today_Clicked" );
                                 InputListFrag inputListFrag = new InputListFrag();
-                                mainActivity.loadmyfrag( inputListFrag );
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.addToBackStack(null);
+                                inputListFrag.setArguments( bundle );
+                                fragmentTransaction.replace(R.id.fragcontainer, inputListFrag);
+                                fragmentTransaction.commit();
                             }
                         }
 

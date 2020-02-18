@@ -7,9 +7,9 @@
         android:radius="60dp"/>
     <gradient
         android:angle="90"
-        android:endColor="@color/colorBlueGray"
+        android:endColor="@color/colorMainYellowTwo"
         android:centerColor="@color/colorWhite"
-        android:startColor="@color/colorBlueGray"/>
+        android:startColor="@color/colorMainYellowTwo"/>
 
 
 </shape>

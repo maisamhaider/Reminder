@@ -9,15 +9,16 @@
         android:id="@+id/editLocationLL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        >
-
+        android:orientation="vertical">
         <TextView
-            android:textSize="50sp"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:text="Location" />
+        <TextView
+            android:textColor="@color/colorMud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Coming Soon" />
     </LinearLayout>
 

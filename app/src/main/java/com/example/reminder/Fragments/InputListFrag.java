@@ -191,23 +191,23 @@ public class InputListFrag extends Fragment {
         List<InputRemiderModel> inputRemiderModelList = new ArrayList<>();
 
 
-        inputRemiderModelList.add( new InputRemiderModel( "Call", R.drawable.call_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Check", R.drawable.search_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Get", R.drawable.get_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Email", R.drawable.email_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Buy", R.drawable.shopping_cart_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Meet/Schedule", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Clean", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Take", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Send", R.drawable.send_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Pay", R.drawable.pay_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Make", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Pick", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Do", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Read", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Print", R.drawable.print_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Finish", R.drawable.ic_launcher_foreground ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Study", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Call", R.drawable.call1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Check", R.drawable.check1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Get", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Email", R.drawable.email1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Buy", R.drawable.shopping1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Meet/Schedule", R.drawable.meeting1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Clean", R.drawable.clean1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Take", R.drawable.take1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Send", R.drawable.send1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Pay", R.drawable.pay1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Make", R.drawable.make1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Pick", R.drawable.pick1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Do", R.drawable.do1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Read", R.drawable.reading1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Print", R.drawable.print1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Finish", R.drawable.finish1 ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Study", R.drawable.study1 ) );
 
         inputTaskListAdapter = new InputTaskListAdapter( getContext(), inputRemiderModelList );
         inputTaskListAdapter.addListener( new EditTextStringListener() {

@@ -9,7 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.drm.DrmStore;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.icu.text.SimpleDateFormat;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -18,12 +19,9 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,10 +29,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.lifecycle.Lifecycle;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.reminder.R;
@@ -43,16 +41,10 @@ import com.example.reminder.interfaces.RecyclerCallBack;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
 public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
@@ -66,7 +58,8 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
     DataBaseHelper dataBaseHelper;
 
-    private LinearLayout fromGalleryLL, takeAPictureLL, recordVideoLL, recordAudioLL,audio_btns_ll;
+    private LinearLayout fromGalleryLL, takeAPictureLL, recordVideoLL, recordAudioLL;
+    private ConstraintLayout audio_btns_cl;
     private RecyclerCallBack mRecyclerCallBack;
 
 
@@ -82,7 +75,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     private CountDownTimer countDownTimer;
     private long totalSeconds = 3600, intervalSeconds = 1;
     TextView audioTv;
-    private Button audioCancelBtn, audioAddBtn;
+    private ImageView audio_CancelIV, audioAddIv;
 
     LottieAnimationView  audio_StartLottieAnimationView,audio_StopLottieAnimationView;
 
@@ -91,6 +84,15 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
     public static AttachmentsBottomSheet getAttachInstance() {
         return new AttachmentsBottomSheet();
+
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate( savedInstanceState );
+        setStyle( BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme );
+
     }
 
     @Nullable
@@ -333,25 +335,26 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         builder.setView( view );
 
         final AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
         dialog.show();
 
 
-        audio_btns_ll = view.findViewById( R.id.audio_btns_ll );
+        audio_btns_cl = view.findViewById( R.id.audio_btns_Cl );
         audio_StartLottieAnimationView = view.findViewById( R.id.audio_StartLottieAnimationView );
         audio_StopLottieAnimationView = view.findViewById( R.id.audio_StopLottieAnimationView );
         audioTv = view.findViewById( R.id.audioTV );
-        audioCancelBtn = view.findViewById( R.id.audio_CancelBtn );
-        audioAddBtn = view.findViewById( R.id.audio_AddBtn );
-        audioAddBtn.setEnabled( false );
+        audio_CancelIV = view.findViewById( R.id.audio_CancelIV );
+        audioAddIv = view.findViewById( R.id.audio_AddIV );
+        audioAddIv.setEnabled( false );
         audio_StopLottieAnimationView.setVisibility( View.GONE );
-        audio_btns_ll.setVisibility( View.GONE );
+        audio_btns_cl.setVisibility( View.GONE );
         audio_StartLottieAnimationView.setOnClickListener( new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
                         //  on audio stared
-                audio_btns_ll.setVisibility( View.VISIBLE );
+                audio_btns_cl.setVisibility( View.VISIBLE );
 
                 startAudio = true;
                 audio_StopLottieAnimationView.setVisibility( View.VISIBLE );
@@ -385,8 +388,8 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                             public void onFinish() {
                                 mediaRecorder.stop();
                                 audioTv.setText( " Time Reached " );
-                                audioAddBtn.setEnabled( true );
-                                audio_btns_ll.setVisibility( View.VISIBLE );
+                                audioAddIv.setEnabled( true );
+                                audio_btns_cl.setVisibility( View.VISIBLE );
                                 audio_StartLottieAnimationView.setVisibility( View.VISIBLE );
                                 audio_StopLottieAnimationView.setVisibility( View.GONE );
                             }
@@ -401,11 +404,11 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 startAudio = false;
-                audioAddBtn.setEnabled( true );
+                audioAddIv.setEnabled( true );
                 audioTv.setText( " Press to Record" );
                 mediaRecorder.stop();
                 countDownTimer.cancel();
-                audio_btns_ll.setVisibility( View.VISIBLE );
+                audio_btns_cl.setVisibility( View.VISIBLE );
                 audio_StopLottieAnimationView.setVisibility( View.GONE );
                 audio_StartLottieAnimationView.setVisibility( View.VISIBLE );
 
@@ -413,7 +416,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         } );
 
 
-        audioAddBtn.setOnClickListener( new View.OnClickListener() {
+        audioAddIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean insert = dataBaseHelper.insertFile( audioSavePath,createdDateFormat.format( calendar.getTime()), taskPosition );
@@ -421,11 +424,9 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                     if (mRecyclerCallBack != null) {
                         mRecyclerCallBack.mCallBack();
                     }
-
-
                     dialog.dismiss();
                     Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
-                    audio_btns_ll.setVisibility( View.GONE );
+                    audio_btns_cl.setVisibility( View.GONE );
 
                 } else {
                     Toast.makeText( getContext(), "not insert", Toast.LENGTH_SHORT ).show();
@@ -433,7 +434,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
             }
         } );
 
-        audioCancelBtn.setOnClickListener( new View.OnClickListener() {
+        audio_CancelIV.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

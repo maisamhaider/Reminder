@@ -1,185 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:id="@+id/oneTimeHorizontalScrollView"
     android:scrollbars="none">
 
-        <LinearLayout
-            android:id="@+id/editTagsLL"
+    <LinearLayout
+        android:id="@+id/editTagsLL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/edit_later_todayCL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+   >
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/tody"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="7dp"
+                android:text="Later Today"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_later_todayCL"
+                app:layout_constraintEnd_toEndOf="@+id/edit_later_todayCL"
+                app:layout_constraintHorizontal_bias="0.722"
+                app:layout_constraintStart_toStartOf="@+id/edit_later_todayCL"
+                app:layout_constraintTop_toTopOf="@+id/edit_later_todayCL"
+                app:layout_constraintVertical_bias="0.641" />
+
+            <TextView
+            android:id="@+id/edit_latertodayTimeTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_gravity="center"
+            android:text="time"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_later_todayCL"
+            app:layout_constraintEnd_toEndOf="@+id/edit_later_todayCL"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="@+id/edit_later_todayCL"
+            app:layout_constraintTop_toTopOf="@+id/edit_later_todayCL"
+            app:layout_constraintVertical_bias="0.884" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:id="@+id/edit_later_todayLL"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:id="@+id/edit_thisEveningCl"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+>
+
+            <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_margin="16dp"
-                android:background="@color/colorBlueGray"
-                android:orientation="vertical">
+                android:src="@drawable/even"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/later_todayIv"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/notification_foreground" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Later Today" />
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="3dp"
+                android:text="This Evening"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_thisEveningCl"
+                app:layout_constraintEnd_toEndOf="@+id/edit_thisEveningCl"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintStart_toStartOf="@+id/edit_thisEveningCl"
+                app:layout_constraintTop_toTopOf="@+id/edit_thisEveningCl"
+                app:layout_constraintVertical_bias="0.641" />
 
-                <TextView
-                    android:id="@+id/edit_latertodayTimeTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="time" />
+            <TextView
+            android:id="@+id/editThis_EveningTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="time"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_thisEveningCl"
+            app:layout_constraintEnd_toEndOf="@+id/edit_thisEveningCl"
+            app:layout_constraintHorizontal_bias="0.474"
+            app:layout_constraintStart_toStartOf="@+id/edit_thisEveningCl"
+            app:layout_constraintTop_toTopOf="@+id/edit_thisEveningCl"
+            app:layout_constraintVertical_bias="0.884" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-            </LinearLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:id="@+id/edit_tomorrowCl"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent">
 
-            <LinearLayout
-                android:id="@+id/edit_thisEveningLL"
+            <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_margin="16dp"
-                android:background="@color/colorBlueGray"
-                android:orientation="vertical">
+                android:src="@drawable/tom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/this_EveningIv"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/notification_active_foreground" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/tomorrow"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_tomorrowCl"
+                app:layout_constraintEnd_toEndOf="@+id/edit_tomorrowCl"
+                app:layout_constraintHorizontal_bias="0.457"
+                app:layout_constraintStart_toStartOf="@+id/edit_tomorrowCl"
+                app:layout_constraintTop_toTopOf="@+id/edit_tomorrowCl"
+                app:layout_constraintVertical_bias="0.641" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="This Evening" />
+            <TextView
+            android:textColor="@color/colorWhite"
+            android:id="@+id/editTimeTomorrowTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="time"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_tomorrowCl"
+            app:layout_constraintEnd_toEndOf="@+id/edit_tomorrowCl"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="@+id/edit_tomorrowCl"
+            app:layout_constraintTop_toTopOf="@+id/edit_tomorrowCl"
+            app:layout_constraintVertical_bias="0.849" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/editThis_EveningTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="time" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:id="@+id/edit_nextWeekCl"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent">
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/edit_tomorrowLL"
+            <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_margin="16dp"
-                android:background="@color/colorBlueGray"
-                android:orientation="vertical">
+                android:src="@drawable/next"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/tomorrowIv"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/notification_active_foreground" />
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Next Week"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_nextWeekCl"
+            app:layout_constraintEnd_toEndOf="@+id/edit_nextWeekCl"
+            app:layout_constraintStart_toStartOf="@+id/edit_nextWeekCl"
+            app:layout_constraintTop_toTopOf="@+id/edit_nextWeekCl"
+            app:layout_constraintVertical_bias="0.608" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/tomorrow" />
 
-                <TextView
-                    android:id="@+id/editTimeTomorrowTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+            <TextView
+                android:id="@+id/ediTimeNextweekTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="time"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_nextWeekCl"
+                app:layout_constraintEnd_toEndOf="@+id/edit_nextWeekCl"
+                app:layout_constraintHorizontal_bias="0.478"
+                app:layout_constraintStart_toStartOf="@+id/edit_nextWeekCl"
+                app:layout_constraintTop_toTopOf="@+id/edit_nextWeekCl"
+                app:layout_constraintVertical_bias="0.839" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </LinearLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:id="@+id/edit_somedayCl"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent">
 
-            <LinearLayout
-                android:id="@+id/edit_nextWeekLL"
+            <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_margin="16dp"
-                android:background="@color/colorBlueGray"
-                android:orientation="vertical">
+                android:src="@drawable/some"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/nextWeekIv"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/notification_active_foreground" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Someday"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_somedayCl"
+                app:layout_constraintEnd_toEndOf="@+id/edit_somedayCl"
+                app:layout_constraintHorizontal_bias="0.487"
+                app:layout_constraintStart_toStartOf="@+id/edit_somedayCl"
+                app:layout_constraintTop_toTopOf="@+id/edit_somedayCl"
+                app:layout_constraintVertical_bias="0.654" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Next Week" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/edit_customCl"
+        app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:id="@+id/ediTimeNextweekTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="time" />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/custom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/edit_somedayLL"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="16dp"
-                android:background="@color/colorBlueGray"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/edit_somedayIv"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/notification_active_foreground" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Someday" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/edit_customLL"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="16dp"
-                android:background="@color/colorBlueGray"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/edit_customIv"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/notification_active_foreground" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="custom" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="custom"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_customCl"
+            app:layout_constraintEnd_toEndOf="@+id/edit_customCl"
+            app:layout_constraintHorizontal_bias="0.519"
+            app:layout_constraintStart_toStartOf="@+id/edit_customCl"
+            app:layout_constraintTop_toTopOf="@+id/edit_customCl"
+            app:layout_constraintVertical_bias="0.641" />
 
 
-            </LinearLayout>
-
-        </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </HorizontalScrollView>
+
+

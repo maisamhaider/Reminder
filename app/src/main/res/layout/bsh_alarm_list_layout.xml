@@ -24,7 +24,6 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="20dp"
         android:layout_gravity="center|start"
-        android:src="@drawable/ic_done_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/listalarm_tv" />
 

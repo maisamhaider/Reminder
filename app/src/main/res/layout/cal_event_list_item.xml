@@ -27,23 +27,27 @@
         <!--            android:layout_height="wrap_content"-->
         <!--            android:layout_gravity="center" />-->
 
-    <com.google.android.material.card.MaterialCardView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:elevation="5dp"
-        app:cardElevation="10dp"
         android:background="@color/colorMainYellowOne"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_date">
+<!--        android:elevation="5dp"-->
+<!--        app:cardElevation="10dp"-->
+
 
         <TextView
             android:id="@+id/eventNameTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/eventSmallLayout"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="18dp"
             android:gravity="start|top"
             android:paddingLeft="10dp"
-            android:background="@android:color/transparent"
             android:textColor="@color/colorWhite"
             android:textSize="18sp" />
 
@@ -78,7 +82,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-    </com.google.android.material.card.MaterialCardView>
+    </RelativeLayout>
 
 
 

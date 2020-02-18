@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
@@ -8,56 +8,62 @@
     android:background="@color/colorWhite"
     android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/edit_deleteTaskLL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            >
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:src="@drawable/trash" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:backgroundTint="@android:color/transparent"
-                android:text="Delete task"
-                android:textAllCaps="false" />
-        </LinearLayout>
-    <TextView
-        android:gravity="center"
-        android:text="|"
+    <ImageView
+        android:layout_marginEnd="20dp"
+        android:id="@+id/edit_deleteTaskIV"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/c"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/edit_MarkAsDoneLL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:textColor="@color/colorMud"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_deleteTaskIV"
+        app:layout_constraintEnd_toEndOf="@+id/edit_deleteTaskIV"
+        app:layout_constraintStart_toStartOf="@+id/edit_deleteTaskIV"
+        app:layout_constraintTop_toTopOf="@+id/edit_deleteTaskIV" />
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_done_black_24dp" />
+    <TextView
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:backgroundTint="@android:color/transparent"
-                android:text="Mark as done"
-                android:textAllCaps="false" />
-        </LinearLayout>
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+
+    <ImageView
+        android:layout_marginStart="20dp"
+        android:id="@+id/edit_MarkAsDoneIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="44dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/d"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toTopOf="parent"
+      />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_MarkAsDoneIV"
+        app:layout_constraintEnd_toEndOf="@+id/edit_MarkAsDoneIV"
+        app:layout_constraintStart_toStartOf="@+id/edit_MarkAsDoneIV"
+        app:layout_constraintTop_toTopOf="@+id/edit_MarkAsDoneIV" />
+</androidx.constraintlayout.widget.ConstraintLayout>

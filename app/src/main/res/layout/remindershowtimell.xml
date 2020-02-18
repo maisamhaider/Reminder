@@ -33,10 +33,11 @@
 
         <ImageView
             android:id="@+id/edit_addReminderDeleteTimeIV"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_margin="16dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/deletebin_foreground"
+            android:src="@drawable/trash"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

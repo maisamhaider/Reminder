@@ -2,9 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/alertdialogsbg"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical">
+    <TextView
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:text="Audio Recording"
+        android:background="@drawable/upernotesbg"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
 
     <RelativeLayout
         android:layout_marginTop="10dp"
@@ -19,14 +29,15 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             app:lottie_autoPlay="true"
-            app:lottie_fileName="playone.json"
+            app:lottie_fileName="play.json"
             app:lottie_loop="true" />
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/audio_StopLottieAnimationView"
             android:layout_gravity="center"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_fileName="listenstate.json"
+            app:lottie_fileName="mic.json"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
@@ -43,33 +54,62 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        android:id="@+id/audio_btns_ll"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/audio_btns_Cl"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
-        <Button
-            android:id="@+id/audio_CancelBtn"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/audio_CancelIV"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="CANCEL"
-            android:background="?attr/selectableItemBackground"
-            android:backgroundTint="@color/colorWhite"
-            android:textColor="@color/colorBlack" />
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/can"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/textView7" />
 
-        <Button
-            android:background="?attr/selectableItemBackground"
-            android:backgroundTint="@color/colorWhite"
-            android:id="@+id/audio_AddBtn"
-            android:layout_width="match_parent"
+        <TextView
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/audio_CancelIV"
+            app:layout_constraintStart_toStartOf="@+id/audio_CancelIV"
+            app:layout_constraintTop_toTopOf="@+id/audio_CancelIV" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_marginStart="20dp"
+            android:src="@drawable/done"
+            android:id="@+id/audio_AddIV"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
-            android:text="ADD"
-            android:textColor="@color/colorBlack" />
-    </LinearLayout>
+            android:textColor="@color/colorBlack"
+            app:layout_constraintStart_toEndOf="@+id/textView7" />
+
+        <TextView
+            android:textColor="@color/colorWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/audio_AddIV"
+            app:layout_constraintEnd_toEndOf="@+id/audio_AddIV"
+            app:layout_constraintStart_toStartOf="@+id/audio_AddIV"
+            app:layout_constraintTop_toTopOf="@+id/audio_AddIV" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

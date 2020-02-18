@@ -166,7 +166,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/custom_foreground" />
+                android:src="@drawable/custom" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -268,7 +268,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/custom_foreground" />
+                android:src="@drawable/custom" />
 
             <TextView
                 android:layout_width="wrap_content"

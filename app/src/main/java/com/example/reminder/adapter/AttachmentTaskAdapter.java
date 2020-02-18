@@ -82,14 +82,10 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
             }
             else
                 {
-                    holder.attaImageView.setImageResource( R.drawable.play_audio_foreground );
+                    holder.attaImageView.setImageResource( R.drawable.video );
 
                 }
-
-
         }
-
-
 
         holder.itemView.setOnClickListener( new View.OnClickListener() {
             @Override

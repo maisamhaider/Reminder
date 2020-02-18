@@ -48,6 +48,14 @@ public class MyTimeSettingClass {
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
+    @SuppressLint("SimpleDateFormat")
+    public static String getToday6pmShortFormatted() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set( Calendar.HOUR_OF_DAY, 18 );
+        calendar.set( Calendar.MINUTE, 0 );
+        calendar.set( Calendar.SECOND, 0 );
+        return new SimpleDateFormat( "h:mm a" ).format( calendar.getTime() );
+    }
 
     @SuppressLint("SimpleDateFormat")
     public static String getLaterToday() {
@@ -56,6 +64,12 @@ public class MyTimeSettingClass {
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
     }
 
+    @SuppressLint("SimpleDateFormat")
+    public static String getLaterTodayShortFormatted() {
+        Calendar cal = Calendar.getInstance();
+        cal.add( Calendar.HOUR, 2 );
+        return new SimpleDateFormat( "h:mm a" ).format( cal.getTime() );
+    }
 
     @SuppressLint("SimpleDateFormat")
     public static String getLaterToday(String strFormat) {
@@ -72,6 +86,17 @@ public class MyTimeSettingClass {
         cal.set( Calendar.SECOND, 0 );
         cal.add( Calendar.DATE, 1 );
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( cal.getTime() );
+
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getTomorrowMorningShortFormatted() {
+        Calendar cal = Calendar.getInstance();
+        cal.set( Calendar.HOUR_OF_DAY, 9 );
+        cal.set( Calendar.MINUTE, 0 );
+        cal.set( Calendar.SECOND, 0 );
+        cal.add( Calendar.DATE, 1 );
+        return new SimpleDateFormat( "EEE, h:mm a" ).format( cal.getTime() );
 
     }
 
@@ -149,6 +174,14 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.MINUTE, 0 );
         calendar.set( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
+    }
+    @SuppressLint("SimpleDateFormat")
+    public static String getNextWeekShortFormatted() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.add( Calendar.DATE,6);
+        calendar.set( Calendar.MINUTE, 0 );
+        calendar.set( Calendar.SECOND, 0 );
+        return new SimpleDateFormat( "dd MMM yyyy" ).format( calendar.getTime() );
     }
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeekWithYear() {

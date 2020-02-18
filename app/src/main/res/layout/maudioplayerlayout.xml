@@ -9,7 +9,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center|start"
-        android:src="@drawable/play_audio_foreground" />
+        android:src="@drawable/video" />
 
     <TextView
         android:id="@+id/audioPlayer_ATitle"
