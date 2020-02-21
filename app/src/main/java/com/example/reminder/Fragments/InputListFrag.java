@@ -7,6 +7,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,7 +58,8 @@ public class InputListFrag extends Fragment {
 
     AllTasksFrag allTasksFrag;
     private EditText input_ET;
-    private Button doneBtn, close_btn;
+    private Button doneBtn;
+    private LinearLayout close_LL;
 
     private String input_from_inputRV,dateToPlaceTask = "", alarmTime ="";
     private EditTextStringListener editTextStringListener;
@@ -65,14 +67,15 @@ public class InputListFrag extends Fragment {
     private MainActivity mainActivity;
     private MyTimeSettingClass myTimeSettingClass;
 
-    private LinearLayout remindTvLo,
-            dayslLo, todayLo, tomorrowLo, nextweekLo, daycustomLo,
-            timeLo, nineLo, threeLo, sixLo, timeCustomLo;
-    private boolean today=false,tomorrow=false,nextWeek=false;
-
+    private LinearLayout
+            dayslLo, timeLo;
+    private boolean today=false,tomorrow=false,nextWeek=false,custom = false;
+    ConstraintLayout nineLo,threeLo,sixLo,todayLo,tomorrowLo,nextweekLo,daycustomLo,timeCustomLo;
     private Calendar calendar = Calendar.getInstance();
     private int checkYear,currentYear,istomorrow,mtomorrow,isToday,mtoday;
 
+    private Calendar whatTime = Calendar.getInstance();
+    private SimpleDateFormat whatTimeFormat = new SimpleDateFormat( "h:mm a" );
     private Calendar c = Calendar.getInstance();
     private int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
     SimpleDateFormat sformat;
@@ -105,10 +108,9 @@ public class InputListFrag extends Fragment {
         recyclerView.setLayoutManager( linearLayoutManager );
 
         input_ET  = view.findViewById( R.id.searchET );
-        close_btn = view.findViewById( R.id.search_close_btn );
+        close_LL = view.findViewById( R.id.list_layout_backLL );
         doneBtn   = view.findViewById( R.id.donebtn );
 
-        remindTvLo  = view.findViewById( R.id.remindLayout );
         dayslLo     = view.findViewById( R.id.dayslayout );
         todayLo     = view.findViewById( R.id.today_layout );
         tomorrowLo  = view.findViewById( R.id.tomorrow_layout );
@@ -119,9 +121,8 @@ public class InputListFrag extends Fragment {
         nineLo  = view.findViewById( R.id.nine_layout );
         threeLo = view.findViewById( R.id.three_layout );
         sixLo   = view.findViewById( R.id.six_layout );
-
+        timeCustomLo = view.findViewById( R.id.custom_time_layout );
         mainActivity.hideBottomNView();
-        remindTvLo.setVisibility( View.GONE );
         dayslLo.setVisibility( View.GONE );
         timeLo.setVisibility( View.GONE );
         getBundleData = getArguments().getString("get_btn");
@@ -156,7 +157,8 @@ public class InputListFrag extends Fragment {
         input_ET.setOnFocusChangeListener( new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                remindTvLo.setVisibility( View.VISIBLE );
+                dayslLo.setVisibility( View.VISIBLE );
+                timeLo.setVisibility( View.GONE );
 
             }
         } );
@@ -193,7 +195,7 @@ public class InputListFrag extends Fragment {
 
         inputRemiderModelList.add( new InputRemiderModel( "Call", R.drawable.call1 ) );
         inputRemiderModelList.add( new InputRemiderModel( "Check", R.drawable.check1 ) );
-        inputRemiderModelList.add( new InputRemiderModel( "Get", R.drawable.ic_launcher_foreground ) );
+        inputRemiderModelList.add( new InputRemiderModel( "Get", R.drawable.get ) );
         inputRemiderModelList.add( new InputRemiderModel( "Email", R.drawable.email1 ) );
         inputRemiderModelList.add( new InputRemiderModel( "Buy", R.drawable.shopping1 ) );
         inputRemiderModelList.add( new InputRemiderModel( "Meet/Schedule", R.drawable.meeting1 ) );
@@ -224,14 +226,7 @@ public class InputListFrag extends Fragment {
             }
         } );
 
-    /*    inputTaskListAdapter.addVisiblelistener(new VisibilityListener() {
-            @Override
-            public void veiwVisibility() {
-                 remindTvLo.setVisibility( View.VISIBLE );
 
-            }
-        });
-*/
         //on done button data should go to task fragment.
 
         //search
@@ -252,7 +247,7 @@ public class InputListFrag extends Fragment {
 
 
         //go to task fragment
-        close_btn.setOnClickListener( new View.OnClickListener() {
+        close_LL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainActivity.showBottomNView();
@@ -277,54 +272,34 @@ public class InputListFrag extends Fragment {
         return view;
     }
 
-    private void onDoneButtonClick()
-    {
+    private void onDoneButtonClick() {
 
 
-        if (input_ET.length()==0)
-        {
+        if (input_ET.length() == 0) {
             mainActivity.setTaskFragDefaultBNBItem();
+            mainActivity.showBottomNView();
 //            mainActivity.showBottomNView();
-        }
-        if (input_ET.length() != 0)
-        {
-            if (dateToPlaceTask.matches( "" ))
-            {
+        } else if (input_ET.length() != 0) {
+            if (dateToPlaceTask.matches( "" ) || alarmTime.matches( "" )) {
                 whatIsThisFun();
-            }
-                else
-                {
-                    //nothing
-                }
-            }
-            else
-            if (alarmTime.matches( "" ))
-            {
-                whatIsThisFun();
-            }
-            else if (alarmTime.matches( "" ) && dateToPlaceTask.matches( "" ))
-            {
-                whatIsThisFun();
+                mainActivity.setTaskFragDefaultBNBItem();
+                mainActivity.showBottomNView();
 
-            }
-            else
-            {
-              int isInsert =   dataBaseHelper.insert( input_ET.getText().toString(), alarmTime,dateToPlaceTask,
-                      taskCreatedDateSF.format( taskCreatedDate.getTime()),"","1" );
-                if (isInsert==0)
-                {
+            } else {
+                int isInsert = dataBaseHelper.insert( input_ET.getText().toString(), alarmTime, dateToPlaceTask,
+                        taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "1" );
+                if (isInsert == 0) {
                     Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-                }
-                else {
-                    alarmSettingClass.setOneAlarm( input_ET.getText().toString(),myTimeSettingClass.getMilliFromDate( alarmTime ),isInsert );
+                } else {
+                    alarmSettingClass.setOneAlarm( input_ET.getText().toString(), myTimeSettingClass.getMilliFromDate( alarmTime ), isInsert );
                     Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
                 }
             }
-
             mainActivity.setTaskFragDefaultBNBItem();
             mainActivity.showBottomNView();
-
         }
+
+    }
 
 
     public void whatIsThisFun()
@@ -398,6 +373,16 @@ public class InputListFrag extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
+            nextWeek =false;
+            tomorrow = false;
+            today = false;
+            custom = true;
+            dayslLo.setVisibility( View.GONE );
+            timeLo.setVisibility( View.VISIBLE );
+            nineLo.setClickable( true );
+            threeLo.setClickable( true );
+            sixLo.setClickable( true );
+            timeCustomLo.setEnabled(true);
 
             calendar.set( Calendar.YEAR,year );
             calendar.set( Calendar.MONTH,month );
@@ -412,10 +397,11 @@ public class InputListFrag extends Fragment {
             mtomorrow   = calendar1.get( Calendar.DAY_OF_MONTH )+1;
             isToday  = calendar.get( Calendar.DAY_OF_MONTH);
             mtoday  = calendar1.get( Calendar.DAY_OF_MONTH );
+         SimpleDateFormat format = new SimpleDateFormat( "dd MMM yyyy EEE, " );
 
             myTimeSettingClass.setCustomPlaceDate( dayOfMonth,month,year );
             dateToPlaceTask = MyTimeSettingClass.getCustomPlaceDate();
-
+            alarmTime = format.format( calendar.getTime() );
 
         }
     };
@@ -426,9 +412,10 @@ public class InputListFrag extends Fragment {
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE,minute );
 
-                sformat =new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
+                sformat =new SimpleDateFormat( "h:mm a" );
 
-            alarmTime = sformat.format( calendar.getTime() );
+
+            alarmTime = alarmTime + sformat.format( calendar.getTime() );
 
         }
     };
@@ -437,14 +424,6 @@ public class InputListFrag extends Fragment {
 
       private void setDateTimeOfTask()
           {
-        remindTvLo.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                remindTvLo.setVisibility( View.GONE );
-                dayslLo.setVisibility( View.VISIBLE );
-                timeLo.setVisibility( View.GONE );
-            }
-        } );
 
             todayLo.setOnClickListener( new View.OnClickListener() {
                 @Override
@@ -452,7 +431,7 @@ public class InputListFrag extends Fragment {
                     today = true;
                     tomorrow = false;
                     nextWeek =false;
-
+                    custom = false;
                     dateToPlaceTask = MyTimeSettingClass.todayPlaceDate();
                     dayslLo.setVisibility( View.GONE );
                     timeLo.setVisibility( View.VISIBLE );
@@ -465,12 +444,14 @@ public class InputListFrag extends Fragment {
                     tomorrow = true;
                     today = false;
                     nextWeek =false;
+                    custom = false;
                     dateToPlaceTask = MyTimeSettingClass.tomorrowPlaceDate();
                     dayslLo.setVisibility( View.GONE );
                     timeLo.setVisibility( View.VISIBLE );
-                    nineLo.setClickable( true );
-                    threeLo.setClickable( true );
-                    sixLo.setClickable( true );
+                    nineLo.setEnabled( true );
+                    threeLo.setEnabled( true );
+                    sixLo.setEnabled( true );
+                    timeCustomLo.setEnabled(true);
 
                 }
             } );
@@ -480,12 +461,14 @@ public class InputListFrag extends Fragment {
                     nextWeek =true;
                     tomorrow = false;
                     today = false;
+                    custom = false;
                     dateToPlaceTask= MyTimeSettingClass.nextWeekPlaceDate();
                     dayslLo.setVisibility( View.GONE );
                     timeLo.setVisibility( View.VISIBLE );
                     nineLo.setClickable( true );
                     threeLo.setClickable( true );
                     sixLo.setClickable( true );
+                    timeCustomLo.setEnabled(true);
                 }
             } );
 
@@ -496,14 +479,24 @@ public class InputListFrag extends Fragment {
                     {
                         alarmTime = MyTimeSettingClass.getToday9am();
                     }
+                    else
                     if (tomorrow)
                     {
                         alarmTime = MyTimeSettingClass.getTomorrowMorning();
                     }
+                    else
                     if (nextWeek)
                     {
                         alarmTime = MyTimeSettingClass.getNextWeek9am();
                     }
+                    else
+                    {
+                        whatTime.set( Calendar.HOUR_OF_DAY, 9 );
+                        whatTime.set( Calendar.MINUTE, 0 );
+                        whatTime.set( Calendar.SECOND, 0 );
+                        alarmTime = alarmTime+whatTimeFormat.format( whatTime.getTime() );
+                    }
+
                 }
             } );
 
@@ -514,14 +507,21 @@ public class InputListFrag extends Fragment {
                     if (today)
                     {
                         alarmTime = MyTimeSettingClass.getToday3pm();
-                    }
+                    }else
                     if (tomorrow)
                     {
                         alarmTime = MyTimeSettingClass.getTomorrow3pm();
-                    }
+                    }else
                     if (nextWeek)
                     {
                         alarmTime = MyTimeSettingClass.getNextWeek3pm();
+                    }
+                    else
+                    {
+                        whatTime.set( Calendar.HOUR_OF_DAY, 15 );
+                        whatTime.set( Calendar.MINUTE, 0 );
+                        whatTime.set( Calendar.SECOND, 0 );
+                        alarmTime = alarmTime+whatTimeFormat.format( whatTime.getTime() );
                     }
                 }
             } );
@@ -533,14 +533,21 @@ public class InputListFrag extends Fragment {
                       if (today)
                       {
                           alarmTime = MyTimeSettingClass.getToday6pm();
-                      }
+                      }else
                       if (tomorrow)
                       {
                           alarmTime = MyTimeSettingClass.getTomorrow6pm();
-                      }
+                      }else
                       if (nextWeek)
                       {
                           alarmTime = MyTimeSettingClass.getNextWeek6pm();
+                      }
+                      else
+                      {
+                          whatTime.set( Calendar.HOUR_OF_DAY, 18 );
+                          whatTime.set( Calendar.MINUTE, 0 );
+                          whatTime.set( Calendar.SECOND, 0 );
+                          alarmTime = alarmTime+whatTimeFormat.format( whatTime.getTime() );
                       }
                   }
               } );
@@ -555,37 +562,33 @@ public class InputListFrag extends Fragment {
                   @Override
                   public void onClick(View v) {
 
-
-                      TimePickerDialog tP = new TimePickerDialog( getContext(),timePickerListener,hour,minutes,false );
-                      tP.show();
                       DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ),datePickerDialog,year,month,day );
                       dP.getDatePicker().setMinDate( System.currentTimeMillis() - 1000 );
                       dP.show();
                   }
               } );
-              timeLo.setOnClickListener( new View.OnClickListener() {
+              timeCustomLo.setOnClickListener( new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
                       TimePickerDialog tP = new TimePickerDialog( getContext(),timePickerListener,hour,minutes,false );
                       tP.show();
                   }
               } );
-
-
-
     }
-
-
-
     @Override
     public void onPause() {
         super.onPause();
-
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach( context );
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
     }
 

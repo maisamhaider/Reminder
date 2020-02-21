@@ -73,8 +73,8 @@ public class EditTask extends BottomSheetDialogFragment {
     private MyTimeSettingClass myTimeSettingClass;
 
     // Edit task Views
-    private TextView edittaskTitle, createdTextView, notesHolderTv, editSetTimeTv, setTimeTv, tomorrow9AmTv, daily_WeeklyTv;
-    private EditText addSubTasksET;
+    private TextView createdTextView, notesHolderTv, editSetTimeTv, setTimeTv, tomorrow9AmTv, daily_WeeklyTv;
+    private EditText addSubTasksET, edittaskTitleEt;
     private CardView dummySubTaskCV;
     private LinearLayout editSetTimeLL, tabToAddAttachmentsLL;
     private ImageView newSubTaskIv, shareTaskIV, editDeleteUpperIV,addNotesIv, edit_uploadIv, edit_deleteTaskIV, edit_MarkAsDoneIV;
@@ -150,7 +150,7 @@ public class EditTask extends BottomSheetDialogFragment {
         setTimeTv = view.findViewById( R.id.setTaskTimeTV );
         tomorrow9AmTv = view.findViewById( R.id.tomorrow9amTv );
         daily_WeeklyTv = view.findViewById( R.id.setTaskRepeatTv );
-        edittaskTitle = view.findViewById( R.id.taskTitle_tv );
+        edittaskTitleEt = view.findViewById( R.id.taskTitle_Et );
         createdTextView = view.findViewById( R.id.createdDateTv );
         editSetTimeTv = view.findViewById( R.id.editSetTimeTv );
         editDeleteUpperIV = view.findViewById( R.id.editDeleteUpperTv );
@@ -198,16 +198,6 @@ public class EditTask extends BottomSheetDialogFragment {
         } );
 
 
-//        editReminderOnOffSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                } else {
-//
-//                }
-//            }
-//        } );
-
         LinearLayoutManager linearLayoutManager;
         linearLayoutManager = new LinearLayoutManager( getContext() ) {
             @Override
@@ -224,6 +214,7 @@ public class EditTask extends BottomSheetDialogFragment {
                 boolean isUpdate = dataBaseHelper.upDate( taskPosition, "yes", "0" );
                 if (isUpdate) {
                     alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( taskPosition ) );
+                    mainActivity.setTaskFragDefaultBNBItem();
                     dismiss();
                     Toast.makeText( getContext(), "updated", Toast.LENGTH_SHORT ).show();
                 } else {
@@ -268,6 +259,33 @@ public class EditTask extends BottomSheetDialogFragment {
             }
         } );
 
+        edittaskTitleEt.post( new Runnable() {
+            @Override
+            public void run() {
+                edittaskTitleEt.setImeOptions( EditorInfo.IME_ACTION_DONE );
+
+
+            }
+        } );
+        edittaskTitleEt.setOnEditorActionListener( new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    dataBaseHelper.updateTitle( edittaskTitleEt.getText().toString(),taskPosition );
+                    mainActivity.setTaskFragDefaultBNBItem();
+                    edittaskTitleEt.setMaxLines( 10 );
+
+                }
+                return false;
+            }
+        } );
+        edittaskTitleEt.setOnTouchListener( new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                edittaskTitleEt.setSingleLine();
+                return false;
+            }
+        } );
 
         return view;
     }
@@ -388,6 +406,7 @@ public class EditTask extends BottomSheetDialogFragment {
 
     private void getDataInBSHDF() {
 
+
         taskPosition = getArguments().getString( "task_position" );
         taskTitle = getArguments().getString( "Task_Title" );
         repeatValue = getArguments().getString( "Repeat_Value" );
@@ -397,7 +416,7 @@ public class EditTask extends BottomSheetDialogFragment {
         taskCreatedDate = getArguments().getString( "Task_Created_Date" );
         attachments = getArguments().getString( "Attachment" );
 
-        edittaskTitle.setText( taskTitle );
+        edittaskTitleEt.setText( taskTitle );
         createdTextView.setText( taskCreatedDate );
 
 
@@ -1159,6 +1178,14 @@ public class EditTask extends BottomSheetDialogFragment {
                     AttachmentsBottomSheet attachmentsBottomSheet = AttachmentsBottomSheet.getAttachInstance();
                     attachmentsBottomSheet.show( getActivity().getSupportFragmentManager(), "attachment BSHeet" );
                     attachmentsBottomSheet.setArguments( bundle );
+
+                    attachmentsBottomSheet.setRecyclerCallBack(new RecyclerCallBack() {
+                        @Override
+                        public void mCallBack() {
+                            getAttachmentFromDB();
+
+                        }
+                    } );
                 }
             }
         } );
@@ -1173,10 +1200,11 @@ public class EditTask extends BottomSheetDialogFragment {
                     AttachmentsBottomSheet attachmentsBottomSheet = AttachmentsBottomSheet.getAttachInstance();
                     attachmentsBottomSheet.show( getActivity().getSupportFragmentManager(), "attachment BSHeet" );
                     attachmentsBottomSheet.setArguments( bundle );
-                    attachmentsBottomSheet.setRecyclerCallBack( new RecyclerCallBack() {
+                    attachmentsBottomSheet.setRecyclerCallBack(new RecyclerCallBack() {
                         @Override
                         public void mCallBack() {
                             getAttachmentFromDB();
+
                         }
                     } );
                 }
@@ -1220,6 +1248,10 @@ public class EditTask extends BottomSheetDialogFragment {
         attachmentTaskAdapter = new AttachmentTaskAdapter( getContext(), attachmentTaskModelList, dataBaseHelper, fragmentManager );
         attachmentRecyclerView.setAdapter( attachmentTaskAdapter );
         attachmentTaskAdapter.notifyDataSetChanged();
+        edit_uploadIv.setVisibility( View.VISIBLE );
+        tabToAddAttachmentsLL.setVisibility( View.GONE );
+        attachmentRecyclerView.setVisibility( View.VISIBLE );
+
 
     }
 

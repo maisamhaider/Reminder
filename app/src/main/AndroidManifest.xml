@@ -11,31 +11,31 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-
-
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/todolisticon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/todolisticon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.LauncherActivityOnNotification"
-            android:theme="@style/LauncherAppTheme"></activity>
-        <activity android:name=".Activity.AboutActivity" />
-        <activity android:name=".Activity.CompletedTasksActivity" />
-
-        <activity
-            android:name=".Activity.MainActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".Activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activity.LauncherActivityOnNotification"
+            android:theme="@style/LauncherAppTheme" />
+        <activity android:name=".Activity.AboutActivity" />
+        <activity android:name=".Activity.CompletedTasksActivity" />
+        <activity
+            android:name=".Activity.MainActivity"
+            android:screenOrientation="portrait">
 
+        </activity>
 
         <provider
             android:name=".classes.ReminderProvider"
@@ -48,14 +48,13 @@
         </provider>
 
         <receiver android:name=".classes.NotificationReceiver" />
-        <receiver android:name=".classes.DeviceBootReceiver" android:enabled="true">
+        <receiver
+            android:name=".classes.DeviceBootReceiver"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
     </application>
-
-
 
 </manifest>

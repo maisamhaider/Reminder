@@ -1,202 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@color/colorMainYellowOne"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorSplashScreen"
     android:orientation="vertical">
 
     <HorizontalScrollView
-        android:visibility="gone"
-        android:layout_above="@+id/addETRelativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_gravity="bottom"
-        android:scrollbars="none"
         android:id="@+id/tagsLlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_above="@+id/addETRelativeLayout"
+        android:layout_gravity="bottom"
         android:background="@color/colorTransparentOne"
-        android:layout_height="35dp">
+        android:scrollbars="none">
 
+        <!--        android:visibility="gone"-->
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:background="@color/colorTransparentOne">
+            android:background="@color/colorTransparentOne"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_margin="5dp"
-                android:background="@drawable/tagsbackgroundbeforeclick"
                 android:id="@+id/thisMorningtagLL"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick">
 
                 <ImageView
-                    android:src="@drawable/notification_foreground"
                     android:id="@+id/thisMorningIv"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/notifi" />
 
                 <TextView
-                    android:textColor="@color/colorBlackType"
-                    android:padding="2dp"
-                    android:paddingEnd="5dp"
                     android:id="@+id/thisMorningtagTv"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
-                    android:backgroundTint="@android:color/transparent"
                     android:layout_gravity="start|center"
+                    android:backgroundTint="@android:color/transparent"
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
                     android:text="This morning"
+                    android:textColor="@color/colorBlackType"
                     tools:ignore="RtlSymmetry" />
             </LinearLayout>
 
             <LinearLayout
-                android:textColor="@color/colorBlackType"
-                android:layout_margin="5dp"
-                android:background="@drawable/tagsbackgroundbeforeclick"
                 android:id="@+id/laterTodaytagLL"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick"
+                android:textColor="@color/colorBlackType">
 
                 <ImageView
-                    android:src="@drawable/notification_foreground"
                     android:id="@+id/mainTaskFraglaterTodayIv"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/notifi" />
 
                 <TextView
-                    android:textColor="@color/colorBlackType"
-                    android:padding="2dp"
-                    android:paddingEnd="5dp"
                     android:id="@+id/laterTodaytagTv"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
-                    android:backgroundTint="@android:color/transparent"
                     android:layout_gravity="start|center"
+                    android:backgroundTint="@android:color/transparent"
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
                     android:text="Later today"
+                    android:textColor="@color/colorBlackType"
                     tools:ignore="RtlSymmetry" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_margin="5dp"
                 android:id="@+id/thisEveningtagLL"
-                android:background="@drawable/tagsbackgroundbeforeclick"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick">
 
                 <ImageView
-                    android:src="@drawable/notification_foreground"
                     android:id="@+id/thisEveningIv"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/notifi" />
+
                 <TextView
-                    android:textColor="@color/colorBlackType"
-                    android:padding="2dp"
-                    android:paddingEnd="5dp"
-                    android:backgroundTint="@android:color/transparent"
                     android:id="@+id/thisEveningTv"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_gravity="start|center"
-                    android:text="This evening" />
+                    android:backgroundTint="@android:color/transparent"
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:text="This evening"
+                    android:textColor="@color/colorBlackType" />
             </LinearLayout>
 
 
             <LinearLayout
-                android:layout_margin="5dp"
                 android:id="@+id/tomorrowtagLL"
-                android:background="@drawable/tagsbackgroundbeforeclick"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick">
 
                 <ImageView
-                    android:src="@drawable/notification_foreground"
                     android:id="@+id/tomorrowIv"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/notifi" />
+
                 <TextView
-                    android:textColor="@color/colorBlackType"
-                    android:padding="2dp"
-                    android:paddingEnd="5dp"
-                    android:backgroundTint="@android:color/transparent"
                     android:id="@+id/tomorrowtagTv"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_gravity="start|center"
-                    android:text="Tomorrow morning" />
+                    android:backgroundTint="@android:color/transparent"
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:text="Tomorrow morning"
+                    android:textColor="@color/colorBlackType" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_margin="5dp"
                 android:id="@+id/nextweekLL"
-                android:background="@drawable/tagsbackgroundbeforeclick"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick">
 
                 <ImageView
-                    android:src="@drawable/notification_foreground"
                     android:id="@+id/nextweekIv"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/notifi" />
+
                 <TextView
-                    android:textColor="@color/colorBlackType"
-                    android:padding="2dp"
-                    android:paddingEnd="5dp"
-                    android:backgroundTint="@android:color/transparent"
                     android:id="@+id/upcomingtagTv"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_gravity="start|center"
-                    android:text="Next week" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_margin="5dp"
-                android:id="@+id/somedayLL"
-                android:background="@drawable/tagsbackgroundbeforeclick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:src="@drawable/notification_foreground"
-                    android:id="@+id/somedayIv"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textColor="@color/colorBlackType"
                     android:backgroundTint="@android:color/transparent"
                     android:padding="2dp"
                     android:paddingEnd="5dp"
+                    android:text="Next week"
+                    android:textColor="@color/colorBlackType" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/somedayLL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick">
+
+                <ImageView
+                    android:id="@+id/somedayIv"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/notifi" />
+
+                <TextView
                     android:id="@+id/somedaytagTv"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_gravity="start|center"
-                    android:text="Someday" />
+                    android:backgroundTint="@android:color/transparent"
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:text="Someday"
+                    android:textColor="@color/colorBlackType" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_margin="5dp"
                 android:id="@+id/customLL"
-                android:background="@drawable/tagsbackgroundbeforeclick"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/tagsbackgroundbeforeclick">
 
                 <ImageView
 
-                    android:src="@drawable/notification_foreground"
                     android:id="@+id/customIv"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/notifi" />
+
                 <TextView
-                    android:textColor="@color/colorBlackType"
-                    android:padding="2dp"
-                    android:paddingEnd="5dp"
-                    android:background="@android:color/transparent"
                     android:id="@+id/customtagTv"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_gravity="start|center"
-                    android:text="Custom" />
+                    android:background="@android:color/transparent"
+                    android:padding="2dp"
+                    android:paddingEnd="5dp"
+                    android:text="Custom"
+                    android:textColor="@color/colorBlackType" />
             </LinearLayout>
         </LinearLayout>
     </HorizontalScrollView>
@@ -214,13 +233,13 @@
             android:id="@+id/addtaskedittext"
             android:layout_width="320dp"
             android:layout_height="50dp"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="2dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:background="@drawable/foursidescurvedwhitebg"
+            android:gravity="bottom"
             android:paddingLeft="10dp"
             android:paddingBottom="10dp"
-            android:gravity="bottom"
-            android:background="@drawable/foursidescurvedwhitebg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -248,8 +267,6 @@
             app:lottie_autoPlay="true"
             app:lottie_fileName="donetwo.json" />
     </RelativeLayout>
-
-
 
 
 </LinearLayout>

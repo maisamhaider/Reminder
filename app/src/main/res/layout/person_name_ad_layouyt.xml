@@ -1,41 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/foursidescurvedwhitebgtwo"
     android:orientation="vertical">
 
     <EditText
         android:id="@+id/person_name_et"
         android:layout_width="match_parent"
         android:layout_height="73dp"
+        android:gravity="center"
         android:inputType="textPersonName"
         android:background="@android:color/transparent"
        android:hint="name" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/cancel_person_name_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:text="Calcel" />
-        <TextView
-            android:text="|"
+        <ImageView
+            android:id="@+id/cancel_person_name_Iv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/save_person_name_btn"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
             android:layout_weight="1"
-            android:text="Save" />
-    </LinearLayout>
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/can"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView17"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/cancel_person_name_Iv"
+            app:layout_constraintEnd_toEndOf="@+id/cancel_person_name_Iv"
+            app:layout_constraintStart_toStartOf="@+id/cancel_person_name_Iv"
+            app:layout_constraintTop_toTopOf="@+id/cancel_person_name_Iv" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="|"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/save_person_name_Iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/done"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView17"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/save_person_name_Iv"
+            app:layout_constraintStart_toStartOf="@+id/save_person_name_Iv"
+            app:layout_constraintTop_toTopOf="@+id/save_person_name_Iv" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

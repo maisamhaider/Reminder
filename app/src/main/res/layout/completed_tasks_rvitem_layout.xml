@@ -28,10 +28,10 @@
 
     <ImageView
         android:id="@+id/completedTaskDeleteIV"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/trash" />
+        android:src="@drawable/clear" />
 </RelativeLayout>

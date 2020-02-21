@@ -1,283 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Fragments.InputListFrag">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorMainYellowOne"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/search_close_btn"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-
+        <LinearLayout
+            android:id="@+id/list_layout_backLL"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="15dp"
             android:background="?attr/selectableItemBackground"
-            android:text="x" />
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/search_close_btn"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/searchET"
-            android:layout_width="225dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginStart="25dp"
+            android:background="@android:color/transparent"
             android:gravity="start|center"
-            android:hint="i want to" />
+            android:hint="I want to..."
+            android:maxWidth="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/list_layout_backLL"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/donebtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_marginEnd="10dp"
             android:background="?attr/selectableItemBackground"
-            android:text="done" />
+            android:text="done"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <LinearLayout
+                android:layout_below="@+id/layout1"
+                android:id="@+id/layout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/layout2"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inputRemiderRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout1"
-        android:layout_alignParentStart="true"
-        android:orientation="vertical">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/inputRemiderRV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:id="@+id/remindLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
         android:layout_below="@+id/layout2"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:background="?android:attr/selectableItemBackground"
-        android:gravity="start|center"
-        android:orientation="horizontal">
+        android:layout_marginTop="150dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:text="Remind"
-            android:textSize="20sp" />
+        <include layout="@layout/inputlisttimelayout" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/dayslayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/layout2"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/today_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:src="@drawable/arrow_down_foreground" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/today" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tomorrow_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/arrow_forward_foreground" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/tomorrow" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/nextweek_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/nextweek_forward_foreground" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Next Week" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/custom_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/custom" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Custom" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/time_layout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/layout2"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/nine_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@mipmap/ninenumber_foreground" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="morning" />
-
-        </LinearLayout>
-
-        <LinearLayout
-
-            android:id="@+id/three_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@mipmap/threenumber_foreground" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="afternoon" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/six_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@mipmap/sixnumber_foreground" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Next Week" />
-
-        </LinearLayout>
-
-        <LinearLayout
-
-            android:id="@+id/custom_time_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/custom" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Custom" />
-
-        </LinearLayout>
-    </LinearLayout>
-
+        <include layout="@layout/listdatelayout" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

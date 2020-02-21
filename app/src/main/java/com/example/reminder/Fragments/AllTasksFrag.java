@@ -252,15 +252,16 @@ public class AllTasksFrag extends Fragment {
                                 {
                                     String position = cursor.getString( 0 );
                                     String isCompleted = cursor.getString( 6 );
+                                    if (isCompleted==null)
+                                    {}
+                                    else
                                     if (isCompleted.matches( "yes" ))
                                     {
                                         alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( position ) );
-                                    }
-                                    else
-                                    {}
+                                        dataBaseHelper.deleteEachCompletedTask(position);
 
+                                    }
                                 }
-                                dataBaseHelper.deleteCompletedTasks();
 
                                 mainActivity.setTaskFragDefaultBNBItem();
                             }
@@ -270,6 +271,7 @@ public class AllTasksFrag extends Fragment {
                             }
 
                             tasksMenuImageView.setImageResource( R.drawable.menu );
+
                             popupMenu.dismiss();
                         }
                         return true;
@@ -280,6 +282,7 @@ public class AllTasksFrag extends Fragment {
                     @Override
                     public void onDismiss(PopupMenu menu) {
                         tasksMenuImageView.setImageResource( R.drawable.menu );
+
                     }
                 } );
 
@@ -570,13 +573,13 @@ public class AllTasksFrag extends Fragment {
         disAbleView6.setBackground( getResources().getDrawable( R.drawable.tagsbackgroundbeforeclick ) );
 
         //set images
-        enAbleImageView.setImageResource( R.drawable.notification_active_foreground );
-        disAbleImageView1.setImageResource( R.drawable.notification_foreground );
-        disAbleImageView2.setImageResource( R.drawable.notification_foreground );
-        disAbleImageView3.setImageResource( R.drawable.notification_foreground );
-        disAbleImageView4.setImageResource( R.drawable.notification_foreground );
-        disAbleImageView5.setImageResource( R.drawable.notification_foreground );
-        disAbleImageView6.setImageResource( R.drawable.notification_foreground );
+        enAbleImageView.setImageResource( R.drawable.bell );
+        disAbleImageView1.setImageResource( R.drawable.notifi );
+        disAbleImageView2.setImageResource( R.drawable.notifi );
+        disAbleImageView3.setImageResource( R.drawable.notifi );
+        disAbleImageView4.setImageResource( R.drawable.notifi );
+        disAbleImageView5.setImageResource( R.drawable.notifi );
+        disAbleImageView6.setImageResource( R.drawable.notifi );
     }
 
     private void insertTodayMorningFun() {
@@ -620,7 +623,7 @@ public class AllTasksFrag extends Fragment {
 
     private void insertThisEveningTaskFun() {
         text = add_task_edittext.getText().toString();
-        reminder_date = MyTimeSettingClass.getToday3pm();
+        reminder_date = MyTimeSettingClass.getToday6pm();
         if (text.matches( "" )) {
             //do nothing
         } else {
@@ -794,11 +797,22 @@ public class AllTasksFrag extends Fragment {
 
         Cursor cursor = dataBaseHelper.getToday();
         if (cursor.getCount() == 0) {
-            Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
+            Log.i( "Data","no data" );
         }
         while (cursor.moveToNext()) {
             String date =cursor.getString( 2 );
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), date) );
+            String isCom = cursor.getString( 6 );
+            boolean isComBoolean = false ;
+            if (isCom==null)
+            {
+                isComBoolean = false;
+            }
+            else
+            if (isCom.matches( "yes" ))
+            {
+                isComBoolean = true;
+            }
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), date,isComBoolean ));
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_today.setAdapter( allTasksAdapter );
@@ -824,11 +838,23 @@ public class AllTasksFrag extends Fragment {
 
         Cursor cursor = dataBaseHelper.getTomorrow();
         if (cursor.getCount() == 0) {
-            Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
+            Log.i( "Data","no data" );
         }
         while (cursor.moveToNext()) {
             String date =cursor.getString( 2 );
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ),date ) );
+            String isCom = cursor.getString( 6 );
+            boolean isComBoolean = false ;
+            if (isCom==null)
+            {
+                isComBoolean = false;
+            }
+            else
+            if (isCom.matches( "yes" ))
+
+            {
+                isComBoolean = true;
+            }
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ),date,isComBoolean  ) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_tomorrow.setAdapter( allTasksAdapter );
@@ -854,10 +880,21 @@ public class AllTasksFrag extends Fragment {
 
         Cursor cursor = dataBaseHelper.getUpcoming();
         if (cursor.getCount() == 0) {
-            Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
+            Log.i( "Data","no data" );
         }
         while (cursor.moveToNext()) {
-            AllTasksModel filter = new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) );
+            String isCom = cursor.getString( 6 );
+            boolean isComBoolean = false;
+            if (isCom==null)
+            {
+                isComBoolean = false;
+            }
+            else
+                if (isCom.matches( "yes" ))
+            {
+                isComBoolean = true;
+            }
+            AllTasksModel filter = new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ),isComBoolean);
             String today = todayPlaceDate();
             String tommorow = tomorrowPlaceDate();
             String someday = "";
@@ -891,10 +928,21 @@ public class AllTasksFrag extends Fragment {
 
         Cursor cursor = dataBaseHelper.getSomeday();
         if (cursor.getCount() == 0) {
-            Toast.makeText( getContext(), "No Data In Db", Toast.LENGTH_SHORT ).show();
+            Log.i( "Data","no data" );
         }
         while (cursor.moveToNext()) {
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ) ) );
+            String isCom = cursor.getString( 6 );
+            boolean isComBoolean = false;
+            if (isCom==null)
+            {
+                isComBoolean = false;
+            }
+            else
+            if (isCom.matches( "yes" ))
+            {
+                isComBoolean = true;
+            }
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ),isComBoolean ) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_someday.setAdapter( allTasksAdapter );

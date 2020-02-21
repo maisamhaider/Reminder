@@ -5,11 +5,13 @@ public class AllTasksModel {
     private String taskText;
     private String date;
     private String id;
+    private boolean isCompleted;
 
-    public AllTasksModel(String id,String taskText, String date) {
+    public AllTasksModel(String id,String taskText, String date,boolean isCompleted) {
         this.id = id;
         this.taskText = taskText;
         this.date = date;
+        this.isCompleted = isCompleted;
     }
 
     public String getId() {return id; }
@@ -19,5 +21,7 @@ public class AllTasksModel {
     public String getDate() {
         return date;
     }
-
+    public boolean isCompleted() {
+        return isCompleted;
+    }
 }

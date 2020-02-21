@@ -82,6 +82,7 @@ public class AlarmSettingClass extends ContextWrapper {
         alarmManager.cancel(sender);
     }
 
+
 //private void enableOnRebootBroadCastReceiver()
 //{
 //    ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);

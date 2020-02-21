@@ -5,15 +5,15 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorPrimaryDark">@color/colorMainYellowOne</item>
-        <item name="colorAccent">@color/colorMainYellowOne</item>
+        <item name="colorAccent">@color/colorWhite</item>
 
     </style>
 
     <style name="LauncherAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorDodgerBlue</item>
-        <item name="colorPrimaryDark">@color/colorDodgerBlue</item>
-        <item name="colorAccent">@color/colorDodgerBlue</item>
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimaryDark">@color/colorMainYellowOne</item>
+        <item name="colorAccent">@color/colorWhite</item>
 
     </style>
 

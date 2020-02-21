@@ -74,7 +74,7 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
 
         if (play == position) {
             if (title.contains( "mp3" )) {
-                holder.attaImageView.setImageResource( R.drawable.stop_audio_foreground );
+                holder.attaImageView.setImageResource( R.drawable.stop );
             } else {
                 holder.attaImageView.setImageResource( R.drawable.video );
             }
@@ -111,15 +111,17 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
                         if (mediaPlayer != null) {
                             if (mediaPlayer.isPlaying()) {
                                 mediaPlayer.pause();
+                                play=-1;
+                                holder.attaImageView.setImageResource( R.drawable.video );
                             } else {
 
+                                holder.attaImageView.setImageResource( R.drawable.stop );
                                 play = position;
                                 mediaPlayer = MediaPlayer.create( context, Uri.fromFile( file ) );
                                 mediaPlayer.start();
                                 mediaPlayer.setLooping( true );
                             }
                         }
-                        notifyDataSetChanged();
                     }
                 } else {
 
@@ -137,6 +139,8 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
 
                     dialog.show();
                 }
+                notifyDataSetChanged();
+
             }
         } );
 
@@ -164,11 +168,13 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
                     @Override
                     public void onClick(View v) {
 
+                        stopAudioOnBackPres();
                         dataBaseHelper.deleteAttachment( list.get( position ).getId() );
                         list.remove( position );
                         deleteFile( title );
                         notifyDataSetChanged();
                         dialog.dismiss();
+
                     }
                 } );
             }

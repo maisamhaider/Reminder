@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:background="@color/colorMainYellowOne"
+    android:background="@color/colorSplashScreen"
     android:orientation="vertical">
 
     <TextView
@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2020"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorMainYellowOne"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.048"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="Calendar"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorMainYellowOne"
         android:layout_marginStart="5dp"
         app:layout_constraintStart_toEndOf="@+id/calActionBarDateTv1"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,8 +36,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="All Events"
+        android:textAllCaps="true"
         android:textStyle="bold"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorMainYellowOne"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

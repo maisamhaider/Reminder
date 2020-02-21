@@ -1,111 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/mainindivduallayout"
     android:layout_width="match_parent"
-    android:layout_marginTop="10dp"
     android:layout_height="65dp"
->
+    android:layout_marginTop="10dp"
+    android:background="?android:attr/selectableItemBackground">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mainCv"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="10dp"
-        android:elevation="5dp"
-        app:cardElevation="7dp">
+        android:background="?android:attr/selectableItemBackground"
+        android:elevation="1dp"
+        app:cardElevation="1dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="55dp">
 
-            <CheckBox
-                android:id="@+id/checkbox"
+            <LinearLayout
+                android:gravity="center|start"
+                android:orientation="vertical"
+                android:layout_width="250dp"
+                android:layout_height="match_parent">
+
+                <TextView
+
+                    android:id="@+id/noteTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="check"
+
+                    android:maxWidth="150dp"
+                    android:textColor="@color/colorBlack"
+                    android:layout_marginStart="5dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/dateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="5dp"
+                    android:gravity="center"
+                    android:layout_gravity="bottom"
+                    android:text="No Reminder Time"
+                    android:textSize="8sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="2dp"
-                android:layout_marginBottom="13dp" />
-
-            <TextView
-                android:id="@+id/noteTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="5dp"
-                android:layout_toEndOf="@+id/checkbox"
-                android:hint="check"
-                android:maxWidth="150dp"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/dateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/noteTextView"
-                android:layout_alignStart="@+id/noteTextView"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="11dp"
-                android:layout_marginBottom="5dp"
-                android:gravity="center"
-                android:textSize="10sp" />
-
-            <ImageView
-
-                android:id="@+id/subtasksImageView"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="19dp"
-                android:layout_marginTop="29dp"
-                android:layout_marginBottom="16dp"
-                android:layout_toEndOf="@+id/AttachmentImageView"
-                android:gravity="center"
-                android:src="@drawable/subtask" />
-
-            <ImageView
-
-                android:id="@+id/AttachmentImageView"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="15dp"
-                android:layout_toEndOf="@+id/dateTextView"
-                android:gravity="center"
-                android:src="@drawable/attachment" />
-
-            <ImageView
-                android:id="@+id/repeatTaskIv"
-                android:layout_width="15sp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="13dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="18dp"
-                android:layout_toEndOf="@+id/subtasksImageView"
-                android:src="@drawable/repeat" />
-
-            <ImageView
-                android:id="@+id/deleteSingletaskIv"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
-                android:src="@drawable/trash" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/subtasksImageView"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_margin="5sp"
+                    android:layout_weight="1"
+                    android:src="@drawable/subtask" />
+
+                <ImageView
+                    android:id="@+id/AttachmentImageView"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_margin="5sp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:src="@drawable/attachment" />
+
+                <ImageView
+                    android:id="@+id/repeatTaskIv"
+                    android:layout_width="15sp"
+                    android:layout_height="15dp"
+                    android:layout_margin="5sp"
+                    android:layout_weight="1"
+                    android:src="@drawable/repeat" />
+
+                <ImageView
+                    android:id="@+id/CompletedIv"
+                    android:layout_width="15sp"
+                    android:layout_height="15dp"
+                    android:layout_margin="5sp"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/undone" />
+
+                <ImageView
+                    android:id="@+id/deleteSingletaskIv"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/clear" />
+
+            </LinearLayout>
+
+
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 

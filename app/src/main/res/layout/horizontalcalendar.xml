@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/calendarbar"
@@ -16,9 +16,8 @@
             android:id="@+id/myHorizontalCalendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorMainYellowOne"
             app:colorBottomText="@color/colorBlack"
             app:colorMiddleText="@color/colorBlack"
-            app:textColorSelected="@color/colorWhite" />
+            app:textColorSelected="@color/colorMainYellowOne" />
     </com.google.android.material.appbar.AppBarLayout>
 </LinearLayout>

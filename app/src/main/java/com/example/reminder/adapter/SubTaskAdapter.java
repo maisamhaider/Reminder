@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.R;
@@ -42,8 +41,19 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.MySubTas
     @Override
     public void onBindViewHolder(@NonNull final MySubTaskHolder holder, final int position) {
         holder.subTaskTitleTextView.setText( list.get( position ).getSubTaskTitle() );
-        holder.subTaskImageView.setVisibility( View.GONE );
+        holder.subTaskRImageView.setVisibility( View.GONE );
 
+
+        if (holder.subTaskCheckBox.isChecked())
+        {
+            holder.subTaskRImageView.setVisibility( View.VISIBLE );
+
+        }
+        else
+        {
+            holder.subTaskRImageView.setVisibility( View.INVISIBLE );
+
+        }
         holder.setItemClickListener( new MyItemClickListener() {
             @Override
             public void onMyClick(View view, int pos) {
@@ -51,13 +61,13 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.MySubTas
 
                 if (checkBox.isChecked())
                 {
-                    holder.subTaskImageView.setVisibility( View.VISIBLE );
+                    holder.subTaskRImageView.setVisibility( View.VISIBLE );
                 }
                 else
-                    holder.subTaskImageView.setVisibility( View.GONE );
+                    holder.subTaskRImageView.setVisibility( View.GONE );
             }
         } );
-        holder.subTaskImageView.setOnClickListener( new View.OnClickListener() {
+        holder.subTaskRImageView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dataBaseHelper.deleteEachSubTask( list.get( position ).getId());
@@ -79,7 +89,7 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.MySubTas
     {
         CheckBox subTaskCheckBox;
         TextView subTaskTitleTextView;
-        ImageView subTaskImageView;
+        ImageView subTaskRImageView;
         MyItemClickListener mItemClickListener;
 
 
@@ -88,7 +98,7 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.MySubTas
 
             subTaskTitleTextView = itemView.findViewById( R.id.subTask_TextView );
             subTaskCheckBox = itemView.findViewById( R.id.subTask_checkBox );
-            subTaskImageView = itemView.findViewById( R.id.subTask_RImageView );
+            subTaskRImageView = itemView.findViewById( R.id.subTask_RImageView );
             subTaskCheckBox.setOnClickListener( this);
 
         }

@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
         //Views
         bottomNavigationView = findViewById( R.id.bottomNV );
 
+
         //
         // editTexts
 

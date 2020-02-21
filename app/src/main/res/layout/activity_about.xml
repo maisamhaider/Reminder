@@ -1,50 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorSplashScreen"
     android:orientation="vertical"
     tools:context=".Activity.AboutActivity">
 
+    <LinearLayout
+        android:background="@color/colorMainYellowOne"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/aboutBackIv"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="159dp"
+            tools:layout_editor_absoluteY="50dp" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="104dp"
+        android:layout_height="95dp"
+        android:layout_marginTop="164dp"
+        android:src="@drawable/todolisticon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
+
         android:id="@+id/applicationNameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="100dp"
-        android:text="Application Name"
-        android:textColor="@color/colorPurple"
-        />
+        android:layout_marginTop="4dp"
+        android:text="To Do List"
+        android:textColor="@color/colorBlack"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/imageView9"
+        app:layout_constraintStart_toStartOf="@+id/imageView9"
+        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Good Day. Every Day."
+        android:textColor="@color/colorBlack"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/applicationVersion" />
+
     <TextView
         android:id="@+id/applicationVersion"
-        android:textColor="@color/colorPurple"
-        android:layout_gravity="bottom|center"
-        android:text="0.1"
-        android:layout_marginBottom="75dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_marginBottom="40dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:src="@drawable/copyright_foreground"
-            android:id="@+id/copyRightsIv"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-        <TextView
-            android:textColor="@color/colorPurple"
-            android:layout_gravity="center"
-            android:text="@string/copy_rights_reserved_by_sky_rider_apps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:layout_marginTop="4dp"
+        android:text="Version 0.1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/applicationNameTV" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:text="We Believe there is an untapped richness to everyday, and we are the company that builds the apps that bridge people to it"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView18"
+        tools:layout_editor_absoluteX="50dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="Productivty through play. Control through balance. Good day, every day"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
 
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

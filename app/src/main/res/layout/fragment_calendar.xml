@@ -28,14 +28,8 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <com.nightonke.boommenu.BoomMenuButton
-        android:id="@+id/bmb"
-        android:layout_marginEnd="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <include
+        layout="@layout/cal_event_task_fab_button_lo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

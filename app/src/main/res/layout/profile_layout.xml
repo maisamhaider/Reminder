@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/colorMainYellowOne"
     >
 
 
@@ -15,12 +14,12 @@
         android:layout_marginTop="26dp"
         android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/Profile_CircleImage"
+            android:src="@drawable/user"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center|top"
-            android:src="@drawable/person_image_foreground"
             app:layout_anchorGravity="center" />
         <ImageView
             android:id="@+id/profileEditIv"

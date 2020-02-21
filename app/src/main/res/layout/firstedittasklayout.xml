@@ -17,7 +17,7 @@
             >
 
             <ImageView
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_weight="1"
                 android:id="@+id/shareTaskIV"
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             >
 
             <ImageView
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_weight="1"
                 android:id="@+id/listTaskIV"
                 android:layout_width="match_parent"
@@ -79,7 +79,7 @@
             <ImageView
                 android:layout_weight="1"
                 android:id="@+id/otherTaskIV"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

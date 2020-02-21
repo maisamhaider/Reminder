@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/fabTaskTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/taskFab"
+        android:layout_alignBottom="@+id/taskFab"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/taskFab"
+        android:gravity="center"
+        android:text="Task"
+        android:textColor="@color/colorMainYellowOne"
+   />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/taskFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/eventFab"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="29dp"
+        android:layout_marginBottom="9dp"
+        android:src="@drawable/checkbox"
+        app:backgroundTint="@color/colorMainYellowTwo"
+        app:fabSize="mini"
+        app:rippleColor="@color/colorMainYellowOne" />
+
+    <TextView
+        android:id="@+id/fabEventTv"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignTop="@+id/eventFab"
+        android:layout_alignBottom="@+id/eventFab"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/eventFab"
+        android:gravity="center"
+        android:text="Event"
+        android:textColor="@color/colorMainYellowOne"
+    />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/eventFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/mainFab"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="29dp"
+        android:layout_marginBottom="5dp"
+        android:tint="@color/colorMainYellowTwo"
+        android:src="@drawable/calnwhite"
+        app:backgroundTint="@color/colorMainYellowTwo"
+        app:fabSize="mini"
+        app:rippleColor="@color/colorSplashScreen" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/mainFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="18dp"
+        app:backgroundTint="@color/colorMainYellowTwo"
+        android:layout_marginBottom="18dp"
+        android:src="@drawable/add"
+        app:fabSize="normal"
+        app:rippleColor="@color/colorMainYellowTwo" />
+
+
+</RelativeLayout>

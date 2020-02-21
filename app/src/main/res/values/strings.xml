@@ -31,5 +31,7 @@
     <string name="press_to_record">Press to Record</string>
     <string name="one_payment_to_remove_ads_forever">one payment to remove ads forever</string>
     <string name="go_to_playstore">Go to Playstore</string>
+    <string name="splash_lower_text">organize your life with ease</string>
+    <string name="splash_app_name_text">TO DO LIST</string>
 
 </resources>

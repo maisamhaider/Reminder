@@ -6,57 +6,49 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp">
-    <TextView
-        android:id="@+id/event_date"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:maxLength="25"
-        android:maxLines="2"
-        android:text="qwertyui, op asdfghjkllzxcvbnm"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-
 
     <!--        <CheckBox-->
-        <!--            android:id="@+id/eventCheckBox"-->
-        <!--            android:background="@color/colorDodgerBlue"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center" />-->
+    <!--            android:id="@+id/eventCheckBox"-->
+    <!--            android:background="@color/colorDodgerBlue"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="center" />-->
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorMainYellowOne"
+        android:elevation="5dp"
+        app:cardElevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_date">
-<!--        android:elevation="5dp"-->
-<!--        app:cardElevation="10dp"-->
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <TextView
             android:id="@+id/eventNameTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/eventSmallLayout"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="28dp"
             android:gravity="start|top"
-            android:paddingLeft="10dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="18sp" />
+            android:text="abc"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:layout_gravity="bottom|start"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="15dp"
+            android:id="@+id/event_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="10sp"
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:id="@+id/event_locationTv"
@@ -76,16 +68,6 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@+id/eventSmallLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-    </RelativeLayout>
-
-
-
-
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

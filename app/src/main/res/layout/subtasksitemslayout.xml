@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="5dp"
-    android:elevation="5dp"
+    app:cardElevation="3dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:elevation="3dp"
     android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp"
     android:orientation="horizontal">
@@ -27,6 +28,7 @@
         android:maxWidth="150dp" />
 
     <ImageView
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:id="@+id/subTask_RImageView"
         android:layout_width="20dp"
         android:layout_height="20dp"

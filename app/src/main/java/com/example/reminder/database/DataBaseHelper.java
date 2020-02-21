@@ -162,6 +162,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else
             return true;
     }
+    public boolean updateTitle(String title, String position) {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( reminderText,title );
+
+        long result = database.update( TABLE_NAME, contentValues, "ID=?", new String[]{position} );
+
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
     public boolean update(String reminder_date, String position) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -210,6 +222,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor allTasks;
         allTasks = database.rawQuery( "SELECT * FROM " + TABLE_NAME, null, null );
         return allTasks;
+
+    }
+    public Cursor getSingleRow(String p) {
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor row;
+        row = database.rawQuery( "SELECT * FROM " + TABLE_NAME+" WHERE ID LIKE \'" + p + "\'", null );
+        return row;
 
     }
 
@@ -286,6 +305,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
+
     public Cursor getCreatedDate(String position) {
         SQLiteDatabase database = getWritableDatabase();
         Cursor CDC = database.rawQuery( "SELECT CREATED_DATE FROM " + TABLE_NAME + " WHERE ID LIKE \'" + position + "\'", null );
@@ -352,6 +372,35 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase database = getWritableDatabase();
         int DSRR = database.delete( TABLE_NAME,"ID=?",new String[]{key} );
+    }
+
+    public boolean isCompleted(String p)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+       Cursor result =  database.rawQuery( "SELECT COMPLETED_TASK FROM "+TABLE_NAME+" WHERE ID LIKE \'" + p + "\'",null);
+       boolean isTrue = false;
+       if (result.getCount()==0)
+       {
+       }
+       while (result.moveToNext())
+       {
+           String isComp = result.getString( 0 );
+           if (isComp==null  )
+           {
+               isTrue = false;
+           }
+           else
+               if (isComp.matches( "no" ))
+               {
+                   isTrue = false;
+               }
+           else
+           if (isComp.matches( "yes" ))
+           {
+               isTrue =  true;
+           }
+       }
+       return isTrue;
     }
 
 }

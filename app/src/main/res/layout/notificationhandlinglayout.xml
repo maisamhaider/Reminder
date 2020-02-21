@@ -14,7 +14,7 @@
         android:layout_gravity="top|center"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_fileName="emptynotification.json"/>
+        app:lottie_fileName="yellowbelltwo.json"/>
 
     <LinearLayout
         android:gravity="center"
@@ -28,30 +28,67 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_gravity="bottom"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="10sp"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/alarmSnoozeBtn"
-            android:layout_weight="1"
+        <ImageView
+            android:id="@+id/alarmSnoozeIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:src="@drawable/can"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView16"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Snooze"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/alarmDoneBtn"
-            android:layout_weight="1"
-            android:text="Done"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/alarmSnoozeIv"
+            app:layout_constraintEnd_toEndOf="@+id/alarmSnoozeIv"
+            app:layout_constraintStart_toStartOf="@+id/alarmSnoozeIv"
+            app:layout_constraintTop_toTopOf="@+id/alarmSnoozeIv" />
 
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/alarmDoneIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/done"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView16"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/alarmDoneIv"
+            app:layout_constraintEnd_toEndOf="@+id/alarmDoneIv"
+            app:layout_constraintStart_toStartOf="@+id/alarmDoneIv"
+            app:layout_constraintTop_toTopOf="@+id/alarmDoneIv" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

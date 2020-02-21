@@ -8,6 +8,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:textColor="@color/colorBlack"
             android:id="@+id/bshcontainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -88,6 +89,7 @@
 
 
             <TextView
+
                 android:id="@+id/all_day_event_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,10 +106,12 @@
                 android:id="@+id/all_time_sb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="36dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/event_title_Et" />
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/all_day_event_tv"
+                app:layout_constraintTop_toBottomOf="@+id/e_date_Tv" />
 
             <TextView
                 android:id="@+id/alarm_tv"
@@ -171,6 +175,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/add_repeat_tv" />
 
             <EditText
+                android:textColor="@color/colorBlack"
                 android:id="@+id/add_notes_Et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

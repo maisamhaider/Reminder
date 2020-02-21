@@ -246,9 +246,7 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
                 onEventSaveClick();
             }
         } );
-
     }
-
 
     public void onEventSaveClick() {
 
@@ -291,7 +289,6 @@ public class CalendarEventAddBottomSheetDialogFrag extends BottomSheetDialogFrag
         } else if (repeat.matches( "Monthly" )) {
             hasRepeat = true;
             addRepeat = "MONTHLY";
-
 
         } else if (repeat.matches( "Yearly" )) {
             hasRepeat = true;

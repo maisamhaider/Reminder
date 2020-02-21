@@ -1,5 +1,6 @@
 package com.example.reminder.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -18,7 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.reminder.R;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventViewHolder> {
 
@@ -54,7 +57,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
         holder.event_descriptionTv.setText( eventDescriptionList.get( position ) );
         holder.event_locationTv.setText( eventLocationList.get( position ) );
         holder.event_calendarIdTv.setText( eventCalendarId.get( position ) );
-
+// event deletion code from device calendar
 //        holder.deleteEventIV.setOnClickListener( new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -76,7 +79,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
 //             notifyDataSetChanged();
 //            }
 //        } );
+//
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -91,7 +97,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
         TextView event_descriptionTv;
         TextView event_locationTv;
         TextView event_calendarIdTv;
-        CheckBox eventCheckBox;
 
         public EventViewHolder(@NonNull View itemView) {
             super( itemView );
@@ -100,25 +105,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
             event_descriptionTv = itemView.findViewById( R.id.event_descriptionTv );
             event_locationTv = itemView.findViewById( R.id.event_locationTv );
             event_calendarIdTv = itemView.findViewById( R.id.event_calendarIdTv );
-//            eventCheckBox = itemView.findViewById( R.id.eventCheckBox );
 
 
-    }
 
     }
-//    private void deleteEvent(ContentResolver resolver, Uri eventsUri, int calendarId) {
-//        Cursor cursor;
-//        if (android.os.Build.VERSION.SDK_INT <= 7) { //up-to Android 2.1
-//            cursor = resolver.query( eventsUri, new String[]{"_id"}, "Calendars._id=" + calendarId, null, null );
-//        } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
-//            cursor = resolver.query( eventsUri, new String[]{"_id"}, "calendar_id=" + calendarId, null, null );
-//        }
-//        while (cursor.moveToNext()) {
-//            long eventId = cursor.getLong( cursor.getColumnIndex( "_id" ) );
-//            resolver.delete( ContentUris.withAppendedId( eventsUri, eventId ), null, null );
-//        }
-//        cursor.close();
-//
-//    }
+
+    }
 
 }

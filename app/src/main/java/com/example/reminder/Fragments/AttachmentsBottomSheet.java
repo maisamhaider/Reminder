@@ -112,23 +112,27 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
         fromGalleryLL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) {dismiss();galleryWork(); }
+            public void onClick(View v) {galleryWork();
+//                dismiss();
+            }
         } );
         takeAPictureLL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) { dismiss();openImageCamera();
+            public void onClick(View v) { openImageCamera();
+//                dismiss();
             }
         } );
         recordVideoLL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) { dismiss();openVideoCamera();
+            public void onClick(View v) {
+                openVideoCamera();
+//                dismiss();
 
             }
         } );
         recordAudioLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) { if (checkAudioPermission()) {
-                    dismiss();
                     audioFun();
                 } else { } }} );
 
@@ -227,7 +231,10 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
                 if (insert) {
                     Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
-                    mRecyclerCallBack.mCallBack();
+                    if (mRecyclerCallBack!=null)
+                    {
+                        mRecyclerCallBack.mCallBack();
+                    }
                 } else {
                     Toast.makeText( getContext(), "not insert", Toast.LENGTH_SHORT ).show();
                 }
@@ -249,7 +256,10 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
                 boolean insert = dataBaseHelper.insertFile( imagePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
-                    mRecyclerCallBack.mCallBack();
+                    if (mRecyclerCallBack!=null)
+                    {
+                        mRecyclerCallBack.mCallBack();
+                    }
                     Toast.makeText( getContext(), "inserted", Toast.LENGTH_SHORT ).show();
                 } else {
                     Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
@@ -273,8 +283,10 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 boolean insert = dataBaseHelper.insertFile( videoPath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
                     Toast.makeText( getContext(), "inserted", Toast.LENGTH_SHORT ).show();
-                    mRecyclerCallBack.mCallBack();
-
+                    if (mRecyclerCallBack!=null)
+                    {
+                        mRecyclerCallBack.mCallBack();
+                    }
                 } else {
                     Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
                 }
@@ -290,7 +302,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
         Intent photoPickerIntent = new Intent( Intent.ACTION_PICK );
         photoPickerIntent.setType( "*/*" );
-        photoPickerIntent.putExtra( Intent.CATEGORY_APP_GALLERY, new String[]{"image/*", "video/*"} );
+        photoPickerIntent.putExtra( Intent.CATEGORY_APP_GALLERY, new String[]{"image/*","video/*"} );
         startActivityForResult( photoPickerIntent, PICK_IMAGE );
     }
 
@@ -406,12 +418,16 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 boolean insert = dataBaseHelper.insertFile( audioSavePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
-                    if (mRecyclerCallBack != null) {
+
+                        if (mRecyclerCallBack!=null)
+                        {
                         mRecyclerCallBack.mCallBack();
-                    }
-                    dialog.dismiss();
-                    Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
+                        }
+
+
+//                    Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
                     audio_btns_cl.setVisibility( View.GONE );
+                    dialog.dismiss();
 
                 } else {
                     Toast.makeText( getContext(), "not insert", Toast.LENGTH_SHORT ).show();

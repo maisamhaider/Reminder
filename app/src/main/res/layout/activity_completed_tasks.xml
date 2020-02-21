@@ -26,9 +26,10 @@
         android:id="@+id/completedTaskDeleteBtn"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:src="@drawable/deletebin_foreground" />
+        android:src="@drawable/trash" />
 
         <TextView
+            
             android:textColor="@color/colorBlack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

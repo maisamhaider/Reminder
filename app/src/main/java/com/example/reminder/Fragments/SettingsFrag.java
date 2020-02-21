@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.icu.text.SimpleDateFormat;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.reminder.Activity.AboutActivity;
 import com.example.reminder.Activity.CompletedTasksActivity;
 import com.example.reminder.Activity.MainActivity;
@@ -46,18 +47,14 @@ import com.example.reminder.R;
 import com.example.reminder.adapter.NotificationSoundsAdapter;
 import com.example.reminder.classes.NotificationSounds;
 import com.example.reminder.interfaces.EditTextStringListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.example.reminder.Fragments.AttachmentsBottomSheet.getPath;
 
 
 public class SettingsFrag extends Fragment {
@@ -73,7 +70,7 @@ public class SettingsFrag extends Fragment {
     private SharedPreferences myPreferences;
 
 
-    private CircleImageView personImageView;
+    private CircularImageView personImageView;
     private TextView personNameTV,appVersionTv1;
     private ImageView profileEditIv, personNameEditIv;
 
@@ -113,8 +110,10 @@ public class SettingsFrag extends Fragment {
 
         myPreferences = getActivity().getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
 
-        Uri imageUri = Uri.parse( myPreferences.getString( "Profile_Image", String.valueOf( R.drawable.usercircle ) ) );
+        Uri imageUri = Uri.parse( myPreferences.getString( "Profile_Image", String.valueOf( R.drawable.user ) ) );
         personImageView.setImageURI( imageUri );
+
+
         personNameTV.setText( myPreferences.getString( "Person_name", Build.MODEL ) );
         try {
             PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo( Objects.requireNonNull( getContext() ).getPackageName(), 0);
@@ -173,10 +172,11 @@ public class SettingsFrag extends Fragment {
 
         final AlertDialog dialog = builder.create();
         dialog.show();
+        dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
 
 //        TextView profile_fromGallery = view.findViewById( R.id.profile_fromGallery );
         TextView profile_openCamera = view.findViewById( R.id.profile_openCamera );
-        Button profile_ADCancelBtn = view.findViewById( R.id.profile_ADCancelBtn );
+        ImageView profile_ADCancelBtn = view.findViewById( R.id.profile_ADCancelIv );
 
 //        profile_fromGallery.setOnClickListener( new View.OnClickListener() {
 //            @Override
@@ -231,10 +231,11 @@ public class SettingsFrag extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder( getContext() );
         builder.setView( view ).setCancelable( true );
         final EditText editPersonName = view.findViewById( R.id.person_name_et );
-        Button cancel_person_name_btn = view.findViewById( R.id.cancel_person_name_btn );
-        Button save_person_name_btn = view.findViewById( R.id.save_person_name_btn );
+        ImageView cancel_person_name_btn = view.findViewById( R.id.cancel_person_name_Iv );
+        ImageView save_person_name_btn = view.findViewById( R.id.save_person_name_Iv );
         final AlertDialog dialog = builder.create();
         dialog.show();
+        dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
 
         @SuppressLint("CommitPrefEdits") final SharedPreferences.Editor editor = myPreferences.edit();
 
@@ -265,7 +266,7 @@ public class SettingsFrag extends Fragment {
                     String name = editPersonName.getText().toString();
 
                     if (editPersonName.length() == 0) {
-                        editor.putString( "Person_name", android.os.Build.MODEL ).apply();
+                        editor.putString( "Person_name", android.os.Build.MODEL ).commit();
 
                     } else {
                         editor.putString( "Person_name", name ).commit();
@@ -304,9 +305,9 @@ public class SettingsFrag extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult( requestCode, resultCode, data );
-        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = myPreferences.edit();
+        @SuppressLint("CommitPrefEdits") final SharedPreferences.Editor editor = myPreferences.edit();
 
-        String imageName = "Image" + ".png";
+        String imageName = "Image";
         File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/.Reminder/Person/" );
         String imagePath = Environment.getExternalStorageDirectory() + "/.Reminder/Person/" + imageName;
 
@@ -325,8 +326,10 @@ public class SettingsFrag extends Fragment {
                     dir.mkdirs();
                 }
                 File SourceFile = new File( imageFilePathCamera );
+                String ext = SourceFile.getAbsolutePath();
+                ext = ext.substring( ext.lastIndexOf( "." ) );
 
-                File DestinationFile = new File( imagePath );
+                File DestinationFile = new File( imagePath+ext );
 
                 if (SourceFile.renameTo( DestinationFile )) {
                     Log.v( "Moving", "Moving file successful." );
@@ -334,6 +337,8 @@ public class SettingsFrag extends Fragment {
                     Log.v( "Moving", "Moving file failed." );
                 }
 
+                Uri uri = Uri.fromFile( DestinationFile);
+//                    personImageView.setImageURI( uri );
                 editor.putString( "Profile_Image", imagePath ).commit();
                 mainActivity.setSettingsBNBItem();
 

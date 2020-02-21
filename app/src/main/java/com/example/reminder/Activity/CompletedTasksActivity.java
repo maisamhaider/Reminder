@@ -37,6 +37,7 @@ public class CompletedTasksActivity extends AppCompatActivity {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_completed_tasks );
 
+        alarmSettingClass = new AlarmSettingClass( this );
 
         dataBaseHelper = new DataBaseHelper( this );
         recyclerView = findViewById( R.id.completedTaskRecyclerView );
@@ -51,6 +52,9 @@ public class CompletedTasksActivity extends AppCompatActivity {
         completedTaskDeleteLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               try {
+
+
                 Cursor cursor = dataBaseHelper.getAllTasks();
                 if (cursor.getCount()==0)
                 {}
@@ -58,16 +62,24 @@ public class CompletedTasksActivity extends AppCompatActivity {
                 {
                     String position = cursor.getString( 0 );
                     String isCompleted = cursor.getString( 6 );
+                    if (isCompleted==null)
+                    {}
+                    else
                     if (isCompleted.matches( "yes" ))
                     {
                         alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( position ) );
+                        dataBaseHelper.deleteEachCompletedTask(position);
                     }
                     else
                     {}
 
                 }
-                dataBaseHelper.deleteCompletedTasks();
                 dataFromDb();
+               }
+               catch (Exception e)
+               {
+                   //error
+               }
             }
         } );
 

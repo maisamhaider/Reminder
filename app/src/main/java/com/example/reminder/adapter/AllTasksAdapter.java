@@ -1,21 +1,15 @@
 package com.example.reminder.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -26,18 +20,15 @@ import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.Fragments.EditTask;
 import com.example.reminder.R;
 import com.example.reminder.classes.AlarmSettingClass;
-import com.example.reminder.classes.NotificationReceiver;
+import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.MyItemClickListener;
 import com.example.reminder.models.AllTasksModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import static android.content.Context.ALARM_SERVICE;
 
 public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHolder> {
 
@@ -47,7 +38,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
     private List<AllTasksModel> myModelList;
     DataBaseHelper dataBaseHelper;
     FragmentManager fragmentManager;
-    int checkPosition ;
+    int checkPosition = -1 ;
 
     public AllTasksAdapter(Context context, List<AllTasksModel> myModelList, DataBaseHelper dataBaseHelper, FragmentManager fragmentManager) {
         this.context = context;
@@ -70,98 +61,69 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
     @Override
     public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
+
         holder.notes_TextView.setText( myModelList.get( position ).getTask() );
         holder.date_textView.setText( myModelList.get( position ).getDate() );
+
 
         holder.deleteItemIv.setVisibility( View.INVISIBLE );
         holder.attachmentsIv.setVisibility( View.GONE );
         holder.subTasksIv.setVisibility( View.GONE );
         holder.repeatTaskIv.setVisibility( View.GONE );
-//
-//        Cursor cursor = dataBaseHelper.getAllTasks();
-//        if (cursor.getCount() == 0)
-//        {
-//        }
-//        while (cursor.moveToNext()) {
-//            String isComplete = cursor.getString( 6 );
-//            String pppp = cursor.getString( 0 );
-//
-//            if (isComplete.matches( "yes" ))
-//            {
-//                holder.deleteItemIv.setVisibility( View.VISIBLE );
-//
-//            }
-//            else
-//            {
-//                holder.deleteItemIv.setVisibility( View.GONE );
-//
-//            }
-//
-//        }
 
-//
-//                Cursor cursor = dataBaseHelper.getAllTasks();
-//        if (cursor.getCount() == 0)
-//        {
-//        }
-//        while (cursor.moveToNext()) {
-//            Calendar calendar = Calendar.getInstance();
-//
-//            String stringCurrentTime = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
-//            long longCurrentTime = getMilliFromDate( stringCurrentTime );;
-//
-//            String reminderDateString = cursor.getString( 2 );
-//            long longReminderDate = getMilliFromDate( reminderDateString );
-//
-//            if (longCurrentTime>longReminderDate)
-//            {
-//                holder.checkBox.setSelected( true );
-//            }
-//            else
-//            {
-//
-//            }
-//
-//
-//
-//        }
-        holder.checkBox.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    dataBaseHelper.upDate( myModelList.get( position ).getId(),"yes","0" );
+        if(myModelList.get(position).isCompleted()){
 
-                }
-                else
-                    dataBaseHelper.upDate( myModelList.get( position ).getId(),"no","1" );
-
-            }
-        } );
-        if (holder.checkBox.isChecked())
-        {
+            holder.completedIv.setImageResource( R.drawable.mark );
             holder.deleteItemIv.setVisibility( View.VISIBLE );
+
+
 
         }
         else
         {
-            holder.deleteItemIv.setVisibility( View.INVISIBLE );
+            holder.completedIv.setImageResource( R.drawable.unmark );
+            holder.deleteItemIv.setVisibility( View.GONE );
+
 
         }
 
-
-
-        holder.setItemClickListener( new MyItemClickListener() {
+        holder.completedIv.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onMyClick(View view, int pos) {
-                CheckBox checkBox = (CheckBox) view;
+            public void onClick(View v) {
+                int pp = Integer.parseInt( myModelList.get( position ).getId() );
+                alarmSettingClass.deleteRepeatAlarm(pp); //cancel completed tasks' alarm
+               if (dataBaseHelper.isCompleted( myModelList.get( position ).getId() ))
+               {
+                   Cursor cursor = dataBaseHelper.getSingleRow( String.valueOf( pp ) );
+                   dataBaseHelper.upDate( myModelList.get( position ).getId(),"no","1");
+                   if (cursor.getCount()==0)
+                   {}
+                   while (cursor.moveToNext())
+                   {
+                       String title = cursor.getString( 1 );
+                       String reminderTime = cursor.getString( 2 );
+                       alarmSettingClass.setOneAlarm( title, MyTimeSettingClass.getMilliFromDate( reminderTime ),pp );
+                   }
+                   holder.completedIv.setImageResource( R.drawable.unmark );
+                   holder.deleteItemIv.setVisibility( View.GONE );
 
-                if (checkBox.isChecked()) {
-                    holder.deleteItemIv.setVisibility( View.VISIBLE );
-                } else
-                    holder.deleteItemIv.setVisibility( View.INVISIBLE );
+
+               }
+               else
+               {
+                   dataBaseHelper.upDate( myModelList.get( position ).getId(),"yes","0");
+                   alarmSettingClass.deleteRepeatAlarm( pp); //cancel completed tasks' alarm
+                   holder.completedIv.setImageResource( R.drawable.mark );
+                   holder.deleteItemIv.setVisibility( View.VISIBLE );
+
+
+
+               }
             }
         } );
+
+
+
         holder.deleteItemIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,7 +137,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
             }
         } );
-        holder.mainLayout.setOnClickListener( new View.OnClickListener() {
+        holder.Cv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -264,6 +226,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             }
         } );
 
+
     }
 
     @Override
@@ -283,12 +246,10 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
     }
 
 
-    class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MyHolder extends RecyclerView.ViewHolder {
         TextView notes_TextView, date_textView;
-        ImageView deleteItemIv, attachmentsIv, subTasksIv, repeatTaskIv;
-        RelativeLayout mainLayout;
-        CheckBox checkBox;
-        MyItemClickListener mItemClickListener;
+        ImageView deleteItemIv, attachmentsIv, subTasksIv, repeatTaskIv, completedIv;
+        CardView Cv;
 
         public MyHolder(@NonNull final View itemView) {
             super( itemView );
@@ -299,20 +260,8 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
             attachmentsIv = itemView.findViewById( R.id.AttachmentImageView );
             subTasksIv = itemView.findViewById( R.id.subtasksImageView );
             repeatTaskIv = itemView.findViewById( R.id.repeatTaskIv );
-            checkBox = itemView.findViewById( R.id.checkbox );
-            checkBox.setOnClickListener( this );
-            mainLayout = itemView.findViewById( R.id.mainindivduallayout );
-        }
-
-        public void setItemClickListener(MyItemClickListener mItemClickListener) {
-            this.mItemClickListener = mItemClickListener;
-        }
-
-
-        @Override
-        public void onClick(View v) {
-            this.mItemClickListener.onMyClick( v, getLayoutPosition() );
-
+            completedIv = itemView.findViewById( R.id.CompletedIv );
+            Cv = itemView.findViewById( R.id.mainCv );
         }
     }
 }

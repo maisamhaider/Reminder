@@ -77,7 +77,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             mChannel.setSound( mChannel.getSound(), null );
             mNotificationManager.createNotificationChannel( mChannel );
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder( context, CHANNEL_ID )
-                    .setSmallIcon( R.mipmap.ic_launcher )
+                    .setSmallIcon( R.drawable.todolisticon )
                     .setContentTitle( title )
                     .setContentText( "Reminder" )
                     .setOnlyAlertOnce( true )
@@ -90,7 +90,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 //Get an instance of NotificationManager//
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder( context )
-                            .setSmallIcon( R.mipmap.ic_launcher )
+                            .setSmallIcon( R.drawable.todolisticon )
                             .setContentTitle( title )
                             .setContentText( "Reminder" )
                             .setOnlyAlertOnce( true )
@@ -121,7 +121,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             mChannel.setSound( mChannel.getSound(), null );
             mNotificationManager.createNotificationChannel( mChannel );
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder( context, CHANNEL_ID )
-                    .setSmallIcon( R.mipmap.ic_launcher )
+                    .setSmallIcon( R.drawable.todolisticon )
                     .setContentTitle( title )
                     .setContentText( "Reminder" )
                     .setOnlyAlertOnce( true )
@@ -135,11 +135,11 @@ public class NotificationReceiver extends BroadcastReceiver {
 //Get an instance of NotificationManager//
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder( context )
-                            .setSmallIcon( R.mipmap.ic_launcher )
                             .setContentTitle( title )
                             .setContentText( "Reminder" )
                             .setOnlyAlertOnce( true )
                             .setSound( soundUri )
+                            .setSmallIcon( R.drawable.todolisticon )
                             .setVibrate( new long[]{1000, 1000, 1000, 1000, 1000} )
                             .setContentIntent( PendingIntent.getActivity( context, notifyID, intent, 0 ) )
                             .setPriority( NotificationCompat.PRIORITY_HIGH )
