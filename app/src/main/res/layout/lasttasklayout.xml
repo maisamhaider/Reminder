@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@color/colorSplashScreen"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <HorizontalScrollView
         android:id="@+id/tagsLlayout"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/addETRelativeLayout"
         android:layout_gravity="bottom"
-        android:background="@color/colorTransparentOne"
+        android:background="@color/colorWhite"
         android:scrollbars="none">
 
         <!--        android:visibility="gone"-->
@@ -221,52 +221,63 @@
     </HorizontalScrollView>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/addETRelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/colorTransparentTwo"
-        android:orientation="horizontal">
+        android:background="@color/colorWhite"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <EditText
+            android:hint="@string/i_want_to"
             android:id="@+id/addtaskedittext"
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="2dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/foursidescurvedwhitebg"
+            android:layout_marginBottom="7dp"
+            android:layout_weight="8"
+            android:background="@drawable/foursidescurvedwhiteetbg"
             android:gravity="bottom"
-            android:paddingLeft="10dp"
-            android:paddingBottom="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:padding="7dp"
+            android:textColorHint="@color/colorGray"
+            android:paddingStart="15dp"
+       />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/mainAddLottieAnimationView"
-            android:layout_width="80dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/addtaskedittext"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="add.json" />
+        <RelativeLayout
+            android:id="@+id/idontknow"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/AddUpLottieAnimationView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/addtaskedittext"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="donetwo.json" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/mainAddLottieAnimationView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.airbnb.lottie.LottieAnimationView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:lottie_fileName="addyellow.json" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/AddUpLottieAnimationView"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/tickyellow" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

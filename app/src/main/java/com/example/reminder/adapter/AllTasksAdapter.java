@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -25,10 +26,13 @@ import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.MyItemClickListener;
 import com.example.reminder.models.AllTasksModel;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHolder> {
 
@@ -38,7 +42,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
     private List<AllTasksModel> myModelList;
     DataBaseHelper dataBaseHelper;
     FragmentManager fragmentManager;
-    int checkPosition = -1 ;
+    int checkPosition = -1;
 
     public AllTasksAdapter(Context context, List<AllTasksModel> myModelList, DataBaseHelper dataBaseHelper, FragmentManager fragmentManager) {
         this.context = context;
@@ -71,57 +75,88 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
         holder.subTasksIv.setVisibility( View.GONE );
         holder.repeatTaskIv.setVisibility( View.GONE );
 
-        if(myModelList.get(position).isCompleted()){
+        if (myModelList.get( position ).isCompleted()) {
 
             holder.completedIv.setImageResource( R.drawable.mark );
             holder.deleteItemIv.setVisibility( View.VISIBLE );
+            for (int i=0; i<myModelList.size(); i++)
+            {
+                if (dataBaseHelper.isRepeated( String.valueOf( i ) ))
+                {
+                    holder.repeatTaskIv.setVisibility( View.VISIBLE);
+                    holder.deleteItemIv.setVisibility( View.GONE );
+
+                }
+                else
+                {
+                    holder.repeatTaskIv.setVisibility( View.GONE);
+
+                }
 
 
+                // work time 😠 ! find out repeated tasks hurry up 😡
+            }
 
-        }
-        else
-        {
+
+        } else {
             holder.completedIv.setImageResource( R.drawable.unmark );
             holder.deleteItemIv.setVisibility( View.GONE );
+            for (int i=0; i<myModelList.size(); i++)
+            {
+                if (dataBaseHelper.isRepeated( String.valueOf( i ) ))
+                {
+                    holder.repeatTaskIv.setVisibility( View.VISIBLE);
+
+                }
+                else
+                {
+                    holder.repeatTaskIv.setVisibility( View.GONE);
+
+                }
+                // work time 😠 ! find out repeated tasks hurry up 😡
+            }
 
 
         }
+
+
 
         holder.completedIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int pp = Integer.parseInt( myModelList.get( position ).getId() );
-                alarmSettingClass.deleteRepeatAlarm(pp); //cancel completed tasks' alarm
-               if (dataBaseHelper.isCompleted( myModelList.get( position ).getId() ))
-               {
-                   Cursor cursor = dataBaseHelper.getSingleRow( String.valueOf( pp ) );
-                   dataBaseHelper.upDate( myModelList.get( position ).getId(),"no","1");
-                   if (cursor.getCount()==0)
-                   {}
-                   while (cursor.moveToNext())
-                   {
-                       String title = cursor.getString( 1 );
-                       String reminderTime = cursor.getString( 2 );
-                       alarmSettingClass.setOneAlarm( title, MyTimeSettingClass.getMilliFromDate( reminderTime ),pp );
-                   }
-                   holder.completedIv.setImageResource( R.drawable.unmark );
-                   holder.deleteItemIv.setVisibility( View.GONE );
+                alarmSettingClass.deleteRepeatAlarm( pp ); //cancel completed tasks' alarm
+                if (dataBaseHelper.isCompleted( myModelList.get( position ).getId() )) {
+                    Cursor cursor = dataBaseHelper.getSingleRow( String.valueOf( pp ) );
+                    dataBaseHelper.upDate( myModelList.get( position ).getId(), "no","1" );
+                    if (cursor.getCount() == 0) {
+                    }
+                    while (cursor.moveToNext()) {
+                        String title = cursor.getString( 1 );
+                        String reminderTime = cursor.getString( 2 );
+
+                        if (reminderTime.matches( "" ))
+                        {
+                            // do nothing ahahahaha take some rest yahooo.
+                        } else
+                            {
+                            alarmSettingClass.setOneAlarm( title, MyTimeSettingClass.getMilliFromDate( reminderTime ), pp );
+                        }
+                    }
+                    holder.completedIv.setImageResource( R.drawable.unmark );
+                    holder.deleteItemIv.setVisibility( View.GONE );
 
 
-               }
-               else
-               {
-                   dataBaseHelper.upDate( myModelList.get( position ).getId(),"yes","0");
-                   alarmSettingClass.deleteRepeatAlarm( pp); //cancel completed tasks' alarm
-                   holder.completedIv.setImageResource( R.drawable.mark );
-                   holder.deleteItemIv.setVisibility( View.VISIBLE );
+                } else {
+                    dataBaseHelper.upDate( myModelList.get( position ).getId(), "yes", "0" );
+                    alarmSettingClass.deleteRepeatAlarm( pp ); //cancel completed tasks' alarm
+                    holder.completedIv.setImageResource( R.drawable.mark );
+                    holder.deleteItemIv.setVisibility( View.VISIBLE );
 
 
-
-               }
+                }
             }
         } );
-
 
 
         holder.deleteItemIv.setOnClickListener( new View.OnClickListener() {
@@ -131,7 +166,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
                 dataBaseHelper.deleteSubTasks( myModelList.get( position ).getDate() );
                 dataBaseHelper.deleteAllAttachments( myModelList.get( position ).getId() );
                 int pp = Integer.parseInt( myModelList.get( position ).getId() );
-                alarmSettingClass.deleteRepeatAlarm(pp); //cancel completed tasks' alarm
+                alarmSettingClass.deleteRepeatAlarm( pp ); //cancel completed tasks' alarm
                 myModelList.remove( position );
                 notifyDataSetChanged();
 
@@ -151,19 +186,14 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
                 Cursor RDC = dataBaseHelper.getReminderDate( position1 );// RDC = reminder date cursor
                 Cursor AC = dataBaseHelper.getAttachment( position1 ); // AC = Attachment Cursor
 
-                if (SRRC.getCount()==0)
-                {
+                if (SRRC.getCount() == 0) {
                 }
-                while (SRRC.moveToNext())
-                {
+                while (SRRC.moveToNext()) {
                     String repeatValue = SRRC.getString( 0 );
-                    if (repeatValue.matches( "" ))
-                    {
-                        bundle.putString( "Repeat_Value","" );
-                    }
-                    else
-                    {
-                        bundle.putString( "Repeat_Value",repeatValue );
+                    if (repeatValue.matches( "" )) {
+                        bundle.putString( "Repeat_Value", "" );
+                    } else {
+                        bundle.putString( "Repeat_Value", repeatValue );
                     }
 
                 }
@@ -234,11 +264,12 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
         return myModelList.size();
 
     }
+
     public long getMilliFromDate(String dateFormat) {
         Date date = new Date();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy EEE, h:mm a");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
         try {
-            date = formatter.parse(dateFormat);
+            date = formatter.parse( dateFormat );
         } catch (ParseException e) {
             e.printStackTrace();
         }

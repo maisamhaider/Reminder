@@ -35,6 +35,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.RecyclerCallBack;
@@ -48,15 +49,15 @@ import java.util.Locale;
 
 public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
-    private static final int AUDIO_REQUEST_CODE = 2020;
 
 
     private static final int PICK_IMAGE = 1;
     private static final int CAMERA_REQ = 2;
     private static final int RECORD_VIDEO_CR = 3;
-    private static final int RECORD_AUDIO_R = 4;
+
 
     DataBaseHelper dataBaseHelper;
+
 
     private LinearLayout fromGalleryLL, takeAPictureLL, recordVideoLL, recordAudioLL;
     private ConstraintLayout audio_btns_cl;
@@ -65,6 +66,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
     private String imageFilePathCamera, videoFilePathCamera;
     Calendar calendar = Calendar.getInstance();
+    @SuppressLint("NewApi")
     SimpleDateFormat createdDateFormat = new SimpleDateFormat( "dd MMM yyyy" );
 
     // audio related
@@ -80,6 +82,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     LottieAnimationView audio_StartLottieAnimationView, audio_StopLottieAnimationView;
 
     String taskPosition;
+    private MainActivity mainActivity;
 
 
     public static AttachmentsBottomSheet getAttachInstance() {
@@ -100,6 +103,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.attachmentsbottomsheet, container, false );
         mediaRecorder = new MediaRecorder();
+        mainActivity = (MainActivity)getActivity();
 
         taskPosition = getArguments().getString( "Position" );
         dataBaseHelper = new DataBaseHelper( getContext() );
@@ -132,7 +136,10 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         } );
         recordAudioLL.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View v) { if (checkAudioPermission()) {
+            public void onClick(View v)
+            {
+                mainActivity.checkPermission();
+                if (mainActivity.checkPermission()) {
                     audioFun();
                 } else { } }} );
 
@@ -179,7 +186,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp =
+        @SuppressLint({"NewApi", "LocalSuppress"}) String timeStamp =
                 new SimpleDateFormat( "dd",
                         Locale.getDefault() ).format( new Date() );
         String imageFileName = "IMAGE_" + timeStamp + "_";
@@ -194,7 +201,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
     }
 
     private File createVideoFile() throws IOException {
-        String timeStamp =
+        @SuppressLint({"NewApi", "LocalSuppress"}) String timeStamp =
                 new SimpleDateFormat( "dd",
                         Locale.getDefault() ).format( new Date() );
         String videoFileName = "VIDEO_" + timeStamp + "_";
@@ -210,12 +217,12 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String imageName = "Image" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".png";
+        @SuppressLint({"NewApi", "LocalSuppress"}) String imageName = "Image" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".png";
         File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/.Reminder/" );
         String imagePath = Environment.getExternalStorageDirectory() + "/.Reminder/" + imageName;
 
 
-        String videoName = "Video" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".mp4";
+        @SuppressLint({"NewApi", "LocalSuppress"}) String videoName = "Video" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".mp4";
         String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/.Reminder/" + videoName;
 
 
@@ -227,7 +234,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 String filePath = getPath( getActivity().getApplicationContext(), selectedImageUri );
                 Log.d( "Picture Path", filePath );
 
-                boolean insert = dataBaseHelper.insertFile( filePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
+                @SuppressLint({"NewApi", "LocalSuppress"}) boolean insert = dataBaseHelper.insertFile( filePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
 
                 if (insert) {
                     Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
@@ -254,15 +261,13 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                     Log.v( "Moving", "Moving file failed." );
                 }
 
-                boolean insert = dataBaseHelper.insertFile( imagePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
+                @SuppressLint({"NewApi", "LocalSuppress"}) boolean insert = dataBaseHelper.insertFile( imagePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
                     if (mRecyclerCallBack!=null)
                     {
                         mRecyclerCallBack.mCallBack();
                     }
-                    Toast.makeText( getContext(), "inserted", Toast.LENGTH_SHORT ).show();
                 } else {
-                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
                 }
 
             } else if (requestCode == RECORD_VIDEO_CR && resultCode == Activity.RESULT_OK) {
@@ -280,15 +285,13 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                     Log.v( "Moving", "Moving file failed." );
                 }
 
-                boolean insert = dataBaseHelper.insertFile( videoPath, createdDateFormat.format( calendar.getTime() ), taskPosition );
+                @SuppressLint({"NewApi", "LocalSuppress"}) boolean insert = dataBaseHelper.insertFile( videoPath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
-                    Toast.makeText( getContext(), "inserted", Toast.LENGTH_SHORT ).show();
                     if (mRecyclerCallBack!=null)
                     {
                         mRecyclerCallBack.mCallBack();
                     }
                 } else {
-                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
                 }
             }
 
@@ -356,7 +359,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 startAudio = true;
                 audio_StopLottieAnimationView.setVisibility( View.VISIBLE );
                 audio_StartLottieAnimationView.setVisibility( View.GONE );
-                String audioName = "Audio" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".mp3";
+                @SuppressLint({"NewApi", "LocalSuppress"}) String audioName = "Audio" + new SimpleDateFormat( "ddhmmss" ).format( calendar.getTime() ) + ".mp3";
                 File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/.Reminder/" );
                 if (!dir.exists()) {
                     dir.mkdirs();
@@ -416,7 +419,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         audioAddIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean insert = dataBaseHelper.insertFile( audioSavePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
+                @SuppressLint({"NewApi", "LocalSuppress"}) boolean insert = dataBaseHelper.insertFile( audioSavePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
 
                         if (mRecyclerCallBack!=null)
@@ -478,16 +481,7 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-    private boolean checkAudioPermission() {
-        int audioPermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.RECORD_AUDIO );
 
-        if (audioPermission == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, AUDIO_REQUEST_CODE );
-            return false;
-        }
-    }
 
 }
 

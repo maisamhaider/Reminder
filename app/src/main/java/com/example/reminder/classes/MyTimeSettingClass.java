@@ -30,6 +30,7 @@ public class MyTimeSettingClass {
         return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
     }
 
+
     @SuppressLint("SimpleDateFormat")
     public static String getToday3pm() {
         Calendar calendar = Calendar.getInstance();
@@ -183,14 +184,6 @@ public class MyTimeSettingClass {
         calendar.set( Calendar.SECOND, 0 );
         return new SimpleDateFormat( "dd MMM yyyy" ).format( calendar.getTime() );
     }
-    @SuppressLint("SimpleDateFormat")
-    public static String getNextWeekWithYear() {
-        Calendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DATE,6);
-        calendar.set( Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
-        return new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" ).format( calendar.getTime() );
-    }
 
     @SuppressLint("SimpleDateFormat")
     public static String getNextWeek(String strFoarmat) {
@@ -270,6 +263,7 @@ public class MyTimeSettingClass {
         }
         return date.getTime();
     }
+
     public static String getFormattedDateFromMilliseconds(long milliSeconds)
     {
         // Create a DateFormatter object for displaying date in specified format.
@@ -289,9 +283,53 @@ public class MyTimeSettingClass {
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliSeconds);
-        return formatter.format(calendar.getTime());
+        return  formatter.format(calendar.getTime()) ;
+
 
     }
+    public static long getCalDateFormat2(long milliSeconds,String format)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        long date =  Long.parseLong( formatter.format(calendar.getTimeInMillis()) );
+        return date;
+
+    }
+
+    public static long getMilliFromDate(String formattedDate,String dateFormat) {
+        Date date = new Date();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+        try {
+            date = formatter.parse(formattedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date.getTime();
+    }
+    public static String getIntervalTime(int days)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy EEE, h:mm a");
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        if (days<=30)
+        {
+            calendar.add(Calendar.DATE,days);
+
+        }
+        else {
+            calendar.add(Calendar.YEAR,1);
+        }
+        return  formatter.format(calendar.getTime()) ;
+
+
+    }
+
 
 
 

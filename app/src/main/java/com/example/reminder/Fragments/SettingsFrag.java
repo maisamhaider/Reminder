@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +43,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.alexzh.circleimageview.CircleImageView;
 import com.example.reminder.Activity.AboutActivity;
 import com.example.reminder.Activity.CompletedTasksActivity;
 import com.example.reminder.Activity.MainActivity;
@@ -47,7 +51,6 @@ import com.example.reminder.R;
 import com.example.reminder.adapter.NotificationSoundsAdapter;
 import com.example.reminder.classes.NotificationSounds;
 import com.example.reminder.interfaces.EditTextStringListener;
-import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,12 +69,11 @@ public class SettingsFrag extends Fragment {
     //profile Views
     private static final int CAMERA_REQ = 1;
     private static final int PICK_IMAGE = 2;
-    private static final int REQUEST_CODE = 1001;
     private SharedPreferences myPreferences;
 
 
-    private CircularImageView personImageView;
-    private TextView personNameTV,appVersionTv1;
+    private CircleImageView personImageView;
+    private TextView personNameTV, appVersionTv1;
     private ImageView profileEditIv, personNameEditIv;
 
     private String imageFilePathCamera;
@@ -100,7 +102,7 @@ public class SettingsFrag extends Fragment {
 
         personImageView = view.findViewById( R.id.Profile_CircleImage );
         personNameTV = view.findViewById( R.id.person_name_tv );
-        appVersionTv1 =view.findViewById( R.id.appVersionTv1 );
+        appVersionTv1 = view.findViewById( R.id.appVersionTv1 );
         profileEditIv = view.findViewById( R.id.profileEditIv );
         personNameEditIv = view.findViewById( R.id.personNameEditIv );
 
@@ -116,9 +118,9 @@ public class SettingsFrag extends Fragment {
 
         personNameTV.setText( myPreferences.getString( "Person_name", Build.MODEL ) );
         try {
-            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo( Objects.requireNonNull( getContext() ).getPackageName(), 0);
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo( Objects.requireNonNull( getContext() ).getPackageName(), 0 );
             String version = pInfo.versionName;
-            appVersionTv1.setText( "To do list: "+version );
+            appVersionTv1.setText( "To do list: " + version );
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -188,7 +190,7 @@ public class SettingsFrag extends Fragment {
         profile_openCamera.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkPermission()) {
+                if (mainActivity.checkPermission()) {
                     openImageCamera();
                     dialog.dismiss();
                 }
@@ -288,9 +290,8 @@ public class SettingsFrag extends Fragment {
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp =
-                new SimpleDateFormat( "dd",
-                        Locale.getDefault() ).format( new Date() );
+        @SuppressLint({"NewApi", "LocalSuppress"}) String timeStamp = new SimpleDateFormat( "dd",
+                Locale.getDefault() ).format( new Date() );
         String imageFileName = "IMAGE_" + timeStamp + "_";
         File storageDir = getActivity().getExternalFilesDir( Environment.DIRECTORY_PICTURES );
         File image = File.createTempFile(
@@ -307,7 +308,7 @@ public class SettingsFrag extends Fragment {
         super.onActivityResult( requestCode, resultCode, data );
         @SuppressLint("CommitPrefEdits") final SharedPreferences.Editor editor = myPreferences.edit();
 
-        String imageName = "Image";
+        String imageName = "Image.png";
         File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/.Reminder/Person/" );
         String imagePath = Environment.getExternalStorageDirectory() + "/.Reminder/Person/" + imageName;
 
@@ -320,16 +321,15 @@ public class SettingsFrag extends Fragment {
 //
 //
 //            } else
-                if (requestCode == CAMERA_REQ && resultCode == Activity.RESULT_OK) {
+            if (requestCode == CAMERA_REQ && resultCode == Activity.RESULT_OK) {
 
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
                 File SourceFile = new File( imageFilePathCamera );
-                String ext = SourceFile.getAbsolutePath();
-                ext = ext.substring( ext.lastIndexOf( "." ) );
 
-                File DestinationFile = new File( imagePath+ext );
+
+                File DestinationFile = new File( imagePath );
 
                 if (SourceFile.renameTo( DestinationFile )) {
                     Log.v( "Moving", "Moving file successful." );
@@ -337,7 +337,7 @@ public class SettingsFrag extends Fragment {
                     Log.v( "Moving", "Moving file failed." );
                 }
 
-                Uri uri = Uri.fromFile( DestinationFile);
+                Uri uri = Uri.fromFile( DestinationFile );
 //                    personImageView.setImageURI( uri );
                 editor.putString( "Profile_Image", imagePath ).commit();
                 mainActivity.setSettingsBNBItem();
@@ -356,21 +356,8 @@ public class SettingsFrag extends Fragment {
 //        photoPickerIntent.putExtra( Intent.CATEGORY_APP_GALLERY, new String[]{"image/*"} );
 //        startActivityForResult( photoPickerIntent, PICK_IMAGE );
 //    }
+//
 
-    public boolean checkPermission() {
-        int cameraPermission = ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.CAMERA );
-        int readStoragePermission = ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE );
-        int writeStoragePermission = ContextCompat.checkSelfPermission( getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE );
-
-        if (cameraPermission == PackageManager.PERMISSION_GRANTED && readStoragePermission == PackageManager.PERMISSION_GRANTED
-                && writeStoragePermission == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE );
-            return false;
-        }
-    }
 
 
     private void notificationSoundsFun() {
@@ -427,9 +414,7 @@ public class SettingsFrag extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     isVibrate = true;
-                }
-                else
-                {
+                } else {
                     isVibrate = false;
                 }
             }
@@ -441,7 +426,7 @@ public class SettingsFrag extends Fragment {
             public void onClick(View v) {
                 editor.putBoolean( "Is_Vibrate", isVibrate ).commit();
                 editor.putString( "NotificationSoundPath", notificationStringPath ).commit();
-                editor.putInt( "sound_item_position",itemPosition ).commit();
+                editor.putInt( "sound_item_position", itemPosition ).commit();
                 dialog.dismiss();
             }
         } );

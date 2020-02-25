@@ -27,40 +27,50 @@ import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 public class AlarmSettingClass extends ContextWrapper {
 
 
-
     public AlarmSettingClass(Context base) {
         super( base );
 
 
     }
-
     public void setOneAlarm(String title,long reminderTime,int position)
     {
-
+        AlarmManager  alarmManager = (AlarmManager) getSystemService( ALARM_SERVICE );
         Intent  myIntent = new Intent( this, NotificationReceiver.class );
         myIntent.putExtra( "Task_Title",title );
         myIntent.putExtra( "Position",position );
-        myIntent.putExtra( "Is_Repeating",false );
+
         PendingIntent  pendingIntent = PendingIntent.getBroadcast( this,position, myIntent, 0 );
-        AlarmManager  alarmManager = (AlarmManager) getSystemService( ALARM_SERVICE );
 
         if (alarmManager != null) {
                     alarmManager.cancel( pendingIntent );
                     alarmManager.setExact( AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent );
-//                    enableOnRebootBroadCastReceiver();
                 }
             }
+//    public void alarmEditFun(String title,long reminderTime,int position)
+//    {
+//        AlarmManager  alarmManager = (AlarmManager) getSystemService( ALARM_SERVICE );
+//        Intent  myIntent = new Intent( this, NotificationReceiver.class );
+//        myIntent.putExtra( "Task_Title",title );
+//        myIntent.putExtra( "Position",position );
+//        myIntent.putExtra( "Is_Repeating",false );
+//
+//        PendingIntent  pendingIntent = PendingIntent.getBroadcast( this,position, myIntent, PendingIntent.FLAG_UPDATE_CURRENT );
+//
+//        if (alarmManager != null) {
+//            alarmManager.cancel( pendingIntent );
+//            alarmManager.setExact( AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent );
+//        }
+//    }
 
     public void setRepeatingAlarm(String title,long reminderTime,int position,long intervalTime )
     {
+
 
         Intent  myIntent1 = new Intent( this, NotificationReceiver.class );
         myIntent1.putExtra( "Task_Title",title );
         myIntent1.putExtra( "Is_Repeating",true );
         myIntent1.putExtra( "Position",position );
-
         myIntent1.putExtra( "Reminder_Time", reminderTime);
-        myIntent1.putExtra( "Interval_Time", intervalTime);
 
 
         PendingIntent  pendingIntent1 = PendingIntent.getBroadcast( this,position, myIntent1, 0 );
@@ -69,7 +79,6 @@ public class AlarmSettingClass extends ContextWrapper {
         if (alarmManager1 != null) {
             alarmManager1.cancel( pendingIntent1 );
             alarmManager1.setRepeating( AlarmManager.RTC_WAKEUP, reminderTime,intervalTime , pendingIntent1 );
-//                    enableOnRebootBroadCastReceiver();
         }
     }
 
@@ -81,18 +90,6 @@ public class AlarmSettingClass extends ContextWrapper {
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.cancel(sender);
     }
-
-
-//private void enableOnRebootBroadCastReceiver()
-//{
-//    ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
-//    PackageManager pm = this.getPackageManager();
-//
-//    pm.setComponentEnabledSetting(receiver,
-//            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-//            PackageManager.DONT_KILL_APP);
-//}
-
 
 
 

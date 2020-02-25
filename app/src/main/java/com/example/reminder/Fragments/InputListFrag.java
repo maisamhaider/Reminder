@@ -1,8 +1,10 @@
 package com.example.reminder.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
@@ -19,11 +21,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -48,7 +52,7 @@ import java.util.Objects;
 public class InputListFrag extends Fragment {
 
 
-    private static final int REQUEST_PERMISSION =1 ;
+    private static final int REQUEST_PERMISSION = 1;
     private RecyclerView recyclerView;
     BottomNavigationView bottomNavigationView;
 
@@ -61,25 +65,28 @@ public class InputListFrag extends Fragment {
     private Button doneBtn;
     private LinearLayout close_LL;
 
-    private String input_from_inputRV,dateToPlaceTask = "", alarmTime ="";
+    private String input_from_inputRV, dateToPlaceTask = "", alarmTime = "";
     private EditTextStringListener editTextStringListener;
 
     private MainActivity mainActivity;
     private MyTimeSettingClass myTimeSettingClass;
 
-    private LinearLayout
-            dayslLo, timeLo;
-    private boolean today=false,tomorrow=false,nextWeek=false,custom = false;
-    ConstraintLayout nineLo,threeLo,sixLo,todayLo,tomorrowLo,nextweekLo,daycustomLo,timeCustomLo;
+    private LinearLayout dayslLo, timeLo;
+    private TextView tvM,tvAfter,tvEvnng;
+    private ImageView listFragImageView3,listFragImageView9,listFragImageView6;
+    private boolean today = false, tomorrow = false, nextWeek = false, custom = false;
+    private ConstraintLayout nineLo, threeLo, sixLo, todayLo, tomorrowLo, nextweekLo, daycustomLo, timeCustomLo;
     private Calendar calendar = Calendar.getInstance();
-    private int checkYear,currentYear,istomorrow,mtomorrow,isToday,mtoday;
+    private int checkYear, currentYear, istomorrow, mtomorrow, isToday, mtoday;
 
     private Calendar whatTime = Calendar.getInstance();
+    @SuppressLint("NewApi")
     private SimpleDateFormat whatTimeFormat = new SimpleDateFormat( "h:mm a" );
     private Calendar c = Calendar.getInstance();
-    private int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+    private int timeOfDay = c.get( Calendar.HOUR_OF_DAY );
     SimpleDateFormat sformat;
-    private  Calendar taskCreatedDate = Calendar.getInstance();
+    private Calendar taskCreatedDate = Calendar.getInstance();
+    @SuppressLint("NewApi")
     private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
     private AlarmSettingClass alarmSettingClass;
     private String getBundleData;
@@ -96,6 +103,8 @@ public class InputListFrag extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate( R.layout.fragment_input_list, container, false );
+        getActivity().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE );
+
         mainActivity = (MainActivity) getActivity();
         myTimeSettingClass = new MyTimeSettingClass();
         dataBaseHelper = new DataBaseHelper( getContext() );
@@ -107,58 +116,56 @@ public class InputListFrag extends Fragment {
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         recyclerView.setLayoutManager( linearLayoutManager );
 
-        input_ET  = view.findViewById( R.id.searchET );
+        input_ET = view.findViewById( R.id.searchET );
         close_LL = view.findViewById( R.id.list_layout_backLL );
-        doneBtn   = view.findViewById( R.id.donebtn );
+        doneBtn = view.findViewById( R.id.donebtn );
 
-        dayslLo     = view.findViewById( R.id.dayslayout );
-        todayLo     = view.findViewById( R.id.today_layout );
-        tomorrowLo  = view.findViewById( R.id.tomorrow_layout );
-        nextweekLo  = view.findViewById( R.id.nextweek_layout );
+        dayslLo = view.findViewById( R.id.dayslayout );
+        todayLo = view.findViewById( R.id.today_layout );
+        tomorrowLo = view.findViewById( R.id.tomorrow_layout );
+        nextweekLo = view.findViewById( R.id.nextweek_layout );
         daycustomLo = view.findViewById( R.id.custom_layout );
 
-        timeLo  = view.findViewById( R.id.time_layout );
-        nineLo  = view.findViewById( R.id.nine_layout );
+        timeLo = view.findViewById( R.id.time_layout );
+        nineLo = view.findViewById( R.id.nine_layout );
         threeLo = view.findViewById( R.id.three_layout );
-        sixLo   = view.findViewById( R.id.six_layout );
+        sixLo = view.findViewById( R.id.six_layout );
+        tvM = view.findViewById( R.id.listFragTextViewmrng );
+        tvAfter = view.findViewById( R.id.listFragTextViewAftrnn );
+        tvEvnng = view.findViewById( R.id.listFragTextViewEvnng );
+        listFragImageView9 = view.findViewById( R.id.listFragImageView9 );
+        listFragImageView3 = view.findViewById( R.id.listFragImageView3 );
+        listFragImageView6 = view.findViewById( R.id.listFragImageView6 );
+
         timeCustomLo = view.findViewById( R.id.custom_time_layout );
         mainActivity.hideBottomNView();
         dayslLo.setVisibility( View.GONE );
         timeLo.setVisibility( View.GONE );
-        getBundleData = getArguments().getString("get_btn");
+        getBundleData = getArguments().getString( "get_btn" );
 
-
-
-        if (timeOfDay>0 && timeOfDay>9) {
-            nineLo.setClickable( true );
-        }
-        else
-        {
-            nineLo.setClickable( false );
-        }
-        if (timeOfDay>0 && timeOfDay >15)
-        {
-            threeLo.setClickable( true );
-        }
-        else
-        {threeLo.setClickable( false );
-        }
-        if (timeOfDay>0 && timeOfDay>18)
-        {
-            sixLo.setClickable( true );
-        }
-        else
-        {
-            sixLo.setClickable( false );
-        }
 
         setDateTimeOfTask();
 
-        input_ET.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+        input_ET.addTextChangedListener( new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                dayslLo.setVisibility( View.VISIBLE );
-                timeLo.setVisibility( View.GONE );
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count >= 1) {
+                    dayslLo.setVisibility( View.VISIBLE );
+                    timeLo.setVisibility( View.GONE );
+                } else {
+                    dayslLo.setVisibility( View.GONE );
+                    timeLo.setVisibility( View.GONE );
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         } );
@@ -180,7 +187,7 @@ public class InputListFrag extends Fragment {
 
                 if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENDCALL) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     InputMethodManager imgr = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
-                    imgr.hideSoftInputFromWindow(input_ET.getWindowToken(), 0);
+                    imgr.hideSoftInputFromWindow( input_ET.getWindowToken(), 0 );
                     onDoneButtonClick();
 
                 }
@@ -191,7 +198,6 @@ public class InputListFrag extends Fragment {
 
 
         List<InputRemiderModel> inputRemiderModelList = new ArrayList<>();
-
 
         inputRemiderModelList.add( new InputRemiderModel( "Call", R.drawable.call1 ) );
         inputRemiderModelList.add( new InputRemiderModel( "Check", R.drawable.check1 ) );
@@ -217,7 +223,6 @@ public class InputListFrag extends Fragment {
             public void myString(String ss) {
                 input_ET.setText( ss + " " );
                 input_ET.setSelection( input_ET.getText().length() );
-
             }
 
             @Override
@@ -251,8 +256,9 @@ public class InputListFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 mainActivity.showBottomNView();
+                mainActivity.onBackPressed();
                 mainActivity.setTaskFragDefaultBNBItem();//it will go on AllTasks fragment and
-                                                // make highlighted Task item of bottom navigation view
+                // make highlighted Task item of bottom navigation view
             }
         } );
 
@@ -278,7 +284,6 @@ public class InputListFrag extends Fragment {
         if (input_ET.length() == 0) {
             mainActivity.setTaskFragDefaultBNBItem();
             mainActivity.showBottomNView();
-//            mainActivity.showBottomNView();
         } else if (input_ET.length() != 0) {
             if (dateToPlaceTask.matches( "" ) || alarmTime.matches( "" )) {
                 whatIsThisFun();
@@ -286,94 +291,61 @@ public class InputListFrag extends Fragment {
                 mainActivity.showBottomNView();
 
             } else {
-                int isInsert = dataBaseHelper.insert( input_ET.getText().toString(), alarmTime, dateToPlaceTask,
+                @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( input_ET.getText().toString(), alarmTime, dateToPlaceTask,
                         taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "1" );
                 if (isInsert == 0) {
-                    Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
                 } else {
-                    alarmSettingClass.setOneAlarm( input_ET.getText().toString(), myTimeSettingClass.getMilliFromDate( alarmTime ), isInsert );
-                    Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                    alarmSettingClass.setOneAlarm( input_ET.getText().toString(), MyTimeSettingClass.getMilliFromDate( alarmTime ), isInsert );
                 }
             }
             mainActivity.setTaskFragDefaultBNBItem();
             mainActivity.showBottomNView();
+            InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
+            inputMethodManager.hideSoftInputFromWindow( input_ET.getWindowToken(), 0 );
         }
 
     }
 
 
-    public void whatIsThisFun()
-    {
-        if (getBundleData.matches( "today_Clicked" ))
-        {
-            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                    MyTimeSettingClass.todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
-            if (isInsert==0)
-            {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-            }
-            else {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+    @SuppressLint("NewApi")
+    public void whatIsThisFun() {
+        if (getBundleData.matches( "today_Clicked" )) {
+            @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( input_ET.getText().toString(), "",
+                    MyTimeSettingClass.todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "0" );
+            if (isInsert == 0) {
+            } else {
             }
 
-        }
-        else if( getBundleData.matches( "tomorrow_Clicked"))
-        {
+        } else if (getBundleData.matches( "tomorrow_Clicked" )) {
 
-            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                    MyTimeSettingClass.tomorrowPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
-            if (isInsert==0)
-            {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-            }
-            else {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-            }
+            dataBaseHelper.insert( input_ET.getText().toString(), "",
+                    MyTimeSettingClass.tomorrowPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "0" );
 
-        } else if (getBundleData.matches( "upcoming_Clicked"))
-        {
+        } else if (getBundleData.matches( "upcoming_Clicked" )) {
 
-            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                    MyTimeSettingClass.nextWeekPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
-            if (isInsert==0)
-            {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-            }
-            else {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-            }
+            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(), "",
+                    MyTimeSettingClass.nextWeekPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "0" );
 
-        } else if (getBundleData.matches( "someday_Clicked"))
-        {
 
-            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(),"",
-                    "", taskCreatedDateSF.format( taskCreatedDate.getTime()),"","0" );
-            if (isInsert==0)
-            {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-            }
-            else {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-            }
+        } else if (getBundleData.matches( "someday_Clicked" )) {
 
-        } else if (getBundleData.matches( "main_Clicked")) {
+            int isInsert = dataBaseHelper.insert( input_ET.getText().toString(), "",
+                    "", taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "0" );
+
+        } else if (getBundleData.matches( "main_Clicked" )) {
 
             int isInsert = dataBaseHelper.insert( input_ET.getText().toString(), "",
                     MyTimeSettingClass.todayPlaceDate(), taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "0" );
-            if (isInsert == 0) {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-            } else {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
-            }
 
         }
-        }
+    }
 
     private DatePickerDialog.OnDateSetListener datePickerDialog = new DatePickerDialog.OnDateSetListener() {
+        @SuppressLint("NewApi")
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-            nextWeek =false;
+            nextWeek = false;
             tomorrow = false;
             today = false;
             custom = true;
@@ -382,202 +354,244 @@ public class InputListFrag extends Fragment {
             nineLo.setClickable( true );
             threeLo.setClickable( true );
             sixLo.setClickable( true );
-            timeCustomLo.setEnabled(true);
+            timeCustomLo.setEnabled( true );
 
-            calendar.set( Calendar.YEAR,year );
-            calendar.set( Calendar.MONTH,month );
-            calendar.set( Calendar.DAY_OF_MONTH,dayOfMonth );
+            calendar.set( Calendar.YEAR, year );
+            calendar.set( Calendar.MONTH, month );
+            calendar.set( Calendar.DAY_OF_MONTH, dayOfMonth );
 
 
             Calendar calendar1 = Calendar.getInstance();
 
             checkYear = calendar.get( Calendar.YEAR );
-            currentYear =calendar1.get( Calendar.YEAR );
-            istomorrow = calendar.get(Calendar.DAY_OF_MONTH);
-            mtomorrow   = calendar1.get( Calendar.DAY_OF_MONTH )+1;
-            isToday  = calendar.get( Calendar.DAY_OF_MONTH);
-            mtoday  = calendar1.get( Calendar.DAY_OF_MONTH );
-         SimpleDateFormat format = new SimpleDateFormat( "dd MMM yyyy EEE, " );
+            currentYear = calendar1.get( Calendar.YEAR );
+            istomorrow = calendar.get( Calendar.DAY_OF_MONTH );
+            mtomorrow = calendar1.get( Calendar.DAY_OF_MONTH ) + 1;
+            isToday = calendar.get( Calendar.DAY_OF_MONTH );
+            mtoday = calendar1.get( Calendar.DAY_OF_MONTH );
+            @SuppressLint({"NewApi", "LocalSuppress"}) SimpleDateFormat format = new SimpleDateFormat( "dd MMM yyyy EEE, " );
 
-            myTimeSettingClass.setCustomPlaceDate( dayOfMonth,month,year );
+            myTimeSettingClass.setCustomPlaceDate( dayOfMonth, month, year );
             dateToPlaceTask = MyTimeSettingClass.getCustomPlaceDate();
             alarmTime = format.format( calendar.getTime() );
 
         }
     };
+
+    // return left string from first ,
+    public String returnPartOfString1(String s, String pointString) {
+        String d = s;
+        String ssDate = d.substring( d.lastIndexOf( pointString ) );
+        d = d.replace( ssDate, "" );
+        return d;
+    }
+
+
+
+    private void setDateTimeOfTask() {
+
+        todayLo.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (timeOfDay > 0 && timeOfDay < 9) {
+                    nineLo.setClickable( true );
+                } else {
+                    nineLo.setClickable( false );
+                    tvM.setTextColor( Color.parseColor( "#d1d1d1" ) );
+                    listFragImageView9.setImageResource( R.drawable.unselect );
+                }
+                if (timeOfDay >0 && timeOfDay < 15) {
+                    threeLo.setClickable( true );
+                } else {
+                    threeLo.setEnabled( false );
+                    tvAfter.setTextColor( Color.parseColor( "#d1d1d1" ) );
+                    listFragImageView3.setImageResource( R.drawable.unselect );
+
+
+                }
+                if (timeOfDay > 0 && timeOfDay < 18) {
+                    sixLo.setClickable( true );
+                } else {
+                    sixLo.setClickable( false );
+                    tvEvnng.setTextColor( Color.parseColor( "#d1d1d1" ) );
+                    listFragImageView6.setImageResource( R.drawable.unselect );
+
+
+                }
+                today = true;
+                tomorrow = false;
+                nextWeek = false;
+                custom = false;
+                dateToPlaceTask = MyTimeSettingClass.todayPlaceDate();
+                dayslLo.setVisibility( View.GONE );
+                timeLo.setVisibility( View.VISIBLE );
+
+            }
+        } );
+        tomorrowLo.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                tomorrow = true;
+                today = false;
+                nextWeek = false;
+                custom = false;
+                dateToPlaceTask = MyTimeSettingClass.tomorrowPlaceDate();
+                dayslLo.setVisibility( View.GONE );
+                timeLo.setVisibility( View.VISIBLE );
+                nineLo.setEnabled( true );
+                threeLo.setEnabled( true );
+                sixLo.setEnabled( true );
+                timeCustomLo.setEnabled( true );
+
+            }
+        } );
+        nextweekLo.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextWeek = true;
+                tomorrow = false;
+                today = false;
+                custom = false;
+                dateToPlaceTask = MyTimeSettingClass.nextWeekPlaceDate();
+                dayslLo.setVisibility( View.GONE );
+                timeLo.setVisibility( View.VISIBLE );
+                nineLo.setClickable( true );
+                threeLo.setClickable( true );
+                sixLo.setClickable( true );
+                timeCustomLo.setEnabled( true );
+            }
+        } );
+
+        nineLo.setOnClickListener( new View.OnClickListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onClick(View v) {
+                if (today) {
+                    alarmTime = MyTimeSettingClass.getToday9am();
+                } else if (tomorrow) {
+                    alarmTime = MyTimeSettingClass.getTomorrowMorning();
+                } else if (nextWeek) {
+                    alarmTime = MyTimeSettingClass.getNextWeek9am();
+                } else {
+                    whatTime.set( Calendar.HOUR_OF_DAY, 9 );
+                    whatTime.set( Calendar.MINUTE, 0 );
+                    whatTime.set( Calendar.SECOND, 0 );
+                    alarmTime = alarmTime + whatTimeFormat.format( whatTime.getTime() );
+                }
+                onDoneButtonClick();
+
+
+            }
+        } );
+
+        threeLo.setOnClickListener( new View.OnClickListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onClick(View v) {
+
+                if (today) {
+                    alarmTime = MyTimeSettingClass.getToday3pm();
+                } else if (tomorrow) {
+                    alarmTime = MyTimeSettingClass.getTomorrow3pm();
+                } else if (nextWeek) {
+                    alarmTime = MyTimeSettingClass.getNextWeek3pm();
+                } else {
+                    whatTime.set( Calendar.HOUR_OF_DAY, 15 );
+                    whatTime.set( Calendar.MINUTE, 0 );
+                    whatTime.set( Calendar.SECOND, 0 );
+                    alarmTime = alarmTime + whatTimeFormat.format( whatTime.getTime() );
+                }
+                onDoneButtonClick();
+            }
+        } );
+
+        sixLo.setOnClickListener( new View.OnClickListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onClick(View v) {
+
+                if (today) {
+                    alarmTime = MyTimeSettingClass.getToday6pm();
+                } else if (tomorrow) {
+                    alarmTime = MyTimeSettingClass.getTomorrow6pm();
+                } else if (nextWeek) {
+                    alarmTime = MyTimeSettingClass.getNextWeek6pm();
+                } else {
+                    whatTime.set( Calendar.HOUR_OF_DAY, 18 );
+                    whatTime.set( Calendar.MINUTE, 0 );
+                    whatTime.set( Calendar.SECOND, 0 );
+                    alarmTime = alarmTime + whatTimeFormat.format( whatTime.getTime() );
+                }
+                onDoneButtonClick();
+            }
+        } );
+
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get( Calendar.YEAR );
+        final int month = calendar.get( Calendar.MONTH );
+        final int day = calendar.get( Calendar.DAY_OF_MONTH );
+        final int hour = calendar.get( Calendar.HOUR_OF_DAY );
+        final int minutes = calendar.get( Calendar.MINUTE );
+
+        daycustomLo.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ), datePickerDialog, year, month, day );
+                dP.getDatePicker().setMinDate( System.currentTimeMillis() - 1000 );
+                dP.show();
+
+            }
+        } );
+        timeCustomLo.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog tP = new TimePickerDialog( getContext(), timePickerListener, hour, minutes, false );
+                tP.show();
+            }
+        } );
+    }
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        @SuppressLint("NewApi")
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            calendar.set(Calendar.MINUTE,minute );
+            calendar.set( Calendar.HOUR_OF_DAY, hourOfDay );
+            calendar.set( Calendar.MINUTE, minute );
 
-                sformat =new SimpleDateFormat( "h:mm a" );
+            sformat = new SimpleDateFormat( " h:mm a" );
 
+            if (nextWeek)
+            {
+            String date = returnPartOfString1(MyTimeSettingClass.getNextWeek(),",");
+                alarmTime = date + sformat.format( calendar.getTime() );
+            }
+            else if (tomorrow)
+            {
+                String date = returnPartOfString1(MyTimeSettingClass.getTomorrow(),",");
+                alarmTime = date + sformat.format( calendar.getTime() );
+            }
+            else if (today)
+            {
+                String date = returnPartOfString1(MyTimeSettingClass.getLaterToday(),",");
+                alarmTime = date + sformat.format( calendar.getTime() );
 
-            alarmTime = alarmTime + sformat.format( calendar.getTime() );
-
+            }else if (custom)
+            {
+                alarmTime = alarmTime + sformat.format( calendar.getTime() );
+            }
         }
     };
 
 
 
-      private void setDateTimeOfTask()
-          {
-
-            todayLo.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    today = true;
-                    tomorrow = false;
-                    nextWeek =false;
-                    custom = false;
-                    dateToPlaceTask = MyTimeSettingClass.todayPlaceDate();
-                    dayslLo.setVisibility( View.GONE );
-                    timeLo.setVisibility( View.VISIBLE );
-
-                }
-            } );
-            tomorrowLo.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tomorrow = true;
-                    today = false;
-                    nextWeek =false;
-                    custom = false;
-                    dateToPlaceTask = MyTimeSettingClass.tomorrowPlaceDate();
-                    dayslLo.setVisibility( View.GONE );
-                    timeLo.setVisibility( View.VISIBLE );
-                    nineLo.setEnabled( true );
-                    threeLo.setEnabled( true );
-                    sixLo.setEnabled( true );
-                    timeCustomLo.setEnabled(true);
-
-                }
-            } );
-            nextweekLo.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    nextWeek =true;
-                    tomorrow = false;
-                    today = false;
-                    custom = false;
-                    dateToPlaceTask= MyTimeSettingClass.nextWeekPlaceDate();
-                    dayslLo.setVisibility( View.GONE );
-                    timeLo.setVisibility( View.VISIBLE );
-                    nineLo.setClickable( true );
-                    threeLo.setClickable( true );
-                    sixLo.setClickable( true );
-                    timeCustomLo.setEnabled(true);
-                }
-            } );
-
-            nineLo.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (today)
-                    {
-                        alarmTime = MyTimeSettingClass.getToday9am();
-                    }
-                    else
-                    if (tomorrow)
-                    {
-                        alarmTime = MyTimeSettingClass.getTomorrowMorning();
-                    }
-                    else
-                    if (nextWeek)
-                    {
-                        alarmTime = MyTimeSettingClass.getNextWeek9am();
-                    }
-                    else
-                    {
-                        whatTime.set( Calendar.HOUR_OF_DAY, 9 );
-                        whatTime.set( Calendar.MINUTE, 0 );
-                        whatTime.set( Calendar.SECOND, 0 );
-                        alarmTime = alarmTime+whatTimeFormat.format( whatTime.getTime() );
-                    }
-
-                }
-            } );
-
-            threeLo.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (today)
-                    {
-                        alarmTime = MyTimeSettingClass.getToday3pm();
-                    }else
-                    if (tomorrow)
-                    {
-                        alarmTime = MyTimeSettingClass.getTomorrow3pm();
-                    }else
-                    if (nextWeek)
-                    {
-                        alarmTime = MyTimeSettingClass.getNextWeek3pm();
-                    }
-                    else
-                    {
-                        whatTime.set( Calendar.HOUR_OF_DAY, 15 );
-                        whatTime.set( Calendar.MINUTE, 0 );
-                        whatTime.set( Calendar.SECOND, 0 );
-                        alarmTime = alarmTime+whatTimeFormat.format( whatTime.getTime() );
-                    }
-                }
-            } );
-
-              sixLo.setOnClickListener( new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-
-                      if (today)
-                      {
-                          alarmTime = MyTimeSettingClass.getToday6pm();
-                      }else
-                      if (tomorrow)
-                      {
-                          alarmTime = MyTimeSettingClass.getTomorrow6pm();
-                      }else
-                      if (nextWeek)
-                      {
-                          alarmTime = MyTimeSettingClass.getNextWeek6pm();
-                      }
-                      else
-                      {
-                          whatTime.set( Calendar.HOUR_OF_DAY, 18 );
-                          whatTime.set( Calendar.MINUTE, 0 );
-                          whatTime.set( Calendar.SECOND, 0 );
-                          alarmTime = alarmTime+whatTimeFormat.format( whatTime.getTime() );
-                      }
-                  }
-              } );
-
-              Calendar calendar = Calendar.getInstance();
-              final int year =  calendar.get( Calendar.YEAR );
-              final int month = calendar.get( Calendar.MONTH );
-              final int day = calendar.get( Calendar.DAY_OF_MONTH );
-              final int hour = calendar.get( Calendar.HOUR_OF_DAY );
-              final int minutes = calendar.get( Calendar.MINUTE );
-              daycustomLo.setOnClickListener( new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-
-                      DatePickerDialog dP = new DatePickerDialog( Objects.requireNonNull( getContext() ),datePickerDialog,year,month,day );
-                      dP.getDatePicker().setMinDate( System.currentTimeMillis() - 1000 );
-                      dP.show();
-                  }
-              } );
-              timeCustomLo.setOnClickListener( new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                      TimePickerDialog tP = new TimePickerDialog( getContext(),timePickerListener,hour,minutes,false );
-                      tP.show();
-                  }
-              } );
-    }
     @Override
     public void onPause() {
         super.onPause();
+        InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
+        inputMethodManager.hideSoftInputFromWindow( input_ET.getWindowToken(), 0 );
     }
 
     @Override
@@ -601,8 +615,6 @@ public class InputListFrag extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull( getActivity() ).getSystemService( Context.INPUT_METHOD_SERVICE );
-                    inputMethodManager.hideSoftInputFromWindow( input_ET.getWindowToken(),0 );
                     return true;
                 }
                 return false;
@@ -611,7 +623,6 @@ public class InputListFrag extends Fragment {
 
 
     }
-
 
 
     @Override
@@ -628,4 +639,4 @@ public class InputListFrag extends Fragment {
         mainActivity.loadmyfrag( allTasksFrag );
     }
 
-    }
+}

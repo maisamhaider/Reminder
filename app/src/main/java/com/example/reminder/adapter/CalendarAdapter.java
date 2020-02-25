@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reminder.R;
+import com.example.reminder.models.EventModel;
 
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
@@ -26,21 +27,11 @@ import java.util.Calendar;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventViewHolder> {
 
     Context context;
-    ArrayList<String> eventTitleList;
-    ArrayList<String> eventDateList;
-    ArrayList<String> eventLocationList;
-    ArrayList<String> eventDescriptionList;
-    ArrayList<String> eventCalendarId;
+    ArrayList<EventModel> eventModelList;
 
-    public CalendarAdapter(Context context, ArrayList<String> eventTitleList,
-                           ArrayList<String> eventDateList,    ArrayList<String> eventLocationList,
-                           ArrayList<String> eventDescriptionList,ArrayList<String> eventCalendarId) {
+    public CalendarAdapter(Context context, ArrayList<EventModel> eventModelList) {
         this.context = context;
-        this.eventTitleList = eventTitleList;
-        this.eventDateList = eventDateList;
-        this.eventLocationList = eventLocationList;
-        this.eventDescriptionList = eventDescriptionList;
-        this.eventCalendarId = eventCalendarId;
+    this.eventModelList = eventModelList;
     }
 
     @NonNull
@@ -52,11 +43,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, final int position) {
-        holder.eventNameTv.setText( eventTitleList.get( position ) );
-        holder.event_date.setText( eventDateList.get( position ) );
-        holder.event_descriptionTv.setText( eventDescriptionList.get( position ) );
-        holder.event_locationTv.setText( eventLocationList.get( position ) );
-        holder.event_calendarIdTv.setText( eventCalendarId.get( position ) );
+        EventModel eventModel=eventModelList.get( position );
+        holder.eventNameTv.setText( eventModel.getNameOfEvent() );
+        holder.event_date.setText( eventModel.getStartDates().toString() );
+        holder.event_descriptionTv.setText( eventModel.getDescriptions());
+        holder.event_locationTv.setText( eventModel.getLocation() );
+        holder.event_calendarIdTv.setText( eventModel.getCalendarId() );
 // event deletion code from device calendar
 //        holder.deleteEventIV.setOnClickListener( new View.OnClickListener() {
 //            @Override
@@ -86,7 +78,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
 
     @Override
     public int getItemCount() {
-        return eventDateList.size();
+        return eventModelList.size();
     }
 
 

@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/alertdialogsbg"
     android:orientation="vertical">
 
     <TextView
-        android:textColor="@color/colorDodgerBlue"
+        android:textColor="@color/colorMainYellowOne"
         android:padding="15dp"
         android:textSize="23sp"
         android:textStyle="bold"
-        android:text="DELETE THIS ITEM?"
+        android:text="@string/delete_this_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <LinearLayout
@@ -30,7 +31,7 @@
             android:backgroundTint="@color/colorWhite"
             android:textStyle="bold"
             android:text="Delete"
-            android:textColor="@color/colorDodgerBlue"
+            android:textColor="@color/colorMainYellowOne"
             android:id="@+id/attachment_deleteBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

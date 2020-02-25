@@ -63,7 +63,6 @@ public class InputTaskListAdapter extends RecyclerView.Adapter<InputTaskListAdap
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
                 invokeVisible();
                 etvString(text);
             }

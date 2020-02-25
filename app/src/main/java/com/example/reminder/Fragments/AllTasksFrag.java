@@ -30,7 +30,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,7 +37,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.adapter.AllTasksAdapter;
 import com.example.reminder.classes.AlarmSettingClass;
@@ -68,7 +66,7 @@ public class AllTasksFrag extends Fragment {
     //actionbar
     ImageView tasksMenuImageView;
 
-   //
+    //
     private HorizontalScrollView horizontalScrollViewTags;
     private RelativeLayout relativeLayoutAddEt;
 
@@ -76,10 +74,10 @@ public class AllTasksFrag extends Fragment {
 
 
     private EditText add_task_edittext;
-    private Button addtodayBtn, addtomorrowbtn, addupcomingbtn, addsomedaybtn ;
+    private Button addtodayBtn, addtomorrowbtn, addupcomingbtn, addsomedaybtn;
     private String text = "", reminder_date = "", date_to_place_task = "";
     private SimpleDateFormat sformat;
-    private LottieAnimationView addUpLottieAnimationView, mainAddLottieAnimationView;
+    private RelativeLayout addUpRLL, mainAddRLL;
 
     private boolean thisMorning = false,
             laterToday = false,
@@ -96,6 +94,7 @@ public class AllTasksFrag extends Fragment {
 
     private Calendar calendar = Calendar.getInstance();
     private Calendar taskCreatedDate = Calendar.getInstance();
+    @SuppressLint("NewApi")
     private SimpleDateFormat taskCreatedDateSF = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm:ss a" );
     private int checkYear, currentYear, istomorrow, mtomorrow, isToday, mtoday;
 
@@ -155,14 +154,14 @@ public class AllTasksFrag extends Fragment {
         addtomorrowbtn = view.findViewById( R.id.tomorrowtaskaddbutton );
         addupcomingbtn = view.findViewById( R.id.upcomingtaskaddbutton );
         addsomedaybtn = view.findViewById( R.id.somedaytaskaddbutton );
-        mainAddLottieAnimationView = view.findViewById( R.id.mainAddLottieAnimationView );
-        addUpLottieAnimationView = view.findViewById( R.id.AddUpLottieAnimationView );
+        mainAddRLL = view.findViewById( R.id.mainAddLottieAnimationView );
+        addUpRLL = view.findViewById( R.id.AddUpLottieAnimationView );
 
         horizontalScrollViewTags = view.findViewById( R.id.tagsLlayout );
 
 
         dataBaseHelper = new DataBaseHelper( getContext() );
-        addUpLottieAnimationView.setVisibility( View.GONE );
+        addUpRLL.setVisibility( View.GONE );
 
         hidelinearLayoutTags();
         actionBarFun();
@@ -173,14 +172,14 @@ public class AllTasksFrag extends Fragment {
         loadedfragonbtnclick();
         witchTagLayoutIsTouched();
 
-       getActivity().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getActivity().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN );
         add_task_edittext.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    addUpLottieAnimationView.setVisibility( View.VISIBLE );
-                    mainAddLottieAnimationView.setVisibility( View.GONE );
+                    addUpRLL.setVisibility( View.VISIBLE );
+                    mainAddRLL.setVisibility( View.GONE );
 
                     add_task_edittext.post( new Runnable() {
                         @Override
@@ -201,7 +200,7 @@ public class AllTasksFrag extends Fragment {
         } );
 
 
-        addUpLottieAnimationView.setOnClickListener( new View.OnClickListener() {
+        addUpRLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDataInRecyclerView();
@@ -217,8 +216,8 @@ public class AllTasksFrag extends Fragment {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
 
                     horizontalScrollViewTags.setVisibility( View.GONE );
-                    addUpLottieAnimationView.setVisibility( View.GONE );
-                    mainAddLottieAnimationView.setVisibility( View.VISIBLE );
+                    addUpRLL.setVisibility( View.GONE );
+                    mainAddRLL.setVisibility( View.VISIBLE );
                     setDataInRecyclerView();
                     add_task_edittext.setText( "" );
 
@@ -230,15 +229,15 @@ public class AllTasksFrag extends Fragment {
 
         return view;
     }
+
     //actionbar
-    private void actionBarFun()
-    {
+    private void actionBarFun() {
         tasksMenuImageView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tasksMenuImageView.setImageResource( R.drawable.option );
-                final PopupMenu popupMenu = new PopupMenu( getContext(),tasksMenuImageView );
-                popupMenu.getMenuInflater().inflate( R.menu.taskactionmenu,popupMenu.getMenu() );
+                final PopupMenu popupMenu = new PopupMenu( getContext(), tasksMenuImageView );
+                popupMenu.getMenuInflater().inflate( R.menu.taskactionmenu, popupMenu.getMenu() );
                 popupMenu.setOnMenuItemClickListener( new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -246,27 +245,19 @@ public class AllTasksFrag extends Fragment {
                         if (item.getItemId() == R.id.clearCompletedTasks) {
                             try {
                                 Cursor cursor = dataBaseHelper.getAllTasks();
-                                if (cursor.getCount()==0)
-                                {}
-                                while (cursor.moveToNext())
-                                {
+                                if (cursor.getCount() == 0) {
+                                }
+                                while (cursor.moveToNext()) {
                                     String position = cursor.getString( 0 );
                                     String isCompleted = cursor.getString( 6 );
-                                    if (isCompleted==null)
-                                    {}
-                                    else
-                                    if (isCompleted.matches( "yes" ))
-                                    {
+                                    if (isCompleted == null) {
+                                    } else if (isCompleted.matches( "yes" )) {
                                         alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( position ) );
-                                        dataBaseHelper.deleteEachCompletedTask(position);
-
+                                        dataBaseHelper.deleteEachCompletedTask( position );
                                     }
                                 }
-
                                 mainActivity.setTaskFragDefaultBNBItem();
-                            }
-                            catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 //error
                             }
 
@@ -291,7 +282,6 @@ public class AllTasksFrag extends Fragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -303,10 +293,10 @@ public class AllTasksFrag extends Fragment {
                 if (event.getKeyCode() == MotionEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
 
                     hidelinearLayoutTags();
-                    addUpLottieAnimationView.setVisibility( View.GONE );
-                    mainAddLottieAnimationView.setVisibility( View.VISIBLE );
+                    addUpRLL.setVisibility( View.GONE );
+                    mainAddRLL.setVisibility( View.VISIBLE );
                     mainActivity.setTaskFragDefaultBNBItem();
-                    return  true;
+                    return true;
                 }
                 return false;
             }
@@ -339,31 +329,31 @@ public class AllTasksFrag extends Fragment {
         addtodayBtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setfrag("today_Clicked");
+                setfrag( "today_Clicked" );
             }
         } );
         addtomorrowbtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 setfrag("tomorrow_Clicked");
+                setfrag( "tomorrow_Clicked" );
             }
         } );
         addupcomingbtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 setfrag("upcoming_Clicked");
+                setfrag( "upcoming_Clicked" );
             }
         } );
         addsomedaybtn.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setfrag("someday_Clicked");
+                setfrag( "someday_Clicked" );
             }
         } );
-        mainAddLottieAnimationView.setOnClickListener( new View.OnClickListener() {
+        mainAddRLL.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setfrag("main_Clicked");
+                setfrag( "main_Clicked" );
             }
         } );
 
@@ -374,8 +364,9 @@ public class AllTasksFrag extends Fragment {
         FragmentManager fragmentManager = getFragmentManager();
         assert fragmentManager != null;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        bundle.putString( "get_btn",whichBTn );
+        bundle.putString( "get_btn", whichBTn );
         fragment.setArguments( bundle );
+        fragmentTransaction.addToBackStack( null );
         fragmentTransaction.replace( R.id.fragcontainer, fragment );
         fragmentTransaction.commit();
     }
@@ -588,15 +579,13 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
 
         } else {
-            int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
-            if (isInsert==0) {
-
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "1" );
+            if (isInsert == 0) {
 
             } else {
-                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                alarmSettingClass.setOneAlarm( text, myTimeSettingClass.getMilliFromDate( reminder_date ), isInsert );
+                //inserted
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -608,14 +597,13 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1");
-            if (isInsert==0) {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
-
+            @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "1" );
+            if (isInsert == 0) {
             } else {
-                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                alarmSettingClass.setOneAlarm( text, myTimeSettingClass.getMilliFromDate( reminder_date ), isInsert );
+                //inserted
+
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -627,13 +615,12 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
-            if (isInsert==0) {
-                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( text, reminder_date, todayPlaceDate(),
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "1" );
+            if (isInsert == 0) {
             } else {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                alarmSettingClass.setOneAlarm( text, myTimeSettingClass.getMilliFromDate( reminder_date ), isInsert );
+                //inserted
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -646,13 +633,12 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
 
         } else {
-            int isInsert = dataBaseHelper.insert( text, reminder_date, tomorrow,
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
-            if (isInsert==0) {
-                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+            @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( text, reminder_date, tomorrow,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "1" );
+            if (isInsert == 0) {
             } else {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+                alarmSettingClass.setOneAlarm( text, myTimeSettingClass.getMilliFromDate( reminder_date ), isInsert );
+                //inserted
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -665,14 +651,13 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            int isInsert = dataBaseHelper.insert( text, reminder_date, upcoming,
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1");
-            if (isInsert==0) {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( text, reminder_date, upcoming,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "1" );
+            if (isInsert == 0) {
 
             } else {
-                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                alarmSettingClass.setOneAlarm( text, myTimeSettingClass.getMilliFromDate( reminder_date ), isInsert );
+            //inserted
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -687,13 +672,12 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            int isInsert = dataBaseHelper.insert( text, "", someday,
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"", "0" );
-            if (isInsert==0) {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( text, "", someday,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "0" );
+            if (isInsert == 0) {
 
             } else {
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                //inserted
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -705,13 +689,12 @@ public class AllTasksFrag extends Fragment {
         if (text.matches( "" )) {
             //do nothing
         } else {
-            int isInsert = dataBaseHelper.insert( text, reminder_date, date_to_place_task,
-                    taskCreatedDateSF.format( taskCreatedDate.getTime() ),"","1" );
-            if (isInsert==0) {
-                Toast.makeText( getContext(), "not inserted", Toast.LENGTH_SHORT ).show();
+            @SuppressLint({"NewApi", "LocalSuppress"}) int isInsert = dataBaseHelper.insert( text, reminder_date, date_to_place_task,
+                    taskCreatedDateSF.format( taskCreatedDate.getTime() ), "", "1" );
+            if (isInsert == 0) {
             } else {
-                alarmSettingClass.setOneAlarm(text,myTimeSettingClass.getMilliFromDate( reminder_date ),isInsert);
-                Toast.makeText( getContext(), "Inserted", Toast.LENGTH_SHORT ).show();
+                alarmSettingClass.setOneAlarm( text, myTimeSettingClass.getMilliFromDate( reminder_date ), isInsert );
+                // inserted
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -743,10 +726,10 @@ public class AllTasksFrag extends Fragment {
             tP.show();
 
 
-
         }
     };
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        @SuppressLint("NewApi")
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
@@ -768,10 +751,10 @@ public class AllTasksFrag extends Fragment {
         } else {
             thisMorningTagLL.setVisibility( View.GONE );
         }
-        if (timeOfDay > 14) {
-            latertodaytagLL.setVisibility( View.GONE );
-        } else {
+        if (timeOfDay < 14) {
             latertodaytagLL.setVisibility( View.VISIBLE );
+        } else {
+            latertodaytagLL.setVisibility( View.GONE );
         }
         if (timeOfDay > 0 && timeOfDay < 18) {
             thisEveningTagLL.setVisibility( View.VISIBLE );
@@ -797,22 +780,18 @@ public class AllTasksFrag extends Fragment {
 
         Cursor cursor = dataBaseHelper.getToday();
         if (cursor.getCount() == 0) {
-            Log.i( "Data","no data" );
+            Log.i( "Data", "no data" );
         }
         while (cursor.moveToNext()) {
-            String date =cursor.getString( 2 );
+            String date = cursor.getString( 2 );
             String isCom = cursor.getString( 6 );
-            boolean isComBoolean = false ;
-            if (isCom==null)
-            {
+            boolean isComBoolean = false;
+            if (isCom == null) {
                 isComBoolean = false;
-            }
-            else
-            if (isCom.matches( "yes" ))
-            {
+            } else if (isCom.matches( "yes" )) {
                 isComBoolean = true;
             }
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), date,isComBoolean ));
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), date, isComBoolean ) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_today.setAdapter( allTasksAdapter );
@@ -838,23 +817,18 @@ public class AllTasksFrag extends Fragment {
 
         Cursor cursor = dataBaseHelper.getTomorrow();
         if (cursor.getCount() == 0) {
-            Log.i( "Data","no data" );
+            Log.i( "Data", "no data" );
         }
         while (cursor.moveToNext()) {
-            String date =cursor.getString( 2 );
+            String date = cursor.getString( 2 );
             String isCom = cursor.getString( 6 );
-            boolean isComBoolean = false ;
-            if (isCom==null)
-            {
+            boolean isComBoolean = false;
+            if (isCom == null) {
                 isComBoolean = false;
-            }
-            else
-            if (isCom.matches( "yes" ))
-
-            {
+            } else if (isCom.matches( "yes" )) {
                 isComBoolean = true;
             }
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ),date,isComBoolean  ) );
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), date, isComBoolean ) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_tomorrow.setAdapter( allTasksAdapter );
@@ -880,21 +854,17 @@ public class AllTasksFrag extends Fragment {
 
         Cursor cursor = dataBaseHelper.getUpcoming();
         if (cursor.getCount() == 0) {
-            Log.i( "Data","no data" );
+            Log.i( "Data", "no data" );
         }
         while (cursor.moveToNext()) {
             String isCom = cursor.getString( 6 );
             boolean isComBoolean = false;
-            if (isCom==null)
-            {
+            if (isCom == null) {
                 isComBoolean = false;
-            }
-            else
-                if (isCom.matches( "yes" ))
-            {
+            } else if (isCom.matches( "yes" )) {
                 isComBoolean = true;
             }
-            AllTasksModel filter = new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ),isComBoolean);
+            AllTasksModel filter = new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ), isComBoolean );
             String today = todayPlaceDate();
             String tommorow = tomorrowPlaceDate();
             String someday = "";
@@ -928,21 +898,17 @@ public class AllTasksFrag extends Fragment {
 
         Cursor cursor = dataBaseHelper.getSomeday();
         if (cursor.getCount() == 0) {
-            Log.i( "Data","no data" );
+            Log.i( "Data", "no data" );
         }
         while (cursor.moveToNext()) {
             String isCom = cursor.getString( 6 );
             boolean isComBoolean = false;
-            if (isCom==null)
-            {
+            if (isCom == null) {
                 isComBoolean = false;
-            }
-            else
-            if (isCom.matches( "yes" ))
-            {
+            } else if (isCom.matches( "yes" )) {
                 isComBoolean = true;
             }
-            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ),isComBoolean ) );
+            model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ), isComBoolean ) );
         }
         allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
         recyclerView_someday.setAdapter( allTasksAdapter );
@@ -950,9 +916,6 @@ public class AllTasksFrag extends Fragment {
 
 
     }
-
-
-
 
 
 }

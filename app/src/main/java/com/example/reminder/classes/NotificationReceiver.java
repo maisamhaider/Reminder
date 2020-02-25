@@ -45,29 +45,25 @@ public class NotificationReceiver extends BroadcastReceiver {
         boolean isVibrate = myPreferences.getBoolean( "Is_Vibrate", false );
         String title = intent.getStringExtra( "Task_Title" );
         int position = intent.getIntExtra( "Position", 0 );
-        boolean isRepeating = intent.getBooleanExtra( "Is_Repeating", false );
         long reminderTime = intent.getLongExtra( "Reminder_Time", 0 );
-        long intervalTime = intent.getLongExtra( "Interval_Time", 0 );
 
 
         if (isVibrate) {
-            getVibrateNotification( context, title, position, soundUri, isRepeating, reminderTime, intervalTime );
+            getVibrateNotification( context, title, position, soundUri, reminderTime );
         } else {
-            getNotification( context, title, position, soundUri, isRepeating, reminderTime, intervalTime );
+            getNotification( context, title, position, soundUri, reminderTime );
 
         }
 
     }
 
-    public void getNotification(Context context, String title, int taskPosition, Uri soundUri, boolean isRepeating, long reminderTime, long intervalTime) {
+    public void getNotification(Context context, String title, int taskPosition, Uri soundUri , long reminderTime) {
         int notifyID = taskPosition;
         Intent intent = new Intent( context, LauncherActivityOnNotification.class );
 
         intent.putExtra( "task_title_frm_notification", title );
         intent.putExtra( "task_position_fr_notification", taskPosition );
-        intent.putExtra( "isTask_repeating", isRepeating );
         intent.putExtra( "Task_Reminder_Time", reminderTime );
-        intent.putExtra( "Task_Interval_Time", intervalTime );
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String CHANNEL_ID = "my_channel_01";// The id of the channel.
@@ -103,15 +99,13 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
     }
 
-    public void getVibrateNotification(Context context, String title, int taskPosition, Uri soundUri, boolean isRepeating, long reminderTime, long intervalTime) {
+    public void getVibrateNotification(Context context, String title, int taskPosition, Uri soundUri , long reminderTime) {
         int notifyID = taskPosition;
         Intent intent = new Intent( context, LauncherActivityOnNotification.class );
 
         intent.putExtra( "task_title_frm_notification", title );
         intent.putExtra( "task_position_fr_notification", taskPosition );
-        intent.putExtra( "isTask_repeating", isRepeating );
         intent.putExtra( "Task_Reminder_Time", reminderTime );
-        intent.putExtra( "Task_Interval_Time", intervalTime );
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String CHANNEL_ID = "my_channel_01";// The id of the channel.

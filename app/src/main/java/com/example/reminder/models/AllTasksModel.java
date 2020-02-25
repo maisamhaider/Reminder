@@ -21,7 +21,6 @@ public class AllTasksModel {
     public String getDate() {
         return date;
     }
-    public boolean isCompleted() {
-        return isCompleted;
+    public boolean isCompleted() { return isCompleted;
     }
 }

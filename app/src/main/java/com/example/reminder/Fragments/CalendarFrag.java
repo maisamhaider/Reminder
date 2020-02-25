@@ -1,10 +1,8 @@
 package com.example.reminder.Fragments;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.PointF;
 import android.icu.text.SimpleDateFormat;
@@ -14,8 +12,6 @@ import android.os.Bundle;
 
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -37,6 +33,7 @@ import com.example.reminder.R;
 import com.example.reminder.adapter.CalendarAdapter;
 import com.example.reminder.classes.MyTimeSettingClass;
 import com.example.reminder.classes.ViewAnimation;
+import com.example.reminder.models.EventModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
@@ -52,32 +49,24 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class CalendarFrag extends Fragment {
 
-    private static final int REQUEST_PERMISSION = 1;
     MainActivity mainActivity;
     AllTasksFrag allTasksFrag;
     private CalendarAdapter adapter;
     private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
-
 
 
     private FloatingActionButton mainFab, eventFab, taskFab;
-    private TextView eventTextView,taskTextView;
-    private boolean isOpen = false;
+    private TextView eventTextView, taskTextView;
 
-    private ArrayList<String> calendarId = new ArrayList<>();
-    private ArrayList<String> nameOfEvent = new ArrayList<>();
-    private ArrayList<String> startDates = new ArrayList<>();
-    private ArrayList<String> endDates = new ArrayList<>();
-    private ArrayList<String> descriptions = new ArrayList<>();
-    private ArrayList<String> location = new ArrayList<>();
-    SimpleDateFormat formatRestDate, formatYear;
+    private ArrayList<EventModel> eventModelList = new ArrayList<>();
+    private ArrayList<String> sDate = new ArrayList<>(  );
+    private EventModel eventModel;
 
-    View bottomsheet;
+
 
     // calendar action bar
     TextView calActionBarDateTv1, calActionBarDateTv2;
-    private boolean isRotate =false;
+    private boolean isRotate = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,14 +79,13 @@ public class CalendarFrag extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate( R.layout.fragment_calendar, container, false );
-        checkPermission();
-        // calendar action bar view
+    // calendar action bar view
         calActionBarDateTv1 = view.findViewById( R.id.calActionBarDateTv1 );
         calActionBarDateTv2 = view.findViewById( R.id.calActionBarDateTv2 );
         //floating buttons
         mainFab = view.findViewById( R.id.mainFab );
         eventFab = view.findViewById( R.id.eventFab );
-        taskFab= view.findViewById( R.id.taskFab );
+        taskFab = view.findViewById( R.id.taskFab );
 
         taskTextView = view.findViewById( R.id.fabTaskTv );
         eventTextView = view.findViewById( R.id.fabEventTv );
@@ -108,11 +96,10 @@ public class CalendarFrag extends Fragment {
         mainActivity = (MainActivity) getActivity();
         allTasksFrag = new AllTasksFrag();
         recyclerView = view.findViewById( R.id.recyclerView );
-        adapter = new CalendarAdapter( getContext(), nameOfEvent, startDates, location, descriptions, calendarId );
+
 
         readCalendarEvent();
         initAdapter(returnCurrentDateItemPosition());
-
 
 
         /* starts before 1 month from now */
@@ -151,9 +138,9 @@ public class CalendarFrag extends Fragment {
                 String currentDate = format.format( date.getTime() );
                 String listDate;
                 int matchItemPosition = 0;
-                for (int i=0; i<startDates.size(); i++)
+                for (int i = 0; i<eventModelList.size(); i++)
                 {
-                    listDate = startDates.get( i );
+                    listDate = eventModelList.get( i ).getStartDates();
                     if (currentDate.matches( listDate ))
                     {
                         matchItemPosition = i;
@@ -177,26 +164,30 @@ public class CalendarFrag extends Fragment {
             }
         } );
 
-        ViewAnimation.init(taskFab);
-        ViewAnimation.init(eventFab);
-        ViewAnimation.init(taskTextView);
-        ViewAnimation.init(eventTextView);
+        ViewAnimation.init( taskFab );
+        ViewAnimation.init( eventFab );
+        ViewAnimation.init( eventTextView );
+        ViewAnimation.init( taskTextView );
 
 
-        mainFab.setOnClickListener(new View.OnClickListener() {
+        mainFab.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isRotate = ViewAnimation.rotateFab(v, !isRotate);
-                if(isRotate){
-                    ViewAnimation.showIn(taskFab,taskTextView);
-                    ViewAnimation.showIn(eventFab,eventTextView);
-                }else{
-                    ViewAnimation.showOut(taskFab,taskTextView);
-                    ViewAnimation.showOut(eventFab,eventTextView);
+                isRotate = ViewAnimation.rotateFab( v, !isRotate );
+                if (isRotate) {
+
+                    ViewAnimation.showIn( taskFab, taskTextView );
+                    ViewAnimation.showIn( eventFab, eventTextView );
+
+                } else {
+                    ViewAnimation.showOut( taskFab, taskTextView );
+                    ViewAnimation.showOut( eventFab, eventTextView );
+
+
                 }
 
             }
-        });
+        } );
 
 
         eventFab.setOnClickListener( new View.OnClickListener() {
@@ -225,8 +216,6 @@ public class CalendarFrag extends Fragment {
         } );
 
 
-
-
         return view;
 
     }
@@ -240,17 +229,19 @@ public class CalendarFrag extends Fragment {
 //                return LinearSmoothScroller.SNAP_TO_START;
 //            }
 //        };
+
+        Collections.sort( eventModelList );
+        adapter = new CalendarAdapter( getContext(), eventModelList );
         recyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getContext()));
         recyclerView.setAdapter( adapter );
         recyclerView.smoothScrollToPosition(i);
-//        smoothScroller.setTargetPosition( returnCurrentDateItemPosition() );
-//        layoutManager.startSmoothScroll(smoothScroller);
         adapter.notifyDataSetChanged();
     }
 
+
     public void readCalendarEvent() {
 
-        if (checkPermission()) {
+        if (mainActivity.checkPermission()) {
             Cursor cursor = getContext().getContentResolver()
                     .query(
                             Uri.parse( "content://com.android.calendar/events" ),
@@ -262,69 +253,74 @@ public class CalendarFrag extends Fragment {
             String CNames[] = new String[cursor.getCount()];
 
             // fetching calendars id
-            nameOfEvent.clear();
-            startDates.clear();
-            endDates.clear();
-            descriptions.clear();
+//            nameOfEvent.clear();
+//            startDates.clear();
+//            endDates.clear();
+//            descriptions.clear();
             for (int i = 0; i < CNames.length; i++) {
-
-                calendarId.add( cursor.getString( 0 ) );
-                nameOfEvent.add( cursor.getString( 1 ) );
-                startDates.add( MyTimeSettingClass.getCalDateFormat( Long.parseLong( cursor.getString( 3 ) ), "EEEE, d MMMM" ) );
-                descriptions.add( cursor.getString( 2 ) );
-                location.add( cursor.getString( 5 ) );
+                eventModel = new EventModel(  );
+                sDate.add( MyTimeSettingClass.getCalDateFormat( Long.parseLong( cursor.getString( 3 ) ), "EEEE, d MMMM" ) );
+                eventModel.setCalendarId( cursor.getString( 0 ) );
+                eventModel.setNameOfEvent( cursor.getString( 1 ) );
+                eventModel.setStartDates( MyTimeSettingClass.getCalDateFormat( Long.parseLong( cursor.getString( 3 ) ), "EEEE, d MMMM" ) );
+                eventModel.setDescriptions( cursor.getString( 2 ) );
+                eventModel.setLocation( cursor.getString( 5 ) );
                 CNames[i] = cursor.getString( 1 );
                 cursor.moveToNext();
+                eventModelList.add( eventModel );
             }
         }
     }
+
     public int returnCurrentDateItemPosition()
     {
         Calendar calendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") java.text.SimpleDateFormat format = new java.text.SimpleDateFormat( "EEEE, d MMMM" );
         String currentDate = format.format( calendar.getTime() );
         String listDate;
+        int i;
         int matchItemPosition = 0;
-        for (int i=0; i<startDates.size(); i++)
+        for ( i = 0; i<eventModelList.size(); i++)
         {
-            listDate = startDates.get( i );
+            listDate = eventModelList.get( i ).getStartDates();
             if (currentDate.matches( listDate ))
             {
                 matchItemPosition = i;
+
             }
         }
-//        eventDateList;
+
         return matchItemPosition ;
     }
 
     public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
 
         public LinearLayoutManagerWithSmoothScroller(Context context) {
-            super(context, VERTICAL, false);
+            super( context, VERTICAL, false );
         }
 
         public LinearLayoutManagerWithSmoothScroller(Context context, int orientation, boolean reverseLayout) {
-            super(context, orientation, reverseLayout);
+            super( context, orientation, reverseLayout );
         }
 
         @Override
         public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state,
                                            int position) {
-            RecyclerView.SmoothScroller smoothScroller = new TopSnappedSmoothScroller(recyclerView.getContext());
-            smoothScroller.setTargetPosition(position);
-            startSmoothScroll(smoothScroller);
+            RecyclerView.SmoothScroller smoothScroller = new TopSnappedSmoothScroller( recyclerView.getContext() );
+            smoothScroller.setTargetPosition( position );
+            startSmoothScroll( smoothScroller );
         }
 
         private class TopSnappedSmoothScroller extends LinearSmoothScroller {
             public TopSnappedSmoothScroller(Context context) {
-                super(context);
+                super( context );
 
             }
 
             @Override
             public PointF computeScrollVectorForPosition(int targetPosition) {
                 return LinearLayoutManagerWithSmoothScroller.this
-                        .computeScrollVectorForPosition(targetPosition);
+                        .computeScrollVectorForPosition( targetPosition );
             }
 
             @Override
@@ -341,18 +337,7 @@ public class CalendarFrag extends Fragment {
     }
 
 
-    private boolean checkPermission() {
-        int calendarWritePermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.WRITE_CALENDAR );
-        int calendarReaDPermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.READ_CALENDAR );
 
-        if (calendarWritePermission == PackageManager.PERMISSION_GRANTED && calendarReaDPermission == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.WRITE_CALENDAR, Manifest.permission.READ_CALENDAR}
-                    , REQUEST_PERMISSION );
-            return false;
-        }
-    }
 
 
 }

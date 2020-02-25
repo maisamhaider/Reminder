@@ -60,6 +60,7 @@
                     android:id="@+id/editAddNotesET"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:maxLength="150"
                     android:backgroundTint="@android:color/transparent"
                     android:gravity="start" />
             </LinearLayout>

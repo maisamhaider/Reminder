@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -154,6 +156,7 @@ public class AttachmentTaskAdapter extends RecyclerView.Adapter<AttachmentTaskAd
                 builder.setView( view );
                 final AlertDialog dialog = builder.create();
                 dialog.show();
+                dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
 
                 Button cancelBtn, deleteBtn;
                 cancelBtn = view.findViewById( R.id.attachment_cancelBtn );

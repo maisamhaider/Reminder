@@ -7,19 +7,20 @@
     android:layout_gravity="bottom"
     android:orientation="vertical">
 
+
     <TextView
+        android:padding="5dp"
         android:id="@+id/fabTaskTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/taskFab"
-        android:layout_alignBottom="@+id/taskFab"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="11dp"
         android:layout_toStartOf="@+id/taskFab"
+        android:background="@drawable/floatbuttonlabelsbg"
         android:gravity="center"
         android:text="Task"
-        android:textColor="@color/colorMainYellowOne"
-   />
-
+        android:textColor="@color/colorMainYellowOne" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/taskFab"
@@ -32,22 +33,24 @@
         android:layout_marginEnd="29dp"
         android:layout_marginBottom="9dp"
         android:src="@drawable/checkbox"
-        app:backgroundTint="@color/colorMainYellowTwo"
+        app:backgroundTint="@color/colorWhite"
         app:fabSize="mini"
         app:rippleColor="@color/colorMainYellowOne" />
 
     <TextView
         android:id="@+id/fabEventTv"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@+id/eventFab"
-        android:layout_alignBottom="@+id/eventFab"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="12dp"
         android:layout_toStartOf="@+id/eventFab"
         android:gravity="center"
+        android:padding="5dp"
+        android:background="@drawable/floatbuttonlabelsbg"
+
         android:text="Event"
-        android:textColor="@color/colorMainYellowOne"
-    />
+        android:textColor="@color/colorMainYellowOne" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/eventFab"
@@ -58,9 +61,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="29dp"
         android:layout_marginBottom="5dp"
-        android:tint="@color/colorMainYellowTwo"
-        android:src="@drawable/calnwhite"
-        app:backgroundTint="@color/colorMainYellowTwo"
+        android:src="@drawable/calendaryellow"
+        app:backgroundTint="@color/colorWhite"
         app:fabSize="mini"
         app:rippleColor="@color/colorSplashScreen" />
 
@@ -74,7 +76,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="18dp"
-        app:backgroundTint="@color/colorMainYellowTwo"
+        app:backgroundTint="@color/colorWhite"
         android:layout_marginBottom="18dp"
         android:src="@drawable/add"
         app:fabSize="normal"

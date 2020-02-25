@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/listFragImageView9"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/flat"
@@ -28,27 +28,28 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/listFragTextViewmrng"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/colorBlack"
                 android:text="Morning"
-                app:layout_constraintEnd_toEndOf="@+id/imageView"
-                app:layout_constraintStart_toStartOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintEnd_toEndOf="@+id/listFragImageView9"
+                app:layout_constraintStart_toStartOf="@+id/listFragImageView9"
+                app:layout_constraintTop_toBottomOf="@+id/listFragImageView9" />
 
             <TextView
+                android:id="@+id/listFragTextView9"
                 android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="9"
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                app:layout_constraintEnd_toEndOf="@+id/imageView"
-                app:layout_constraintStart_toStartOf="@+id/imageView"
-                app:layout_constraintTop_toTopOf="@+id/imageView" />
+                app:layout_constraintBottom_toBottomOf="@+id/listFragImageView9"
+                app:layout_constraintEnd_toEndOf="@+id/listFragImageView9"
+                app:layout_constraintStart_toStartOf="@+id/listFragImageView9"
+                app:layout_constraintTop_toTopOf="@+id/listFragImageView9" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -63,7 +64,7 @@
 
             <ImageView
 
-                android:id="@+id/imageView2"
+                android:id="@+id/listFragImageView3"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/flat"
@@ -72,28 +73,29 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/listFragTextView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2"
-                app:layout_constraintStart_toStartOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="@+id/imageView2" />
+                app:layout_constraintBottom_toBottomOf="@+id/listFragImageView3"
+                app:layout_constraintEnd_toEndOf="@+id/listFragImageView3"
+                app:layout_constraintStart_toStartOf="@+id/listFragImageView3"
+                app:layout_constraintTop_toTopOf="@+id/listFragImageView3" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/listFragTextViewAftrnn"
                 android:layout_width="66dp"
                 android:layout_height="19dp"
                 android:layout_gravity="center"
                 android:textColor="@color/colorBlack"
                 android:text="Afternoon"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="@+id/listFragImageView3"
                 app:layout_constraintHorizontal_bias="0.482"
-                app:layout_constraintStart_toStartOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintStart_toStartOf="@+id/listFragImageView3"
+                app:layout_constraintTop_toBottomOf="@+id/listFragImageView3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -108,7 +110,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/listFragImageView6"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/flat"
@@ -117,27 +119,28 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/listFragTextView6"
                 android:textStyle="bold"
                 android:textSize="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="6"
                 android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toTopOf="@+id/textView14"
-                app:layout_constraintEnd_toEndOf="@+id/imageView4"
-                app:layout_constraintStart_toStartOf="@+id/imageView4"
+                app:layout_constraintBottom_toTopOf="@+id/listFragTextViewEvnng"
+                app:layout_constraintEnd_toEndOf="@+id/listFragImageView6"
+                app:layout_constraintStart_toStartOf="@+id/listFragImageView6"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/listFragTextViewEvnng"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Evening"
                 android:textColor="@color/colorBlack"
-                app:layout_constraintEnd_toEndOf="@+id/imageView4"
-                app:layout_constraintStart_toStartOf="@+id/imageView4"
-                app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+                app:layout_constraintEnd_toEndOf="@+id/listFragImageView6"
+                app:layout_constraintStart_toStartOf="@+id/listFragImageView6"
+                app:layout_constraintTop_toBottomOf="@+id/listFragImageView6" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
