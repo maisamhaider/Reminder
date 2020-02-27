@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +13,7 @@ import android.widget.LinearLayout;
 
 import com.example.reminder.R;
 import com.example.reminder.adapter.CompletedTaskAdapter;
-import com.example.reminder.classes.AlarmSettingClass;
+import com.example.reminder.utilities.AlarmSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.models.CompletedTasksModel;
 
@@ -28,14 +30,16 @@ public class CompletedTasksActivity extends AppCompatActivity {
     String date = "";
     String id;
 
-    LinearLayout completedTaskDeleteLL;
+    LinearLayout completedTaskDeleteLL,CompletedTaskBackLL;
     private AlarmSettingClass alarmSettingClass;
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_completed_tasks );
+        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // Make to run activity only in portrait mode
 
         alarmSettingClass = new AlarmSettingClass( this );
 
@@ -45,9 +49,16 @@ public class CompletedTasksActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         recyclerView.setLayoutManager( linearLayoutManager );
 
-        completedTaskDeleteLL = findViewById( R.id.completedTaskDeleteLL );
 
+        completedTaskDeleteLL = findViewById( R.id.completedTaskDeleteLL );
+        CompletedTaskBackLL = findViewById( R.id.CompletedTaskBackLL );
         dataFromDb();
+        CompletedTaskBackLL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            onBackPressed();
+            }
+        } );
 
         completedTaskDeleteLL.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -91,7 +102,6 @@ public class CompletedTasksActivity extends AppCompatActivity {
         Cursor cursor = dataBaseHelper.getAllTasks();
         if (cursor.getCount()==0)
         {
-
         }
         while (cursor.moveToNext())
         {
@@ -101,25 +111,24 @@ public class CompletedTasksActivity extends AppCompatActivity {
             id = cursor.getString( 0 );
 
 
-
-
             if (date.matches( "" ))
             {
                 date = "";
             }
             if (checkCompleted==null)
             {
-
+                //😁😁😁😁😁😁😁 i am free. no work
             }
             else
             if (checkCompleted.matches( "yes" ))
             {
+                //😢 adding completed task to list.to much work is here 😣
                 list.add( new CompletedTasksModel( title,date,id ) );
 
             }
             else
             {
-
+            // yahoo.nothing to do now 😂🤣😅😁😀
             }
         }
         completedTaskAdapter = new CompletedTaskAdapter( this,list,dataBaseHelper );
@@ -127,5 +136,9 @@ public class CompletedTasksActivity extends AppCompatActivity {
         completedTaskAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
+    }
 }

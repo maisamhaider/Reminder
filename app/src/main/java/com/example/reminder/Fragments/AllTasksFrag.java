@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,29 +33,32 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.adapter.AllTasksAdapter;
-import com.example.reminder.classes.AlarmSettingClass;
-import com.example.reminder.classes.MyTimeSettingClass;
+import com.example.reminder.utilities.AlarmSettingClass;
+import com.example.reminder.utilities.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.R;
 import com.example.reminder.models.AllTasksModel;
+import com.example.reminder.utilities.SortingTypes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.reminder.classes.MyTimeSettingClass.getToday9am;
-import static com.example.reminder.classes.MyTimeSettingClass.todayPlaceDate;
-import static com.example.reminder.classes.MyTimeSettingClass.tomorrowPlaceDate;
-import static com.example.reminder.classes.MyTimeSettingClass.nextWeekPlaceDate;
+import static com.example.reminder.utilities.MyTimeSettingClass.getToday9am;
+import static com.example.reminder.utilities.MyTimeSettingClass.todayPlaceDate;
+import static com.example.reminder.utilities.MyTimeSettingClass.tomorrowPlaceDate;
+import static com.example.reminder.utilities.MyTimeSettingClass.nextWeekPlaceDate;
 
 
 public class AllTasksFrag extends Fragment {
@@ -105,6 +109,14 @@ public class AllTasksFrag extends Fragment {
     private InputListFrag inputListFrag = new InputListFrag();
     private Bundle bundle = new Bundle();
 
+    SharedPreferences sharedPreferences;
+    List<AllTasksModel> todayFilterList = new ArrayList<>();
+    List<AllTasksModel> tomorrowFilterList = new ArrayList<>();
+    List<AllTasksModel> upcomingFiltertodayList = new ArrayList<>();
+    List<AllTasksModel> somedayFilterList = new ArrayList<>();
+
+    List<AllTasksModel> defaultTodayList = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -119,7 +131,7 @@ public class AllTasksFrag extends Fragment {
 
         View view = inflater.inflate( R.layout.fragment_tasks, container, false );
         alarmSettingClass = new AlarmSettingClass( getActivity() );
-
+        sharedPreferences = getContext().getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
 
         mainActivity = (MainActivity) getActivity();
         myTimeSettingClass = new MyTimeSettingClass();
@@ -164,13 +176,20 @@ public class AllTasksFrag extends Fragment {
         addUpRLL.setVisibility( View.GONE );
 
         hidelinearLayoutTags();
+//        defaultTaskList();
         actionBarFun();
-        readTodayfromDb();
-        readTomorrowFromDb();
-        readUpcomingfromDb();
-        readSomedayFromDb();
         loadedfragonbtnclick();
         witchTagLayoutIsTouched();
+        String sOrder = sharedPreferences.getString( "sort_order", "Default Order" );
+        if (sOrder.matches( "Default Order" )) {
+            defaultTaskList();
+
+        } else if (sOrder.matches( "Ascending Order" )) {
+            taskSortInAscendingOrderFuc();
+
+        } else if (sOrder.matches( "Descending Order" )) {
+            taskSortInDescendingOrderFuc();
+        }
 
         getActivity().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN );
         add_task_edittext.setOnTouchListener( new View.OnTouchListener() {
@@ -232,55 +251,158 @@ public class AllTasksFrag extends Fragment {
 
     //actionbar
     private void actionBarFun() {
+
         tasksMenuImageView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tasksMenuImageView.setImageResource( R.drawable.option );
-                final PopupMenu popupMenu = new PopupMenu( getContext(), tasksMenuImageView );
-                popupMenu.getMenuInflater().inflate( R.menu.taskactionmenu, popupMenu.getMenu() );
-                popupMenu.setOnMenuItemClickListener( new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-
-                        if (item.getItemId() == R.id.clearCompletedTasks) {
-                            try {
-                                Cursor cursor = dataBaseHelper.getAllTasks();
-                                if (cursor.getCount() == 0) {
-                                }
-                                while (cursor.moveToNext()) {
-                                    String position = cursor.getString( 0 );
-                                    String isCompleted = cursor.getString( 6 );
-                                    if (isCompleted == null) {
-                                    } else if (isCompleted.matches( "yes" )) {
-                                        alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( position ) );
-                                        dataBaseHelper.deleteEachCompletedTask( position );
-                                    }
-                                }
-                                mainActivity.setTaskFragDefaultBNBItem();
-                            } catch (Exception e) {
-                                //error
-                            }
-
-                            tasksMenuImageView.setImageResource( R.drawable.menu );
-
-                            popupMenu.dismiss();
-                        }
-                        return true;
-                    }
-                } );
-                popupMenu.show();
-                popupMenu.setOnDismissListener( new PopupMenu.OnDismissListener() {
-                    @Override
-                    public void onDismiss(PopupMenu menu) {
-                        tasksMenuImageView.setImageResource( R.drawable.menu );
-
-                    }
-                } );
+                PopupWindow popupwindow_obj = popupWindowDisplay();
+                popupwindow_obj.showAsDropDown( tasksMenuImageView );
 
             }
         } );
     }
 
+    // popupWindow menu function  😍😍😍😍😍😍
+    private PopupWindow popupWindowDisplay() {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        final PopupWindow popupWindow = new PopupWindow( getContext() );
+        // inflate your layout or dynamically add view
+        final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+
+        View view = inflater.inflate( R.layout.completedtaskfilterpopupmenu, null );
+
+        LinearLayout sortTasksItemLL = view.findViewById( R.id.sortTasksItemLL );
+        final TextView sortAscedAndDecendTv = view.findViewById( R.id.sortAscedAndDecendTv );
+//        LinearLayout allDataItem = view.findViewById( R.id.sortTasksItemLL );
+        LinearLayout clearCompletedTasksItemLL = view.findViewById( R.id.clearCompletedTasksItemLL );
+        popupWindow.setFocusable( true );
+        popupWindow.setWidth( WindowManager.LayoutParams.WRAP_CONTENT );
+        popupWindow.setHeight( WindowManager.LayoutParams.WRAP_CONTENT );
+        popupWindow.setContentView( view );
+        popupWindow.setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+        sortAscedAndDecendTv.setText( sharedPreferences.getString( "sort_order", "Default Order" ) );
+
+        clearCompletedTasksItemLL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Cursor cursor = dataBaseHelper.getAllTasks();
+                    if (cursor.getCount() == 0) {
+                    }
+                    while (cursor.moveToNext()) {
+                        String position = cursor.getString( 0 );
+                        String isCompleted = cursor.getString( 6 );
+                        if (isCompleted == null) {
+                        } else if (isCompleted.matches( "yes" )) {
+                            alarmSettingClass.deleteRepeatAlarm( Integer.parseInt( position ) );
+                            dataBaseHelper.deleteEachCompletedTask( position );
+                        }
+                    }
+                    mainActivity.setTaskFragDefaultBNBItem();
+                    popupWindow.dismiss();
+                } catch (Exception e) {
+                    //error
+                }
+            }
+        } );
+        sortTasksItemLL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sOrder = sharedPreferences.getString( "sort_order", "Default Order" );
+                if (sOrder.matches( "Default Order" )) {
+                    mainActivity.setTaskFragDefaultBNBItem();
+                    sortAscedAndDecendTv.setText( "Ascending Order" );
+                    editor.putString( "sort_order", "Ascending Order" ).commit();
+                } else if (sOrder.matches( "Ascending Order" )) {
+                    //TODO
+                    mainActivity.setTaskFragDefaultBNBItem();
+                    sortAscedAndDecendTv.setText( "Descending Order" );
+                    editor.putString( "sort_order", "Descending Order" ).commit();
+                } else if (sOrder.matches( "Descending Order" )) {
+                    //TODO
+                    mainActivity.setTaskFragDefaultBNBItem();
+                    sortAscedAndDecendTv.setText( "Default Order" );
+                    editor.putString( "sort_order", "Default Order" ).commit();
+                }
+
+
+            }
+        } );
+        popupWindow.setOnDismissListener( new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                tasksMenuImageView.setImageResource( R.drawable.menu );
+            }
+        } );
+
+        return popupWindow;
+    }
+
+    public void sortFun(List<AllTasksModel> list, SortingTypes types, final boolean isAscending) {
+        if (types == SortingTypes.ByDate) {
+            Collections.sort( list, new Comparator<AllTasksModel>() {
+                public int compare(AllTasksModel obj1, AllTasksModel obj2) {
+                    if (obj1.getDate() == null || obj2.getDate() == null) return 0;
+
+                    if (isAscending) {
+                        // ## Ascending order
+                        return obj1.getDate().compareToIgnoreCase( obj2.getDate() ); // To compare Date values
+                    } else {
+                        // ## Descending order
+                        return obj2.getDate().compareToIgnoreCase( obj1.getDate() ); // To compare Date values
+
+                    }
+                }
+            } );
+        }
+
+
+    }
+
+//ascending
+    private void taskSortInAscendingOrderFuc() {
+
+        todayFilterList.addAll( returnTodayListFromDb() );
+        tomorrowFilterList.addAll( returnTomorrowListFromDb() );
+        upcomingFiltertodayList.addAll( returnUpcomingListFromDb() );
+        somedayFilterList.addAll( returnSomedayListFromDb() );
+        sortFun( todayFilterList, SortingTypes.ByDate, true );
+        sortFun( tomorrowFilterList, SortingTypes.ByDate, true );
+        sortFun( upcomingFiltertodayList, SortingTypes.ByDate, true );
+        sortFun( somedayFilterList, SortingTypes.ByDate, true );
+
+        setTodayInRV( todayFilterList );
+        setTomorrowInRV( tomorrowFilterList );
+        setUpcomingInRV( upcomingFiltertodayList );
+        setSomedayInRV( somedayFilterList );
+
+    }
+//descending
+    private void taskSortInDescendingOrderFuc() {
+
+        todayFilterList.addAll( returnTodayListFromDb() );
+        tomorrowFilterList.addAll( returnTomorrowListFromDb() );
+        upcomingFiltertodayList.addAll( returnUpcomingListFromDb() );
+        somedayFilterList.addAll( returnSomedayListFromDb() );
+        sortFun( todayFilterList, SortingTypes.ByDate, false );
+        sortFun( tomorrowFilterList, SortingTypes.ByDate, false );
+        sortFun( upcomingFiltertodayList, SortingTypes.ByDate, false );
+        sortFun( somedayFilterList, SortingTypes.ByDate, false );
+
+        setTodayInRV( todayFilterList );
+        setTomorrowInRV( tomorrowFilterList );
+        setUpcomingInRV( upcomingFiltertodayList );
+        setSomedayInRV( somedayFilterList );
+    }
+
+    // default sorted tasks' list
+    private void defaultTaskList() {
+        setTodayInRV( returnTodayListFromDb() );
+        setTomorrowInRV( returnTomorrowListFromDb() );
+        setUpcomingInRV( returnUpcomingListFromDb() );
+        setSomedayInRV( returnSomedayListFromDb() );
+    }
 
     @Override
     public void onResume() {
@@ -657,7 +779,7 @@ public class AllTasksFrag extends Fragment {
 
             } else {
                 alarmSettingClass.setOneAlarm( text, myTimeSettingClass.getMilliFromDate( reminder_date ), isInsert );
-            //inserted
+                //inserted
             }
             mainActivity.setTaskFragDefaultBNBItem();//refresh fragment,just setting Task item of bottomNavigationView.which call task frag
         }
@@ -728,6 +850,8 @@ public class AllTasksFrag extends Fragment {
 
         }
     };
+
+
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         @SuppressLint("NewApi")
         @Override
@@ -764,9 +888,9 @@ public class AllTasksFrag extends Fragment {
 
     }
 
-    private void readTodayfromDb() {
+    private void setTodayInRV(List<AllTasksModel> inList) {
         AllTasksAdapter allTasksAdapter;
-        List<AllTasksModel> model2List = new ArrayList<>();
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
         linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
         linearLayoutManager = new LinearLayoutManager( getContext() ) {
@@ -776,8 +900,82 @@ public class AllTasksFrag extends Fragment {
             }
         };
         recyclerView_today.setLayoutManager( linearLayoutManager );
+        List<AllTasksModel> list = new ArrayList<>();
+        list.addAll( inList );
+        allTasksAdapter = new AllTasksAdapter( getContext(), list, dataBaseHelper, fragmentManager );
+        recyclerView_today.setAdapter( allTasksAdapter );
+        allTasksAdapter.notifyDataSetChanged();
+
+    }
+
+    private void setTomorrowInRV(List<AllTasksModel> inList) {
+
+        AllTasksAdapter allTasksAdapter;
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
+        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
+        linearLayoutManager = new LinearLayoutManager( getContext() ) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        recyclerView_tomorrow.setLayoutManager( linearLayoutManager );
+        List<AllTasksModel> list = new ArrayList<>();
+        list.addAll( inList );
+        allTasksAdapter = new AllTasksAdapter( getContext(), list, dataBaseHelper, fragmentManager );
+        recyclerView_tomorrow.setAdapter( allTasksAdapter );
+        allTasksAdapter.notifyDataSetChanged();
 
 
+    }
+
+    private void setUpcomingInRV(List<AllTasksModel> inList) {
+        AllTasksAdapter allTasksAdapter1;
+        LinearLayoutManager linearLayoutManager;
+        linearLayoutManager = new LinearLayoutManager( getContext() ) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
+
+        recyclerView_upcoming.setLayoutManager( linearLayoutManager );
+        List<AllTasksModel> list = new ArrayList<>();
+        list.addAll( inList );
+
+        allTasksAdapter1 = new AllTasksAdapter( getContext(), list, dataBaseHelper, fragmentManager );
+        recyclerView_upcoming.setAdapter( allTasksAdapter1 );
+        allTasksAdapter1.notifyDataSetChanged();
+
+    }
+
+    private void setSomedayInRV(List<AllTasksModel> inList) {
+
+        AllTasksAdapter allTasksAdapter;
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
+        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
+        linearLayoutManager = new LinearLayoutManager( getContext() ) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        List<AllTasksModel> list = new ArrayList<>();
+        list.addAll( inList );
+        recyclerView_someday.setLayoutManager( linearLayoutManager );
+        allTasksAdapter = new AllTasksAdapter( getContext(), list, dataBaseHelper, fragmentManager );
+        recyclerView_someday.setAdapter( allTasksAdapter );
+        allTasksAdapter.notifyDataSetChanged();
+
+
+    }
+
+
+    private List<AllTasksModel> returnTodayListFromDb() {
+        List<AllTasksModel> model2List = new ArrayList<>();
+        AllTasksModel allTasksModel = new AllTasksModel();
         Cursor cursor = dataBaseHelper.getToday();
         if (cursor.getCount() == 0) {
             Log.i( "Data", "no data" );
@@ -793,28 +991,11 @@ public class AllTasksFrag extends Fragment {
             }
             model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), date, isComBoolean ) );
         }
-        allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
-        recyclerView_today.setAdapter( allTasksAdapter );
-        allTasksAdapter.notifyDataSetChanged();
-
+        return model2List;
     }
 
-    private void readTomorrowFromDb() {
-
-        AllTasksAdapter allTasksAdapter;
-
+    private List<AllTasksModel> returnTomorrowListFromDb() {
         List<AllTasksModel> model2List = new ArrayList<>();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
-        linearLayoutManager = new LinearLayoutManager( getContext() ) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recyclerView_tomorrow.setLayoutManager( linearLayoutManager );
-
-
         Cursor cursor = dataBaseHelper.getTomorrow();
         if (cursor.getCount() == 0) {
             Log.i( "Data", "no data" );
@@ -830,27 +1011,11 @@ public class AllTasksFrag extends Fragment {
             }
             model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), date, isComBoolean ) );
         }
-        allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
-        recyclerView_tomorrow.setAdapter( allTasksAdapter );
-        allTasksAdapter.notifyDataSetChanged();
-
-
+        return model2List;
     }
 
-    private void readUpcomingfromDb() {
-        AllTasksAdapter allTasksAdapter1;
+    private List<AllTasksModel> returnUpcomingListFromDb() {
         List<AllTasksModel> allTasksModels = new ArrayList<>();
-        LinearLayoutManager linearLayoutManager;
-        linearLayoutManager = new LinearLayoutManager( getContext() ) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
-
-        recyclerView_upcoming.setLayoutManager( linearLayoutManager );
-
 
         Cursor cursor = dataBaseHelper.getUpcoming();
         if (cursor.getCount() == 0) {
@@ -869,33 +1034,24 @@ public class AllTasksFrag extends Fragment {
             String tommorow = tomorrowPlaceDate();
             String someday = "";
             String provDate = cursor.getString( 3 );
-            if (!provDate.equals( tommorow ) && !provDate.equals( today ) && !provDate.equals( someday ))
+//            String rd = cursor.getString( 2 );
+//            long reminderDate = MyTimeSettingClass.getMilliFromDate( cursor.getString( 2 ) );
+//            Calendar cal = Calendar.getInstance();
+//            @SuppressLint({"NewApi", "LocalSuppress"}) SimpleDateFormat f = new SimpleDateFormat( "dd MMM yyyy EEE, h:mm a" );
+//            cal.set( Calendar.HOUR_OF_DAY, 1 );
+//            cal.set( Calendar.MINUTE, 0 );
+//            cal.set( Calendar.SECOND, 0 );
+//            cal.add( Calendar.DATE, 1 );
+//            long testRDWithMe = Long.parseLong( f.format( cal.getTimeInMillis() ) );
+            if (!provDate.equals( tommorow ) && !provDate.equals( today ) && !provDate.equals( someday )  )
+
                 allTasksModels.add( filter );
         }
-
-        allTasksAdapter1 = new AllTasksAdapter( getContext(), allTasksModels, dataBaseHelper, fragmentManager );
-        recyclerView_upcoming.setAdapter( allTasksAdapter1 );
-        allTasksAdapter1.notifyDataSetChanged();
-
+        return allTasksModels;
     }
 
-
-    private void readSomedayFromDb() {
-
-        AllTasksAdapter allTasksAdapter;
-
+    private List<AllTasksModel> returnSomedayListFromDb() {
         List<AllTasksModel> model2List = new ArrayList<>();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager( getContext() );
-        linearLayoutManager.setOrientation( LinearLayoutManager.VERTICAL );
-        linearLayoutManager = new LinearLayoutManager( getContext() ) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recyclerView_someday.setLayoutManager( linearLayoutManager );
-
-
         Cursor cursor = dataBaseHelper.getSomeday();
         if (cursor.getCount() == 0) {
             Log.i( "Data", "no data" );
@@ -910,12 +1066,7 @@ public class AllTasksFrag extends Fragment {
             }
             model2List.add( new AllTasksModel( cursor.getString( 0 ), cursor.getString( 1 ), cursor.getString( 2 ), isComBoolean ) );
         }
-        allTasksAdapter = new AllTasksAdapter( getContext(), model2List, dataBaseHelper, fragmentManager );
-        recyclerView_someday.setAdapter( allTasksAdapter );
-        allTasksAdapter.notifyDataSetChanged();
-
-
+        return model2List;
     }
-
 
 }

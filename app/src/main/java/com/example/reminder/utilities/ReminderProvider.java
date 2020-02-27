@@ -1,4 +1,4 @@
-package com.example.reminder.classes;
+package com.example.reminder.utilities;
 
 import androidx.core.content.FileProvider;
 

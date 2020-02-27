@@ -35,7 +35,7 @@ import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.BottomShAlarmRVFragDialogAdapter;
 import com.example.reminder.adapter.CalBottomShRepeatDialogAdapter;
-import com.example.reminder.classes.MyTimeSettingClass;
+import com.example.reminder.utilities.MyTimeSettingClass;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 

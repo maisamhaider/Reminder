@@ -1,4 +1,4 @@
-package com.example.reminder.classes;
+package com.example.reminder.utilities;
 
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;

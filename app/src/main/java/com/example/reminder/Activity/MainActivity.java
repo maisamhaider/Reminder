@@ -1,6 +1,7 @@
 package com.example.reminder.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,15 +10,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.reminder.Fragments.CalendarFrag;
@@ -25,12 +28,10 @@ import com.example.reminder.Fragments.SettingsFrag;
 import com.example.reminder.Fragments.AllTasksFrag;
 import com.example.reminder.Fragments.mainfrag;
 import com.example.reminder.R;
-import com.example.reminder.classes.NotificationReceiver;
-import com.example.reminder.classes.NotificationSounds;
+import com.example.reminder.utilities.NotificationReceiver;
+import com.example.reminder.utilities.NotificationSounds;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements EditTextStringListener {
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
                     grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 Log.i( "Calendar Permission", "Granted" );
             } else {
+//                alertMsg();
                 Toast.makeText( this, "Permission is required for working application properly ",
                         Toast.LENGTH_SHORT ).show();
                 Log.i( "Calendar Permission", "Not Granted" );
@@ -148,6 +150,37 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
         }
         super.onRequestPermissionsResult( requestCode, permissions, grantResults );
     }
+
+//    private void alertMsg()
+//    {
+//
+//        View view1 = LayoutInflater.from( this).inflate( R.layout.alertmessageforcalpermission,null );
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setCancelable( true );
+//        builder.setView( view1 );
+//        final AlertDialog dialog = builder.create();
+//        dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+//        if (!checkPermission() )
+//        {
+//            Button allowBtn = view1.findViewById( R.id.calPermissionAllowBtn );
+//            Button denyBtn = view1.findViewById( R.id.calPermissionDenyBtn );
+//            dialog.show();
+//            allowBtn.setOnClickListener( new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    checkPermission();
+//                    dialog.dismiss();
+//                }
+//            } );
+//            denyBtn.setOnClickListener( new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    dialog.dismiss();
+//                }
+//            } );
+//
+//        }
+//    }
 
 
     public void setTaskFragDefaultBNBItem() {

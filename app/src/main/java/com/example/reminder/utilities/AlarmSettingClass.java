@@ -1,28 +1,10 @@
-package com.example.reminder.classes;
+package com.example.reminder.utilities;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.icu.text.SimpleDateFormat;
-
-import androidx.core.app.NotificationCompat;
-
-import com.example.reminder.Activity.LauncherActivityOnNotification;
-import com.example.reminder.R;
-import com.example.reminder.database.DataBaseHelper;
-
-import java.util.Calendar;
-import java.util.Date;
-
-import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 
 public class AlarmSettingClass extends ContextWrapper {
 

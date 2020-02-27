@@ -9,6 +9,7 @@
     <color name="colorAliceBlue">#F0F8FF</color>
     <color name="colorBlueGray">#90a4ae</color>
     <color name="colorGray">#d1d1d1</color>
+    <color name="popupMenuGray">#bdbdbd</color>
 
 
     <color name="colorMainYellowOne">#FFD200</color>

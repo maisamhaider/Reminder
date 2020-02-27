@@ -45,33 +45,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.EventV
     public void onBindViewHolder(@NonNull EventViewHolder holder, final int position) {
         EventModel eventModel=eventModelList.get( position );
         holder.eventNameTv.setText( eventModel.getNameOfEvent() );
-        holder.event_date.setText( eventModel.getStartDates().toString() );
+        holder.event_date.setText( eventModel.getStartDates() );
         holder.event_descriptionTv.setText( eventModel.getDescriptions());
         holder.event_locationTv.setText( eventModel.getLocation() );
         holder.event_calendarIdTv.setText( eventModel.getCalendarId() );
-// event deletion code from device calendar
-//        holder.deleteEventIV.setOnClickListener( new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Uri eventsUri;
-//                int osVersion = android.os.Build.VERSION.SDK_INT;
-//                if (osVersion <= 7) { //up-to Android 2.1
-//                    eventsUri = Uri.parse("content://calendar/events");
-//                } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
-//                    eventsUri = Uri.parse("content://com.android.calendar/events");
-//                }
-//                ContentResolver resolver = context.getContentResolver();
-//                deleteEvent(resolver, eventsUri, Integer.parseInt( eventCalendarId.get( position ) ) );
-//             eventTitleList.remove( position );
-//             eventDateList.remove( position );
-//             eventLocationList.remove( position );
-//             eventDescriptionList.remove( position );
-//             eventCalendarId.remove( position );
-//             notifyDataSetChanged();
-//            }
-//        } );
-//
+
     }
 
 

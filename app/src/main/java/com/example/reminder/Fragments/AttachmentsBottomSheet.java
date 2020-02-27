@@ -237,13 +237,14 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
                 @SuppressLint({"NewApi", "LocalSuppress"}) boolean insert = dataBaseHelper.insertFile( filePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
 
                 if (insert) {
-                    Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
+                    //inserted 😁😁😁😁
                     if (mRecyclerCallBack!=null)
                     {
                         mRecyclerCallBack.mCallBack();
+                        dismiss();
                     }
                 } else {
-                    Toast.makeText( getContext(), "not insert", Toast.LENGTH_SHORT ).show();
+//not Inserted 😊😊😊😊
                 }
 
             } else if (requestCode == CAMERA_REQ && resultCode == Activity.RESULT_OK) {
@@ -263,11 +264,15 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
                 @SuppressLint({"NewApi", "LocalSuppress"}) boolean insert = dataBaseHelper.insertFile( imagePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
+                    //inserted 😁😁😁😁
                     if (mRecyclerCallBack!=null)
                     {
                         mRecyclerCallBack.mCallBack();
+                        dismiss();
                     }
                 } else {
+                    //not Inserted 😊😊😊😊
+
                 }
 
             } else if (requestCode == RECORD_VIDEO_CR && resultCode == Activity.RESULT_OK) {
@@ -287,11 +292,14 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
 
                 @SuppressLint({"NewApi", "LocalSuppress"}) boolean insert = dataBaseHelper.insertFile( videoPath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
+                    //inserted 😁😁😁😁
                     if (mRecyclerCallBack!=null)
                     {
                         mRecyclerCallBack.mCallBack();
+                        dismiss();
                     }
                 } else {
+                    //not Inserted 😊😊😊😊
                 }
             }
 
@@ -421,19 +429,19 @@ public class AttachmentsBottomSheet extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 @SuppressLint({"NewApi", "LocalSuppress"}) boolean insert = dataBaseHelper.insertFile( audioSavePath, createdDateFormat.format( calendar.getTime() ), taskPosition );
                 if (insert) {
-
-                        if (mRecyclerCallBack!=null)
+//                   inserted 😁😁😁😁
+                    if (mRecyclerCallBack!=null)
                         {
-                        mRecyclerCallBack.mCallBack();
+                            mRecyclerCallBack.mCallBack();
                         }
 
 
-//                    Toast.makeText( getContext(), "insert", Toast.LENGTH_SHORT ).show();
                     audio_btns_cl.setVisibility( View.GONE );
                     dialog.dismiss();
+                    dismiss();
 
                 } else {
-                    Toast.makeText( getContext(), "not insert", Toast.LENGTH_SHORT ).show();
+                    //not Inserted 😊😊😊😊
                 }
             }
         } );

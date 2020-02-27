@@ -1,10 +1,15 @@
 package com.example.reminder.Fragments;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.drawable.ColorDrawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -12,6 +17,8 @@ import android.os.Bundle;
 
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,14 +32,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.CalendarAdapter;
-import com.example.reminder.classes.MyTimeSettingClass;
-import com.example.reminder.classes.ViewAnimation;
+import com.example.reminder.utilities.MyTimeSettingClass;
+import com.example.reminder.utilities.ViewAnimation;
 import com.example.reminder.models.EventModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -49,6 +57,7 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class CalendarFrag extends Fragment {
 
+    private static final int REQUEST_PERMISSION = 1001;
     MainActivity mainActivity;
     AllTasksFrag allTasksFrag;
     private CalendarAdapter adapter;
@@ -98,9 +107,9 @@ public class CalendarFrag extends Fragment {
         recyclerView = view.findViewById( R.id.recyclerView );
 
 
-        readCalendarEvent();
+        if (mainActivity.checkPermission() ) {
+            readCalendarEvent(); }
         initAdapter(returnCurrentDateItemPosition());
-
 
         /* starts before 1 month from now */
         Calendar startDate = Calendar.getInstance();
@@ -220,15 +229,25 @@ public class CalendarFrag extends Fragment {
 
     }
 
+//    public boolean checkPermission() {
+//        int calendarWritePermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.WRITE_CALENDAR );
+//        int calendarReaDPermission = ContextCompat.checkSelfPermission( getContext(), Manifest.permission.READ_CALENDAR );
+//
+//        if (calendarWritePermission == PackageManager.PERMISSION_GRANTED
+//                && calendarReaDPermission == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            return true;
+//        } else {
+//            ActivityCompat.requestPermissions( getActivity(), new String[]{ Manifest.permission.WRITE_CALENDAR,
+//                    Manifest.permission.READ_CALENDAR,
+//            }, REQUEST_PERMISSION );
+//            return false;
+//        }
+//    }
+
+
 
     private void initAdapter(int i) {
-//        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller( getContext() )
-//        {
-//            @Override
-//            protected int getVerticalSnapPreference() {
-//                return LinearSmoothScroller.SNAP_TO_START;
-//            }
-//        };
 
         Collections.sort( eventModelList );
         adapter = new CalendarAdapter( getContext(), eventModelList );
@@ -241,7 +260,7 @@ public class CalendarFrag extends Fragment {
 
     public void readCalendarEvent() {
 
-        if (mainActivity.checkPermission()) {
+
             Cursor cursor = getContext().getContentResolver()
                     .query(
                             Uri.parse( "content://com.android.calendar/events" ),
@@ -252,11 +271,6 @@ public class CalendarFrag extends Fragment {
             // fetching calendars name
             String CNames[] = new String[cursor.getCount()];
 
-            // fetching calendars id
-//            nameOfEvent.clear();
-//            startDates.clear();
-//            endDates.clear();
-//            descriptions.clear();
             for (int i = 0; i < CNames.length; i++) {
                 eventModel = new EventModel(  );
                 sDate.add( MyTimeSettingClass.getCalDateFormat( Long.parseLong( cursor.getString( 3 ) ), "EEEE, d MMMM" ) );
@@ -268,7 +282,6 @@ public class CalendarFrag extends Fragment {
                 CNames[i] = cursor.getString( 1 );
                 cursor.moveToNext();
                 eventModelList.add( eventModel );
-            }
         }
     }
 

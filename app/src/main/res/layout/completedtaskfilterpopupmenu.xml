@@ -2,21 +2,85 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:paddingTop="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/allDataItem"
-        android:orientation="horizontal"
+    <androidx.cardview.widget.CardView
+        app:cardElevation="5dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/allDataItemLL"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+<!--        <ImageView-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:src="@drawable/calendaryellow"/>-->
+<!--        <TextView-->
+<!--            android:text="All Data"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/colorMainYellowOne"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+<!--    </LinearLayout>-->
+
+    <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/sortTasksItemLL"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/calendaryellow"/>
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/sort"/>
         <TextView
-            android:text="All Data"
-            android:textStyle="bold"
+            android:text="Sorted In :"
+            android:textColor="@color/colorMainYellowOne"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/sortAscedAndDecendTv"
+            android:layout_marginStart="20dp"
+            android:layout_gravity="center"
+            android:text="Default Order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/clearCompletedTasksItemLL"
+        android:orientation="horizontal"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/trash"/>
+        <TextView
+            android:text="Clear Completed Tasks"
             android:textColor="@color/colorMainYellowOne"
             android:layout_marginStart="10dp"
             android:layout_gravity="center"
@@ -24,24 +88,6 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/customFilterItem"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/calendaryellow"/>
-        <TextView
-            android:text="Custom"
-            android:textStyle="bold"
-            android:textColor="@color/colorMainYellowOne"
-            android:layout_marginStart="10dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
     </LinearLayout>
-
+    </androidx.cardview.widget.CardView>
 </LinearLayout>

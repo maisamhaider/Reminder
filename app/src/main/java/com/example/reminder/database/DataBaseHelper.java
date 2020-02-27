@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import static com.example.reminder.classes.MyTimeSettingClass.todayPlaceDate;
-import static com.example.reminder.classes.MyTimeSettingClass.tomorrowPlaceDate;
+import static com.example.reminder.utilities.MyTimeSettingClass.todayPlaceDate;
+import static com.example.reminder.utilities.MyTimeSettingClass.tomorrowPlaceDate;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 

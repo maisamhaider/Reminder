@@ -38,7 +38,7 @@
             android:windowSoftInputMode="adjustPan"></activity>
 
         <provider
-            android:name=".classes.ReminderProvider"
+            android:name=".utilities.ReminderProvider"
             android:authorities="com.example.reminder.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -47,9 +47,9 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver android:name=".classes.NotificationReceiver" />
+        <receiver android:name=".utilities.NotificationReceiver" />
         <receiver
-            android:name=".classes.DeviceBootReceiver"
+            android:name=".utilities.DeviceBootReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

@@ -3,7 +3,6 @@ package com.example.reminder.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -14,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.reminder.R;
-import com.example.reminder.classes.AlarmSettingClass;
-import com.example.reminder.classes.MyTimeSettingClass;
-import com.example.reminder.classes.NotificationReceiver;
+import com.example.reminder.utilities.AlarmSettingClass;
+import com.example.reminder.utilities.MyTimeSettingClass;
+import com.example.reminder.utilities.NotificationReceiver;
 import com.example.reminder.database.DataBaseHelper;
 
 import java.util.Calendar;

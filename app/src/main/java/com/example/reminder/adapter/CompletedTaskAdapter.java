@@ -1,10 +1,16 @@
 package com.example.reminder.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,18 +21,26 @@ import com.example.reminder.R;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.models.CompletedTasksModel;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-public class CompletedTaskAdapter extends RecyclerView.Adapter<CompletedTaskAdapter.CompletedTasksHolder> {
+public class CompletedTaskAdapter extends RecyclerView.Adapter<CompletedTaskAdapter.CompletedTasksHolder>
+//        implements Filterable
+{
 
     Context context;
     List<CompletedTasksModel>list;
+    List<CompletedTasksModel>fullList;
     DataBaseHelper dataBaseHelper;
 
-    public CompletedTaskAdapter(Context context, List<CompletedTasksModel> list, DataBaseHelper dataBaseHelper) {
+    public CompletedTaskAdapter(Context context, List<CompletedTasksModel> list, DataBaseHelper dataBaseHelper)  {
         this.context = context;
         this.list = list;
         this.dataBaseHelper = dataBaseHelper;
+        fullList = new ArrayList<>(  );
+        fullList.addAll( list );
     }
 
     @NonNull
@@ -45,9 +59,32 @@ public class CompletedTaskAdapter extends RecyclerView.Adapter<CompletedTaskAdap
     holder.completedTaskDeleteIV.setOnClickListener( new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            dataBaseHelper.deleteEachCompletedTask( list.get( position ).getId() );
-            list.remove( position );
-            notifyDataSetChanged();
+            AlertDialog.Builder builder = new AlertDialog.Builder( context );
+            View view = LayoutInflater.from( context ).inflate( R.layout.deletetaskalertmessagelayout,null  );
+            Button deleteBtn = view.findViewById( R.id.popupMenuAllTaskDeleletBtn );
+            Button cancelBtn =  view.findViewById( R.id.popupMenuAllTaskCancelBtn );
+
+            builder.setView( view ).setCancelable( true );
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+            dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+            deleteBtn.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dataBaseHelper.deleteEachCompletedTask( list.get( position ).getId() );
+                    list.remove( position );
+                    notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+            } );
+
+            cancelBtn.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            } );
+
         }
     } );
 
@@ -57,6 +94,8 @@ public class CompletedTaskAdapter extends RecyclerView.Adapter<CompletedTaskAdap
     public int getItemCount() {
         return list.size();
     }
+
+
 
     public class CompletedTasksHolder extends RecyclerView.ViewHolder
     {
@@ -71,4 +110,43 @@ public class CompletedTaskAdapter extends RecyclerView.Adapter<CompletedTaskAdap
 
         }
     }
+//    @Override
+//    public Filter getFilter() {
+//        return null;
+//    }
+//
+//    Filter completedTasksFilter = new Filter()
+//    {
+//
+//        @Override
+//        protected FilterResults performFiltering(CharSequence constraint) {
+//            List<CompletedTasksModel>filterList = new ArrayList<>(  );
+//            if (constraint == null || constraint.length()==0)
+//            {
+//                filterList.addAll( fullList );
+//            }
+//            else
+//            {
+//                String string = constraint.toString().toLowerCase();
+//                for (CompletedTasksModel data : fullList) {
+//                    if (data.getTaskDate().toLowerCase().startsWith( string ))
+//                    {
+//                        filterList.add( data );
+//                    }
+//                }
+//            }
+//            FilterResults results = new FilterResults();
+//            results.values = filterList ;
+//            return results;
+//        }
+//
+//        @Override
+//        protected void publishResults(CharSequence constraint, FilterResults results) {
+//        list.clear();
+//        list.addAll( (Collection<? extends CompletedTasksModel>) results.values );
+//        notifyDataSetChanged();
+//        }
+//    };
+
+
 }

@@ -47,6 +47,7 @@ public class EventModel  implements Comparable<EventModel> {
     public String getStartDates() {
         return startDates;
     }
+
     @SuppressLint("NewApi")
     public Date getDate() {
         @SuppressLint({"NewApi", "LocalSuppress"}) SimpleDateFormat format = new SimpleDateFormat(

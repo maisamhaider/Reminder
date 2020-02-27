@@ -1,6 +1,5 @@
 package com.example.reminder.Fragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -9,7 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -32,17 +32,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,12 +49,13 @@ import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.AttachmentTaskAdapter;
 import com.example.reminder.adapter.SubTaskAdapter;
-import com.example.reminder.classes.AlarmSettingClass;
-import com.example.reminder.classes.MyTimeSettingClass;
+import com.example.reminder.utilities.AlarmSettingClass;
+import com.example.reminder.utilities.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.RecyclerCallBack;
 import com.example.reminder.models.AttachmentTaskModel;
 import com.example.reminder.models.MySubTaskModel;
+import com.example.reminder.utilities.TextTypes;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 
@@ -68,6 +67,7 @@ import java.util.Objects;
 
 public class EditTask extends BottomSheetDialogFragment {
 
+    private SharedPreferences sharedPreferences;
     MainActivity mainActivity;
     private static final int REQUEST_CODE = 1001;
     private MyTimeSettingClass myTimeSettingClass;
@@ -77,7 +77,7 @@ public class EditTask extends BottomSheetDialogFragment {
     private EditText addSubTasksET, edittaskTitleEt;
     private CardView dummySubTaskCV;
     private LinearLayout editSetTimeLL, tabToAddAttachmentsLL;
-    private ImageView newSubTaskIv, shareTaskIV, editDeleteUpperIV, addNotesIv, edit_uploadIv, edit_deleteTaskIV, edit_MarkAsDoneIV;
+    private ImageView newSubTaskIv, shareTaskIV, editDeleteUpperIV, addNotesIv, edit_uploadIv, edit_deleteTaskIV, edit_MarkAsDoneIV, selectTextTypeImageView;
     //    private Switch editReminderOnOffSwitch;
     private RecyclerView subTaskRecyclerView, attachmentRecyclerView;
     private SubTaskAdapter subTaskAdapter;
@@ -117,7 +117,6 @@ public class EditTask extends BottomSheetDialogFragment {
     DataBaseHelper dataBaseHelper;
 
     private SimpleDateFormat sformat;
-    String notesHolderStg;
     String whichOnIsClick = "", repeatString = "";
     long repeatingIntervalTime;
     private AlarmSettingClass alarmSettingClass;
@@ -136,7 +135,7 @@ public class EditTask extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.edit_task, container, false );
         alarmSettingClass = new AlarmSettingClass( getActivity() );
-
+        sharedPreferences = getActivity().getSharedPreferences( "MY_PREFERENCES", Context.MODE_PRIVATE );
 
         mainActivity = (MainActivity) getActivity();
         dataBaseHelper = new DataBaseHelper( getContext() );
@@ -144,6 +143,7 @@ public class EditTask extends BottomSheetDialogFragment {
         subTaskRecyclerView = view.findViewById( R.id.subTasksRecyclerView );
         attachmentRecyclerView = view.findViewById( R.id.AttachmentRv );
         addNotesIv = view.findViewById( R.id.addNotesIv );
+        selectTextTypeImageView = view.findViewById( R.id.selectTextTypeImageView );
 
         shareTaskIV = view.findViewById( R.id.shareTaskIV );
 
@@ -371,8 +371,67 @@ public class EditTask extends BottomSheetDialogFragment {
         } );
     }
 
+//popupWindow menu contains text Styles 😍😍😍😍😍😍
+    private PopupWindow notesTextTypePopupWindow() {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        final PopupWindow popupWindow = new PopupWindow(getContext());
+        final LayoutInflater inflater = (LayoutInflater) Objects.requireNonNull( getActivity() ).getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View view = inflater.inflate( R.layout.changenotestextpopupwindowlayout, null );
+
+        LinearLayout textStyleLL = view.findViewById( R.id.textStyleLL );
+        final TextView whichTypeTv = view.findViewById( R.id.whichTypeTv );
+        popupWindow.setFocusable( true );
+        popupWindow.setHeight( WindowManager.LayoutParams.WRAP_CONTENT );
+        popupWindow.setHeight( WindowManager.LayoutParams.WRAP_CONTENT );
+        popupWindow.setContentView( view );
+        popupWindow.setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+        whichTypeTv.setText( sharedPreferences.getString( "text_type", TextTypes.Normal.toString() ) );
+        textStyleLL.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tType = sharedPreferences.getString( "text_type", TextTypes.Normal.toString() );
+                if (tType.matches( TextTypes.Normal.toString() )) {
+                    whichTypeTv.setText( TextTypes.Bold.toString() );
+                    editor.putString( "text_type", TextTypes.Bold.toString() ).commit();
+
+                } else if (tType.matches( TextTypes.Bold.toString() )) {
+                    whichTypeTv.setText( TextTypes.Italic.toString() );
+                    editor.putString( "text_type", TextTypes.Italic.toString() ).commit();
+
+                } else if (tType.matches( TextTypes.Italic.toString() )) {
+                    whichTypeTv.setText( TextTypes.Normal.toString() );
+                    editor.putString( "text_type", TextTypes.Normal.toString() ).commit();
+                }
+
+            }
+        } );
+
+        return popupWindow;
+    }
+
 
     private void launchNotesDialogFragFun() {
+        String tType = sharedPreferences.getString( "text_type", TextTypes.Normal.toString() );
+        if (tType.matches( TextTypes.Normal.toString() )) {
+            notesHolderTv.setTypeface( Typeface.DEFAULT );
+
+        } else if (tType.matches( TextTypes.Bold.toString() )) {
+            notesHolderTv.setTypeface( notesHolderTv.getTypeface(), Typeface.BOLD );
+
+        } else if (tType.matches( TextTypes.Italic.toString() )) {
+            notesHolderTv.setTypeface( notesHolderTv.getTypeface(), Typeface.ITALIC );
+        }
+
+        selectTextTypeImageView.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopupWindow popupWindow_obj = notesTextTypePopupWindow();
+                popupWindow_obj.showAsDropDown( selectTextTypeImageView,20,-70 );
+
+            }
+        } );
+
 
         notesHolderTv.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -422,8 +481,7 @@ public class EditTask extends BottomSheetDialogFragment {
 
         if (reminder_date.matches( "" )) {
             showEditRemindTagsLLAndStuffs();
-        }
-        else {
+        } else {
             hideEditRemindTagsLLAndStuffs();
             if (repeatValue.matches( "" )) {
                 editSetTimeTv.setText( reminder_date );
@@ -755,7 +813,7 @@ public class EditTask extends BottomSheetDialogFragment {
                             dataBaseHelper.update( MyTimeSettingClass.getTomorrow(), MyTimeSettingClass.todayPlaceDate(),
                                     checkRepeat, "1", taskPosition );
                             dataBaseHelper.upDate( taskPosition, String.valueOf( repeatingIntervalTime ) );
-                            alarmSettingClass.setRepeatingAlarm( taskTitle,myTimeSettingClass.getMilliFromDate( MyTimeSettingClass.getTomorrow() ),Integer.parseInt( taskPosition ),repeatingIntervalTime );
+                            alarmSettingClass.setRepeatingAlarm( taskTitle, myTimeSettingClass.getMilliFromDate( MyTimeSettingClass.getTomorrow() ), Integer.parseInt( taskPosition ), repeatingIntervalTime );
 
                         } else {
                             Cursor cursor = dataBaseHelper.getDateToPlaceSingleRowValue( taskPosition );
@@ -769,7 +827,7 @@ public class EditTask extends BottomSheetDialogFragment {
                             editSetTimeTv.setText( whichOnIsClick + reminder_date );
                             edit_addReminderShowTimeTv.setText( whichOnIsClick + reminder_date );
                             dataBaseHelper.update( reminder_date, date_to_place_task, checkRepeat, "1", taskPosition );
-                            dataBaseHelper.upDate(taskPosition,"no","1");
+                            dataBaseHelper.upDate( taskPosition, "no", "1" );
                             dataBaseHelper.upDate( taskPosition, String.valueOf( repeatingIntervalTime ) );
                             alarmSettingClass.setRepeatingAlarm( taskTitle, myTimeSettingClass.getMilliFromDate( reminder_date ), Integer.parseInt( taskPosition ), repeatingIntervalTime );
 
@@ -1066,6 +1124,19 @@ public class EditTask extends BottomSheetDialogFragment {
         myDialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
         myDialog.show();
         String dataa = notesHolderTv.getText().toString();
+// set myNotesET text styles depends on save type in sharedPreferences
+        String tType = sharedPreferences.getString( "text_type", TextTypes.Normal.toString() );
+        if (tType.matches( TextTypes.Normal.toString() )) {
+            myNotesET.setTypeface( Typeface.DEFAULT );
+
+        } else if (tType.matches( TextTypes.Bold.toString() )) {
+            myNotesET.setTypeface( myNotesET.getTypeface(), Typeface.BOLD );
+
+        } else if (tType.matches( TextTypes.Italic.toString() )) {
+            myNotesET.setTypeface( myNotesET.getTypeface(), Typeface.ITALIC );
+        }
+
+        //
         if (!dataa.matches( "Tap to add Notes" )) {
             myNotesET.setText( notesHolderTv.getText().toString() );
         } else {

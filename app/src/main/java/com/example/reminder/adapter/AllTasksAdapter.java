@@ -1,16 +1,18 @@
 package com.example.reminder.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -20,19 +22,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.Fragments.EditTask;
 import com.example.reminder.R;
-import com.example.reminder.classes.AlarmSettingClass;
-import com.example.reminder.classes.MyTimeSettingClass;
+import com.example.reminder.utilities.AlarmSettingClass;
+import com.example.reminder.utilities.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
-import com.example.reminder.interfaces.MyItemClickListener;
 import com.example.reminder.models.AllTasksModel;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHolder> {
 
@@ -65,7 +63,7 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
 
     @Override
     public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
-
+        AllTasksModel allTasksModel = new AllTasksModel(  );
         holder.notes_TextView.setText( myModelList.get( position ).getTask() );
         holder.date_textView.setText( myModelList.get( position ).getDate() );
 
@@ -162,13 +160,36 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
         holder.deleteItemIv.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataBaseHelper.deleteOneTask( myModelList.get( position ).getId() );
-                dataBaseHelper.deleteSubTasks( myModelList.get( position ).getDate() );
-                dataBaseHelper.deleteAllAttachments( myModelList.get( position ).getId() );
-                int pp = Integer.parseInt( myModelList.get( position ).getId() );
-                alarmSettingClass.deleteRepeatAlarm( pp ); //cancel completed tasks' alarm
-                myModelList.remove( position );
-                notifyDataSetChanged();
+                AlertDialog.Builder builder = new AlertDialog.Builder( context );
+                final View view1 = LayoutInflater.from( context ).inflate( R.layout.deletetaskalertmessagelayout, null );
+                Button cancelBtn = view1.findViewById( R.id.popupMenuAllTaskCancelBtn );
+                Button deleteBtn = view1.findViewById( R.id.popupMenuAllTaskDeleletBtn );
+                builder.setCancelable( true);
+                builder.setView( view1 );
+                final AlertDialog dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+                dialog.show();
+                cancelBtn.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //do nothing but just dismiss dialog 😉😉
+                        dialog.dismiss();
+                    }
+                } );
+                deleteBtn.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dataBaseHelper.deleteOneTask( myModelList.get( position ).getId() );
+                        dataBaseHelper.deleteSubTasks( myModelList.get( position ).getDate() );
+                        dataBaseHelper.deleteAllAttachments( myModelList.get( position ).getId() );
+                        int pp = Integer.parseInt( myModelList.get( position ).getId() );
+                        alarmSettingClass.deleteRepeatAlarm( pp ); //cancel completed tasks' alarm
+                        myModelList.remove( position );
+                        notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                } );
+
 
             }
         } );

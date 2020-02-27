@@ -34,15 +34,26 @@
     <TextView
         android:id="@+id/holdNotesTv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="8dp"
-        android:paddingLeft="5dp"
-        android:hint="Tap to add note "
-        android:textColorHint="@color/colorGray"
         android:background="?android:attr/selectableItemBackground"
+        android:hint="Tap to add note "
+        android:paddingLeft="5dp"
+        android:textColorHint="@color/colorGray"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notes_tv" />
+
+    <ImageView
+        android:id="@+id/selectTextTypeImageView"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="15dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/text"
+        app:layout_constraintBottom_toBottomOf="@+id/notes_tv"
+        app:layout_constraintStart_toEndOf="@+id/notes_tv"
+        app:layout_constraintTop_toTopOf="@+id/notes_tv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

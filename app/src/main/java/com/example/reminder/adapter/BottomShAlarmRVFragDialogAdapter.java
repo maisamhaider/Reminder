@@ -45,27 +45,27 @@ public class BottomShAlarmRVFragDialogAdapter extends RecyclerView.Adapter<Botto
         final String s =list.get( position );
         holder.setData( s );
 
-        if (isVisible==position) {
-            holder.imageView.setVisibility( View.VISIBLE );
-        }
-        else
-        {
-            holder.imageView.setVisibility( View.INVISIBLE );
-        }
+//        if (isVisible==position) {
+//            holder.imageView.setVisibility( View.VISIBLE );
+//        }
+//        else
+//        {
+//            holder.imageView.setVisibility( View.INVISIBLE );
+//        }
 
         holder.itemView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (isVisible==position)
-                {
-                    holder.imageView.setVisibility( View.INVISIBLE );
-                }
-                else
-                {
-                    holder.imageView.setVisibility( View.VISIBLE );
-                }
-                isVisible=position;
+//                if (isVisible==position)
+//                {
+//                    holder.imageView.setVisibility( View.INVISIBLE );
+//                }
+//                else
+//                {
+//                    holder.imageView.setVisibility( View.VISIBLE );
+//                }
+//                isVisible=position;
                 setAlarmString(s);
                 dialog.dismiss();
                 notifyDataSetChanged();

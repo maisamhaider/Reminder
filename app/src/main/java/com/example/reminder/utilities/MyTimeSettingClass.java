@@ -1,8 +1,6 @@
-package com.example.reminder.classes;
+package com.example.reminder.utilities;
 
 import android.annotation.SuppressLint;
-
-import com.example.reminder.Fragments.CalendarFrag;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -205,6 +203,15 @@ public class MyTimeSettingClass {
 
     @SuppressLint({"SimpleDateFormat", "DefaultLocale"})
     public static String tomorrowPlaceDate() {
+        Calendar calendar = Calendar.getInstance();
+        final int setDay = calendar.get( Calendar.DAY_OF_MONTH ) + 1;
+        final int setMonth = calendar.get( Calendar.MONTH );
+        final int setYear = calendar.get( Calendar.YEAR );
+
+        return String.format( "%d/%d/%d", setDay, setMonth, setYear );
+    }
+    @SuppressLint({"SimpleDateFormat", "DefaultLocale"})
+    public static String tomorrowFromTonightPm12() {
         Calendar calendar = Calendar.getInstance();
         final int setDay = calendar.get( Calendar.DAY_OF_MONTH ) + 1;
         final int setMonth = calendar.get( Calendar.MONTH );

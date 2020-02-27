@@ -31,13 +31,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.example.reminder.Activity.MainActivity;
 import com.example.reminder.R;
 import com.example.reminder.adapter.InputTaskListAdapter;
-import com.example.reminder.classes.AlarmSettingClass;
-import com.example.reminder.classes.MyTimeSettingClass;
+import com.example.reminder.utilities.AlarmSettingClass;
+import com.example.reminder.utilities.MyTimeSettingClass;
 import com.example.reminder.database.DataBaseHelper;
 import com.example.reminder.interfaces.EditTextStringListener;
 import com.example.reminder.models.InputRemiderModel;
@@ -571,7 +570,7 @@ public class InputListFrag extends Fragment {
             else if (tomorrow)
             {
                 String date = returnPartOfString1(MyTimeSettingClass.getTomorrow(),",");
-                alarmTime = date + sformat.format( calendar.getTime() );
+                alarmTime = date+"," + sformat.format( calendar.getTime() );
             }
             else if (today)
             {

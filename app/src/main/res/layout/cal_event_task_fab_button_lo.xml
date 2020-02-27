@@ -64,7 +64,7 @@
         android:src="@drawable/calendaryellow"
         app:backgroundTint="@color/colorWhite"
         app:fabSize="mini"
-        app:rippleColor="@color/colorSplashScreen" />
+        app:rippleColor="@color/colorMainYellowOne" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mainFab"
@@ -80,7 +80,7 @@
         android:layout_marginBottom="18dp"
         android:src="@drawable/add"
         app:fabSize="normal"
-        app:rippleColor="@color/colorMainYellowTwo" />
+        app:rippleColor="@color/colorMainYellowOne" />
 
 
 </RelativeLayout>

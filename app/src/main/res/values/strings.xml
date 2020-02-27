@@ -35,8 +35,8 @@
     <string name="splash_app_name_text">TO DO LIST</string>
     <string name="i_want_to">I want to...</string>
     <string name="delete_this_item">DELETE THIS ITEM?</string>
-    <string name="permissiontexts">This application (To_Do_List) asks user to allow certain permissions that are required for the application to perform its actions properly. To_Do_List helps the user to remind task that may contain user personal data.We insure yoy that thr user personal data or information is not collected by the company nor does the application host users data </string>
+    <string name="permissiontexts">This application (Toto List) asks user to allow certain permissions that are required for the application to perform its actions properly. (Todo List) helps the user to remind task that may contain user personal data.We insure you that the user personal data or information is not collected by the company nor does the application host users data </string>
     <string name="by_accepting">By accepting you are agree to our <u><b>Terms and\n Condistions</b></u> </string>
-    <string name="permissionsexplanation">\n1. Calendar permission is required to show events of calendar.\n\n2. Camera permission is required to capture photo/video.\n\n3. Storage permission is required to save user data/information on device storage.\n  </string>
+    <string name="permissionsexplanation">\t\n1. Calendar permission is required to show events of calendar.\n\n2. Camera permission is required to capture photos/videos.\n\n3. Audio permission is required to record audio.\n\n4. Storage permission is required to save user data/information on device storage.\n  </string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.example.reminder.classes;
+package com.example.reminder.utilities;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,20 +7,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
 import com.example.reminder.Activity.LauncherActivityOnNotification;
 import com.example.reminder.R;
-import com.example.reminder.database.DataBaseHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
