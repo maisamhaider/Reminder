@@ -38,5 +38,9 @@
     <string name="permissiontexts">This application (Toto List) asks user to allow certain permissions that are required for the application to perform its actions properly. (Todo List) helps the user to remind task that may contain user personal data.We insure you that the user personal data or information is not collected by the company nor does the application host users data </string>
     <string name="by_accepting">By accepting you are agree to our <u><b>Terms and\n Condistions</b></u> </string>
     <string name="permissionsexplanation">\t\n1. Calendar permission is required to show events of calendar.\n\n2. Camera permission is required to capture photos/videos.\n\n3. Audio permission is required to record audio.\n\n4. Storage permission is required to save user data/information on device storage.\n  </string>
+    <string name="exit_dialog">Do you want to exit ?</string>
+    <string name="exit_text">Do you want to exit ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

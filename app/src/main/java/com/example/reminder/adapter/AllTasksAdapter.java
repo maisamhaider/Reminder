@@ -65,13 +65,20 @@ public class AllTasksAdapter extends RecyclerView.Adapter<AllTasksAdapter.MyHold
     public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
         AllTasksModel allTasksModel = new AllTasksModel(  );
         holder.notes_TextView.setText( myModelList.get( position ).getTask() );
-        holder.date_textView.setText( myModelList.get( position ).getDate() );
 
 
         holder.deleteItemIv.setVisibility( View.INVISIBLE );
         holder.attachmentsIv.setVisibility( View.GONE );
         holder.subTasksIv.setVisibility( View.GONE );
         holder.repeatTaskIv.setVisibility( View.GONE );
+
+        if (myModelList.get(position).getDate().matches(""))
+        {
+            holder.date_textView.setVisibility(View.GONE);
+        }else {
+            holder.date_textView.setVisibility(View.VISIBLE);
+            holder.date_textView.setText( myModelList.get( position ).getDate() );
+        }
 
         if (myModelList.get( position ).isCompleted()) {
 

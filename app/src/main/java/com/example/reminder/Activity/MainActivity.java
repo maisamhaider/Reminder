@@ -1,6 +1,7 @@
 package com.example.reminder.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -10,10 +11,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -151,38 +154,6 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
         super.onRequestPermissionsResult( requestCode, permissions, grantResults );
     }
 
-//    private void alertMsg()
-//    {
-//
-//        View view1 = LayoutInflater.from( this).inflate( R.layout.alertmessageforcalpermission,null );
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setCancelable( true );
-//        builder.setView( view1 );
-//        final AlertDialog dialog = builder.create();
-//        dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
-//        if (!checkPermission() )
-//        {
-//            Button allowBtn = view1.findViewById( R.id.calPermissionAllowBtn );
-//            Button denyBtn = view1.findViewById( R.id.calPermissionDenyBtn );
-//            dialog.show();
-//            allowBtn.setOnClickListener( new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    checkPermission();
-//                    dialog.dismiss();
-//                }
-//            } );
-//            denyBtn.setOnClickListener( new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    dialog.dismiss();
-//                }
-//            } );
-//
-//        }
-//    }
-
-
     public void setTaskFragDefaultBNBItem() {
 
         bottomNavigationView.setSelectedItemId( R.id.tasks );
@@ -212,16 +183,14 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count > 0) {
+        if (count ==1) {
             showBottomNView();
             getSupportFragmentManager().popBackStack();
         } else {
-            MainActivity.this.finish();
-            super.onBackPressed();
+
+            exit();
 
         }
-
-
     }
 
     @Override
@@ -254,5 +223,34 @@ public class MainActivity extends AppCompatActivity implements EditTextStringLis
 
     }
 
+    public void exit() {
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater layoutInflater = getLayoutInflater();
+            @SuppressLint("InflateParams") final View dialogView = layoutInflater.inflate(R.layout.dialog_exit, null);
+            Button yes = dialogView.findViewById(R.id.yes);
+            Button no = dialogView.findViewById(R.id.no);
+            builder.setView(dialogView);
+            final AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+            yes.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void onClick(View view) {
+                    moveTaskToBack(true);
+                    alertDialog.cancel();
+                    finishAffinity();
+                }
+            });
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    alertDialog.dismiss();
+                }
+            });
+        } catch (Exception a) {
+            a.printStackTrace();
+        }
+    }
 
 }
