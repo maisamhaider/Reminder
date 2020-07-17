@@ -356,8 +356,6 @@ public class AllTasksFrag extends Fragment {
                 }
             } );
         }
-
-
     }
 
 //ascending
@@ -975,8 +973,7 @@ public class AllTasksFrag extends Fragment {
 
     private List<AllTasksModel> returnTodayListFromDb() {
         List<AllTasksModel> model2List = new ArrayList<>();
-        AllTasksModel allTasksModel = new AllTasksModel();
-        Cursor cursor = dataBaseHelper.getToday();
+         Cursor cursor = dataBaseHelper.getToday();
         if (cursor.getCount() == 0) {
             Log.i( "Data", "no data" );
         }
