@@ -18,6 +18,7 @@
         android:roundIcon="@drawable/todolisticon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity android:name=".Activity.TermsAndConditions"/>
         <activity android:name=".Activity.SplashActivity">
